@@ -13,7 +13,7 @@ module.exports = {
     componentWillUnmount: function () {
         if (this.events) {
             for (var key in this.events) {
-                glimpse.off(this.events[key]);
+                glimpse.off(key);
             }
 
             this.events = null;
