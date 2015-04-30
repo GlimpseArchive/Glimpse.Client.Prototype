@@ -1,7 +1,8 @@
 'use strict';
 
 var glimpse = require('glimpse');
-    // TODO: Not sure if the data will ultimately live here or not
+
+// TODO: Not sure if the data will ultimately live here or not
 var summaryData = [];
 var detailData = [];
 
