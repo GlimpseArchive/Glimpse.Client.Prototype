@@ -7,7 +7,11 @@ var _storeSummaryKey = 'glimpse.data.summary.local';
 var _storeDetailKey = 'glimpse.data.request.local';
 var _storeDetailIndex = 'glimpse.data.request.local.index';
 
+// Store Summies: Found from Remote or Stream
 (function () {
+    // TODO: Needs to be reviewed to see if we need to store
+    //       this in memory or not, should just be able to work
+    //       with store each time its needed.
     var storeSummary;
 
     function storeFoundSummary(data) {
@@ -21,6 +25,7 @@ var _storeDetailIndex = 'glimpse.data.request.local.index';
     }
 
     function flush() {
+        // TODO: Doesn't look like its flushing back to store
         while (storeSummary.length > 100) {
             storeSummary.pop();
         }
@@ -30,7 +35,11 @@ var _storeDetailIndex = 'glimpse.data.request.local.index';
     glimpse.on('data.request.summary.found.stream', storeFoundSummary);
 })();
 
+// Store Summies: Found from Remote
 (function () {
+    // TODO: Needs to be reviewed to see if we need to store
+    //       this in memory or not, should just be able to work
+    //       with store each time its needed.
     var storeDetail;
     var storeDetailIndex;
 
@@ -45,6 +54,7 @@ var _storeDetailIndex = 'glimpse.data.request.local.index';
     }
 
     function flush() {
+        // TODO: Doesn't look like its flushing back to store
         while (storeDetailIndex.length > 10) {
             var id = storeDetailIndex.pop();
             delete storeDetail[id];
