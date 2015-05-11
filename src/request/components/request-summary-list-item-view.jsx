@@ -2,13 +2,13 @@
 
 var glimpse = require('glimpse');
 var React = require('react');
-var cx = React.addons.classSet;
 var Timeago = require('lib/components/timeago');
+var classNames = require('classnames');
 
 module.exports = React.createClass({
     render: function () {
         var summary = this.props.summary;
-        var containerClass = cx({
+        var containerClass = classNames({
             'request-summary-item-holder': true,
             'request-summary-shell-selected': summary._selected
         });

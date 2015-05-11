@@ -3,12 +3,12 @@
 var glimpse = require('glimpse');
 var React = require('react');
 var Timeago = require('lib/components/timeago');
-var cx = React.addons.classSet;
+var classNames = require('classnames');
 
 module.exports = React.createClass({
     render: function () {
         var user = this.props.user;
-        var containerClass = cx({
+        var containerClass = classNames({
             'table table-bordered user-status': true,
             'user-status-online': user.online,
             'user-shell-selected': user.selected

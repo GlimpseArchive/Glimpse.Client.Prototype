@@ -2,12 +2,12 @@
 
 var glimpse = require('glimpse');
 var React = require('react');
-var cx = React.addons.classSet;
+var classNames = require('classnames');
 
 module.exports = React.createClass({
     render: function () {
         var data = this.props.data;
-        var containerClass = cx({
+        var containerClass = classNames({
             'active': this.props.isActive
         });
 
