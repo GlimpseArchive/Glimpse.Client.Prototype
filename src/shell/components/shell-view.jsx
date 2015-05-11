@@ -15,7 +15,7 @@ module.exports = React.createClass({
         return (
             <div className="application-holder">
                 {this.props.applications.map(function (application) {
-                    return <div key={application.key}>{application.component()}</div>;
+                    return <div key={application.key}><application.component /></div>;
                 })}
             </div>
         );
