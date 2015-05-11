@@ -29,7 +29,7 @@
   "homepage": "https://github.com/Glimpse/Glimpse.Client",
   "dependencies": {
     "bootstrap-sass": "^3.3.4",
-    "lodash": "~2.4.1",
+    "lodash": "^3.8.0",
     "moment": "^2.10.2",
     "postal": "~1.0.3",
     "postal.diagnostics": "~0.7.4",
