@@ -11,7 +11,7 @@ module.exports = React.createClass({
 
         return (
             <div className="request-summary-list-holder">
-                <ReactCSSTransitionGroup component={React.DOM.div} transitionName="request-summary-item-holder">
+                <ReactCSSTransitionGroup component="div" transitionName="request-summary-item-holder">
                     {allSummaries.map(function (summary) {
                         return <SummaryItem key={summary.id} summary={summary} />;
                     })}

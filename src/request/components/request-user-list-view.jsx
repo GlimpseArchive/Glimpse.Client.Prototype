@@ -11,7 +11,7 @@ module.exports = React.createClass({
 
         return (
             <div className="request-user-list-holder">
-                <ReactCSSTransitionGroup component={React.DOM.div} transitionName="request-user-item-holder" transitionLeave={false}>
+                <ReactCSSTransitionGroup component="div" transitionName="request-user-item-holder" transitionLeave={false}>
                     {glimpse.util.eachMap(allUsers, function (key, user) {
                         return <UserItem key={user.details.id} user={user} />;
                     })}

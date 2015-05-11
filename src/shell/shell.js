@@ -12,7 +12,8 @@ module.exports = {
         glimpse.emit('shell.application.added', { application: application });
     },
     initialize: function () {
-        React.renderComponent(shell({ applications: applications }),
+        React.render(
+            React.createElement(Shell, { applications: applications }),
             document.getElementById('application-holder'));
 
         glimpse.emit('shell.ready', {});
