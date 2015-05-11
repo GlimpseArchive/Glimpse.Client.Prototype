@@ -2,7 +2,7 @@
 
 var glimpse = require('glimpse');
 var React = require('react');
-var shell = require('./components/shell-view');
+var Shell = require('./components/shell-view');
 var applications = [];
 
 module.exports = {
