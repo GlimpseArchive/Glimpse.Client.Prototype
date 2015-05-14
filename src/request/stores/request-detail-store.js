@@ -26,7 +26,7 @@ function requestChanged(targetRequests) {
     glimpse.on('shell.request.detail.closed', clearRequest);
 })();
 
-// Found Data
+// Found Request
 (function () {
     function dataFound(payload) {
         var newRequest = payload.newRequest;
@@ -44,7 +44,7 @@ function requestChanged(targetRequests) {
     glimpse.on('data.request.detail.found', dataFound);
 })();
 
-// Trigger Requests
+// Get Request
 (function () {
     function triggerRequest(payload) {
         var requestId = payload.requestId;
