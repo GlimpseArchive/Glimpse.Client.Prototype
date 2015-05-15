@@ -26,13 +26,14 @@ function notifyUsersChanged() {
 // Select User
 (function () {
     function clear(oldUserId, users) {
-            if (oldUserId) {
-                var oldUser = users[oldUserId];
-                if (oldUser) {
-                    oldUser.selected = false;
-                }
+        if (oldUserId) {
+            var oldUser = users[oldUserId];
+            if (oldUser) {
+                oldUser.selected = false;
             }
         }
+    }
+
     function select(userId, users) {
         var user = users[userId];
         if (user) {
@@ -81,6 +82,7 @@ function notifyUsersChanged() {
 
                 user.latestRequests.unshift(request);
 
+                // TODO: Switch offline timeout to settings
                 setTimeout(function () { removeRequest(user, request); }, 5000);
             }
         };
@@ -100,6 +102,7 @@ function notifyUsersChanged() {
                 clearTimeout(user.onlineCallback);
             }
 
+            // TODO: Switch offline timeout to settings
             user.onlineCallback = setTimeout(function () { setOffline(user); }, 12000);
         };
     })();
@@ -120,8 +123,8 @@ function notifyUsersChanged() {
         for (var i = rawRequests.length - 1; i >= 0; i--) {
             var rawRequest = rawRequests[i];
             var rawUser = rawRequest.user;
-            var user = _users[rawUser.id];
 
+            var user = _users[rawUser.id];
             if (user === undefined) {
                 user = createUser(rawUser);
                 _users[rawUser.id] = user;
