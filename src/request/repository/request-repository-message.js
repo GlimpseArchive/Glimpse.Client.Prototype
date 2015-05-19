@@ -5,7 +5,7 @@ var glimpse = require('glimpse');
 var create = (function() {
     var processMessageSummary = function(request, message) {
         // process indexes (promoted to first class properties)
-        if (message.indexes && message.indexes.length > 0) {
+        if (message.indexes) {
             for (var indexKey in message.indexes) {
                 request[indexKey] = message.indexes[indexKey];
             }
