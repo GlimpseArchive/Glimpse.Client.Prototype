@@ -2,16 +2,14 @@
 
 var glimpse = require('glimpse');
 
-// TODO: get data from server and publish notifications
-
 module.exports = {
-    triggerGetLastestSummaries: function () {
+    triggerGetSummariesLastest: function () {
         // TODO: Need to complete
         //       Ajax call to REST endpoint
 
         // simulate success callback
         setTimeout(function () {
-            glimpse.emit('data.request.summary.found.remote', []);
+            glimpse.emit('data.message.summary.found.remote', []);
         }, 0);
     },
     triggerGetDetailsFor: function (requestId) {
@@ -20,7 +18,7 @@ module.exports = {
 
         // simulate success callback
         setTimeout(function () {
-            glimpse.emit('data.request.detail.found.remote', []);
+            glimpse.emit('data.message.detail.found.remote', []);
         }, 0);
     }
 };

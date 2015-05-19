@@ -2,32 +2,31 @@
 
 require('./request-store-manage');
 
-var glimpse = require('glimpse');
-var resourceRepository = require('./request-repository-remote');
-var localRepository = require('./request-repository-local');
-var streamRepository = require('./request-repository-stream');
+var localRequestRepository = require('./request-repository-local');
+var messageRequestRepository = require('./request-repository-message');
+var messageRepository = require('./message-repository');
 
 module.exports = {
-    triggerGetLastestSummaries: function () {
+    triggerGetSummariesLastest: function () {
         if (!FAKE_SERVER) {
-            resourceRepository.triggerGetLastestSummaries();
-            localRepository.triggerGetLastestSummaries();
+            // find any messages from server
+            messageRepository.triggerGetSummariesLastest();
+            // find any requests in stroage
+            localRequestRepository.triggerGetSummariesLastest();
+
+            // make sure we get new messages from server as they happen
+            messageRepository.subscribeToSummariesLastest();
         }
     },
     triggerGetDetailsFor: function (requestId) {
         if (!FAKE_SERVER) {
-            resourceRepository.triggerGetDetailsFor(requestId);
-            localRepository.triggerGetDetailsFor(requestId);
+            // find the messages from server
+            messageRepository.triggerGetDetailsFor(requestId);
+            // find the request in stroage
+            localRequestRepository.triggerGetDetailsFor(requestId);
+
+            // make sure we get updates for the request as they happen
+            messageRepository.subscribeToDetailsFor(requestId);
         }
-    },
-    // TODO: Need to look and see if this is the best place for these
-    subscribeToLatestSummaries: function () {
-        streamRepository.subscribeToLatestSummaries();
-    },
-    subscribeToLatestSummariesPatches: function () {
-        streamRepository.subscribeToLatestSummariesPatches();
-    },
-    subscribeToDetailsPatchesFor: function (requestId) {
-        streamRepository.subscribeToDetailsPatchesFor(requestId);
     }
 };

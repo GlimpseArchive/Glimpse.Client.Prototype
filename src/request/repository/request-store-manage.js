@@ -22,15 +22,14 @@ var detailData = [];
         glimpse.emit('data.request.summary.found', payload);
     }
 
-    // NOTE: the fact that we are listening to both local and remote,
+    // NOTE: the fact that we are listening to both local and message,
     //       means that we will get notifications from first and then
     //       from remote. This means that the same record could get
     //       multiple notifications for the one record. This is by design
     //       and shouldn't cause any side effects.
 
     glimpse.on('data.request.summary.found.local', republishFoundSummary);
-    glimpse.on('data.request.summary.found.remote', republishFoundSummary);
-    glimpse.on('data.request.summary.found.stream', republishFoundSummary);
+    glimpse.on('data.request.summary.found.message', republishFoundSummary);  //TODO: not yet implemented
 })();
 
 // republish Found Details
@@ -48,32 +47,5 @@ var detailData = [];
     //       and shouldn't cause any side effects.
 
     glimpse.on('data.request.detail.found.local', republishFoundDetail);
-    glimpse.on('data.request.detail.found.remote', republishFoundDetail);
-})();
-
-// TODO: NOT SURE THIS IS THE BEST PLACE FOR THIS
-// merge Patch Summary
-(function () {
-    function mergePatchSummary(data) {
-
-        // TODO: Need to complete
-        //       Pull from store, publish result
-
-        glimpse.emit('data.request.summary.update', []);
-    }
-
-    glimpse.on('data.request.summary.patch.found.stream', mergePatchSummary);
-})();
-
-// merge Patch Details
-(function () {
-    function mergePatchDetail(data) {
-
-        // TODO: Need to complete
-        //       Pull from store, publish result
-
-        glimpse.emit('data.request.detail.update', []);
-    }
-
-    glimpse.on('data.request.detail.patch.found.stream', mergePatchDetail);
+    glimpse.on('data.request.detail.found.message', republishFoundDetail);  //TODO: not yet implemented
 })();

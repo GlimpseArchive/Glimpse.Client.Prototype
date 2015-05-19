@@ -58,14 +58,14 @@ var triggerGetLastestSummaries = (function () {
         },
         remote: function () {
             // simulate requests happeing more than 10 seconds ago
-            generate._batch(numRemote, 'remote', 10 * -1);
+            generate._batch(numRemote, 'message', 10 * -1);
         },
         stream: function (position) {
             // simulate requests happeing more every interval
             console.log('[fake] stream - ' + position + ' of ' + maxEvents);
 
             // TODO: Update so that array occasionally puts out 2 vs the norm of 1 result
-            requestsFound('stream', [ fakeSummary.generate() ]);
+            requestsFound('message', [ fakeSummary.generate() ]);
 
             setTimeout(function () {
                 if (position < maxEvents) {
@@ -93,6 +93,7 @@ var triggerGetLastestSummaries = (function () {
     };
 })();
 
+// simulate details
 var triggerGetDetailsFor = (function () {
     var fakeDetail = require('./fake-request-detail');
 
@@ -106,7 +107,7 @@ var triggerGetDetailsFor = (function () {
                 requestsFound('local', cache.details[id]);
             }
         },
-        remote: function (id) {
+        message: function (id) {
             var request = cache.details[id];
             if (!request) {
                 request = fakeDetail.generate(cache.summary[id]);
@@ -114,7 +115,8 @@ var triggerGetDetailsFor = (function () {
                 cache.details[id] = request;
             }
 
-            requestsFound('remote', request);
+            // TODO: Check if this needs to happen given the local logic above
+            requestsFound('message', request);
         }
     };
 
@@ -126,7 +128,7 @@ var triggerGetDetailsFor = (function () {
 
         // simulate messages from remote
         setTimeout(function () {
-            generate.remote(id);
+            generate.message(id);
         }, chance.integerRange(2000, 3000));
     };
 })();
