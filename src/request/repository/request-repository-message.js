@@ -6,8 +6,8 @@ var create = (function() {
     var processMessageSummary = function(request, message) {
         // process indexes (promoted to first class properties)
         if (message.indexes && message.indexes.length > 0) {
-            for (var index in message.indexes) {
-                request[index] = message.indexes[index];
+            for (var indexKey in message.indexes) {
+                request[indexKey] = message.indexes[indexKey];
             }
         }
 
