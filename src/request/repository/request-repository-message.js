@@ -34,12 +34,13 @@ var create = (function() {
         return request;
     };
     var processMessageList = function(messagesByRequest, processAction) {
-        var requests = {};
+        var requests = [];
 
         for (var requestId in messagesByRequest) {
             var messagesForRequest = messagesByRequest[requestId].allMessages;
+            var request = processMessage(messagesForRequest, processAction);
 
-            requests[requestId] = processMessage(messagesForRequest, processAction);
+            requests.push(request);
         }
 
         return requests;
