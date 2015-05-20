@@ -16,7 +16,7 @@ var updateData = (function() {
             Array.prototype.push.apply(store, messages);
         };
     var updateGrouped = function(messages, storeGroup) {
-            for (var i = 0; i < messages; i++) {
+            for (var i = 0; i < messages.length; i++) {
                 var message = messages[i];
                 var contextId = message.context.id;
 
@@ -32,7 +32,7 @@ var updateData = (function() {
                 updatedMessagesByRequest: {}
             };
 
-            for (var i = 0; i < messages; i++) {
+            for (var i = 0; i < messages.length; i++) {
                 var message = messages[i];
                 var contextId = message.context.id;
 
