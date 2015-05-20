@@ -37,8 +37,8 @@ var updateData = (function() {
                 var contextId = message.context.id;
 
                 // create object & store it if not present
-                var resultGroup = result.updatedMessagesByRequest[id]
-                    || (result.updatedMessagesByRequest[id]
+                var resultGroup = result.updatedMessagesByRequest[contextId]
+                    || (result.updatedMessagesByRequest[contextId]
                             = { newMessages: [], allMessages: storeGroup[contextId] });
                 resultGroup.newMessages.push(message);
             }
