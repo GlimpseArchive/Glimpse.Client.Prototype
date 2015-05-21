@@ -34,22 +34,46 @@ function generate(dateTime) {
         };
     }
 
-    var request =  {
-        _mvc: mvcAction,
-        id: chance.guid(),
-        uri: mvcAction.url,
-        dateTime: dateTime || moment().toISOString(),
-        duration: clientTime + serverTime + networkTime,
-        method: chance.httpMethod(),
-        contentType: chance.httpContentType(),
-        statusCode: httpStatus.code,
-        statusText: httpStatus.text,
-        user: pickUser(),
-        abstract: pickAbstract()
+    var context = { type: 'request', id: chance.guid() };
+    var messages = [
+        {
+            type: 'request-start',
+            context: context,
+            index: {
+                uri: mvcAction.url,
+                dateTime: dateTime || moment().toISOString(),
+                method: chance.httpMethod(),
+                contentType: chance.httpContentType(),
+                user: pickUser()
+            }
+        },
+        {
+            type: 'request-framework',
+            context: context,
+            abstract: pickAbstract()
+        },
+        {
+            type: 'request-end',
+            context: context,
+            index: {
+                duration: clientTime + serverTime + networkTime,
+                statusCode: httpStatus.code,
+                statusText: httpStatus.text,
+            }
+        }
+    ];
+
+    var result = {
+        data: mvcAction,
+        context: context,
+        messages: messages
     };
 
-    return request;
+    return result;
 }
+
+// TODO: Need to genrate message bases responses as well as request based
+//       responses.
 
 module.exports = {
     generate: generate

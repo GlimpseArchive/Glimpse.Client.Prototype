@@ -14,51 +14,60 @@ var triggerGetLastestSummaries = (function () {
     var numLocal = maxEvents * 0.25;
     var numRemote = maxEvents * 0.3;
 
-    function subtractSeconds(seconds) {
-        var date = new Date();
-        var value = seconds * 1000;
+    var batch = (function() {
+        var calculateOffset = function(seconds) {
+            var date = new Date();
+            var value = seconds * 1000;
 
-        return moment(date.setTime(date.getTime() + value)).toISOString();
-    }
-
-    function storeRequests(requests) {
-        for (var i = 0; i < requests.length; i++) {
-            var request = requests[i];
-
-            cache.summary[request.id] = request;
+            return moment(date.setTime(date.getTime() + value)).toISOString();
         }
-    }
 
-    function requestsFound(event, requests) {
-        storeRequests(requests);
-
-        glimpse.emit('data.request.summary.found.' + event, requests);
-    }
-
-    var generate = {
-        _batch: function (num, event, dateTimeOffet) {
-            console.log('[fake] ' + event + ' - ' + parseInt(num));
-
+        var generateMessages = function(num, event, dateTimeOffet) {
             var results = [];
-
             for (var i = 0; i < num; i++) {
                 dateTimeOffet -= chance.integerRange(30, 300);
 
-                var dateTime = subtractSeconds(dateTimeOffet);
-                var request = fakeSummary.generate(dateTime);
+                var dateTime = calculateOffset(dateTimeOffet);
+                var result = fakeSummary.generate(dateTime);
 
-                results.push(request);
+                results.push(result);
             }
 
-            requestsFound(event, results);
-        },
+            return results;
+        }
+        var cacheMessages = function(requests) {
+            for (var i = 0; i < requests.length; i++) {
+                var request = requests[i];
+
+                cache.summary[request.context.id] = request;
+            }
+        };
+        var publishMessages = function(event, requests) {
+            var messages = [];
+            for (var i = 0; i < requests.length; i++) {
+                Array.prototype.push.apply(messages, requests[i].messages);
+            }
+
+            glimpse.emit('data.message.summary.found.' + event, messages);
+        }
+
+        return function(num, event, dateTimeOffet) {
+            console.log('[fake] ' + event + ' - ' + parseInt(num));
+
+            var results = generateMessages(num, event, dateTimeOffet);
+            cacheMessages(results);
+            publishMessages(event, results);
+        }
+    })();
+
+    var generate = {
         local: function () {
             // simulate requests happening more than a day ago
-            generate._batch(numLocal, 'local', 25 * 60 * 60 * -1);
+            batch(numLocal, 'local', 25 * 60 * 60 * -1);
         },
         remote: function () {
             // simulate requests happeing more than 10 seconds ago
-            generate._batch(numRemote, 'message', 10 * -1);
+            batch(numRemote, 'remote', 10 * -1);
         },
         stream: function (position) {
             // simulate requests happeing more every interval
