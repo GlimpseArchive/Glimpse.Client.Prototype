@@ -18,6 +18,13 @@ var create = (function() {
                 abstract[abstractKey] = message.abstract[abstractKey];
             }
         }
+
+        // TODO: this should probably throw and exception if
+        //       context is missing, but not doing for the time
+        // process context id (bring out request id)
+        if (!request.id && message.context) {
+            request.id = message.context.id;
+        }
     };
     var processMessageDetail = function(request, message) {
         request.messages.push(message);
