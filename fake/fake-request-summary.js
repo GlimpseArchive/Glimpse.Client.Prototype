@@ -16,60 +16,92 @@ function generate(dateTime) {
     var clientTime = chance.integerRange(20, 120);
     var queryTime = chance.integerRange(2, Math.max(actionTime / 3, 3));
 
-    var pickUser = function() {
-        return fakeSession.pickUser();
-    }
-
-    var pickAbstract = function () {
-        return {
-            networkTime: networkTime,
-            serverTime: serverTime,
-            clientTime: clientTime,
-            controller: mvcAction.controller,
-            action: mvcAction.action,
-            actionTime: actionTime,
-            viewTime: viewTime,
-            queryTime: queryTime,
-            queryCount: chance.integerRange(1, 4)
-        };
-    }
-
-    var context = { type: 'request', id: chance.guid() };
-    var messages = [
-        {
-            type: 'request-start',
-            context: context,
-            index: {
-                uri: mvcAction.url,
-                dateTime: dateTime || moment().toISOString(),
-                method: chance.httpMethod(),
-                contentType: chance.httpContentType(),
-                user: pickUser()
-            }
+    var pick = {
+        user: function () {
+            return fakeSession.pickUser();
         },
-        {
-            type: 'request-framework',
-            context: context,
-            abstract: pickAbstract()
+        abstract: function () {
+            return {
+                    networkTime: networkTime,
+                    serverTime: serverTime,
+                    clientTime: clientTime,
+                    controller: mvcAction.controller,
+                    action: mvcAction.action,
+                    actionTime: actionTime,
+                    viewTime: viewTime,
+                    queryTime: queryTime,
+                    queryCount: chance.integerRange(1, 4)
+                };
         },
-        {
-            type: 'request-end',
-            context: context,
-            index: {
-                duration: clientTime + serverTime + networkTime,
-                statusCode: httpStatus.code,
-                statusText: httpStatus.text,
-            }
+        index: function () {
+            return {
+                    uri: mvcAction.url,
+                    dateTime: dateTime || moment().toISOString(),
+                    method: chance.httpMethod(),
+                    contentType: chance.httpContentType(),
+                    user: pick.user(),
+                    duration: clientTime + serverTime + networkTime,
+                    statusCode: httpStatus.code,
+                    statusText: httpStatus.text,
+                };
+        },
+        context: function () {
+            return { type: 'request', id: chance.guid() };
         }
-    ];
-
-    var result = {
-        data: mvcAction,
-        context: context,
-        messages: messages
     };
 
-    return result;
+    var generate = {
+        messages: function() {
+            var context = pick.context();
+            var index = pick.index();
+            var messages = [
+                {
+                    type: 'request-start',
+                    context: context,
+                    index: {
+                        uri: index.url,
+                        dateTime: index.dateTime,
+                        method: index.method,
+                        contentType: index.contentType,
+                        user: index.user
+                    }
+                },
+                {
+                    type: 'request-framework',
+                    context: context,
+                    abstract: pick.abstract()
+                },
+                {
+                    type: 'request-end',
+                    context: context,
+                    index: {
+                        duration: index.duration,
+                        statusCode: index.statusCode,
+                        statusText: index.statusText,
+                    }
+                }
+            ];
+
+            return {
+                    data: mvcAction,
+                    context: context,
+                    messages: messages
+                };
+        },
+        request: function() {
+            var context = pick.context();
+            var request = pick.index();
+            request.abstract = pick.abstract();
+
+            return {
+                    data: mvcAction,
+                    context: context,
+                    request: request
+                };
+        }
+    };
+
+    return generate.messages();
 }
 
 // TODO: Need to genrate message bases responses as well as request based
