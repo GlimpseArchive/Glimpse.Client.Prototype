@@ -54,6 +54,8 @@ function generate(dateTime) {
         messages: function() {
             var context = pick.context();
             var index = pick.index();
+            var abstract = pick.abstract();
+
             var messages = [
                 {
                     type: 'request-start',
@@ -69,7 +71,7 @@ function generate(dateTime) {
                 {
                     type: 'request-framework',
                     context: context,
-                    abstract: pick.abstract()
+                    abstract: abstract
                 },
                 {
                     type: 'request-end',
@@ -81,21 +83,13 @@ function generate(dateTime) {
                     }
                 }
             ];
+            var request = index;
+            request.abstract = abstract;
 
             return {
                     data: mvcAction,
                     context: context,
-                    messages: messages
-                };
-        },
-        request: function() {
-            var context = pick.context();
-            var request = pick.index();
-            request.abstract = pick.abstract();
-
-            return {
-                    data: mvcAction,
-                    context: context,
+                    messages: messages,
                     request: request
                 };
         }
