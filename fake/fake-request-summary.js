@@ -16,11 +16,11 @@ function generate(dateTime) {
     var clientTime = chance.integerRange(20, 120);
     var queryTime = chance.integerRange(2, Math.max(actionTime / 3, 3));
 
-    function pickUser() {
+    var pickUser = function() {
         return fakeSession.pickUser();
     }
 
-    function pickAbstract() {
+    var pickAbstract = function () {
         return {
             networkTime: networkTime,
             serverTime: serverTime,
