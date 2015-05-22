@@ -1,13 +1,14 @@
 'use strict';
 
 var chance = require('./fake-extension');
-var fakeSession = require('./fake-request-user');
+var _ = require('lodash');
 var moment = require('moment');
+var fakeSession = require('./fake-request-user');
 
 // TODO: Even though this works, structure of this is kinda crummy
 
 function generate(dateTime) {
-    var mvcAction = chance.mvcAction();
+    var rawRequest = _.clone(chance.mvcAction(), true);
     var httpStatus = chance.httpStatus();
     var networkTime = chance.integerRange(0, 15);
     var serverLowerTime = chance.integerRange(5, 10);
@@ -27,8 +28,8 @@ function generate(dateTime) {
                     networkTime: networkTime,
                     serverTime: serverTime,
                     clientTime: clientTime,
-                    controller: mvcAction.controller,
-                    action: mvcAction.action,
+                    controller: rawRequest.controller,
+                    action: rawRequest.action,
                     actionTime: actionTime,
                     viewTime: viewTime,
                     queryTime: queryTime,
@@ -37,7 +38,7 @@ function generate(dateTime) {
         },
         index: function () {
             return {
-                    uri: mvcAction.url,
+                    uri: rawRequest.url,
                     dateTime: dateTime || moment().toISOString(),
                     method: chance.httpMethod(),
                     contentType: chance.httpContentType(),
@@ -56,7 +57,7 @@ function generate(dateTime) {
         var context = pick.context();
         var index = pick.index();
         var abstract = pick.abstract();
-
+        var request = index;
         var messages = [
             {
                 type: 'request-start',
@@ -84,11 +85,13 @@ function generate(dateTime) {
                 }
             }
         ];
-        var request = index;
+
+        // modify reseults
         request.abstract = abstract;
+        rawRequest.duration = abstract.actionTime;
 
         return {
-                data: mvcAction,
+                rawRequest: rawRequest,
                 context: context,
                 messages: messages,
                 request: request
