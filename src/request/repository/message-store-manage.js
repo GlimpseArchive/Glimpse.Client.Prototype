@@ -59,23 +59,19 @@ var process = (function() {
     // NOTE: This assumes that the UI for the details will be listening to both
     //       summary and detail messages.
     return {
-        summary: function() {
-            function(messages, data) {
-                updateRoot(messages, data.summary.list);
-                updateRoot(messages, data.detials.list);
-                updateGrouped(messages, data.summary.grouping);
-                updateGrouped(messages, data.details.grouping);
+        summary: function(messages, data) {
+            updateRoot(messages, data.summary.list);
+            updateRoot(messages, data.details.list);
+            updateGrouped(messages, data.summary.grouping);
+            updateGrouped(messages, data.details.grouping);
 
-                return createResult(messages, data.summary.list, data.summary.grouping);
-            };
+            return createResult(messages, data.summary.list, data.summary.grouping);
         },
-        details: function() {
-            function(messages, data) {
-                updateRoot(messages, data.detials.list);
-                updateGrouped(messages, data.details.grouping);
+        details: function(messages, data) {
+            updateRoot(messages, data.details.list);
+            updateGrouped(messages, data.details.grouping);
 
-                return createResult(messages, data.details.list, data.details.grouping);
-            };
+            return createResult(messages, data.details.list, data.details.grouping);
         }
     };
 })();
@@ -83,7 +79,7 @@ var process = (function() {
 // republish Found Summary
 (function () {
     function republishFoundSummary(messages) {
-        var payload = process(messages, data);
+        var payload = process.summary(messages, data);
 
         glimpse.emit('data.message.summary.found', payload);
     }
@@ -95,7 +91,7 @@ var process = (function() {
 // republish Found Details
 (function () {
     function republishFoundDetail(messages) {
-        var payload = process(messages, data);
+        var payload = process.detail(messages, data);
 
         glimpse.emit('data.message.detail.found', payload);
     }
