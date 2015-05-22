@@ -3,15 +3,21 @@
 var glimpse = require('glimpse');
 
 // TODO: Not sure if the data will ultimately live here or not
-var summaryData = [];
-var summaryDataByRequest = {};
-var detailData = [];
-var detailDataByRequest = {};
+var data = {
+    summary: {
+        list: [],
+        grouping: {}
+    },
+    details: {
+        list: [],
+        grouping: {}
+    }
+}
 
-// TODO: Bad. Currently looping through this list twice, need to look at this.
+// TODO: Bad!!! Currently looping through this list twice, need to look at this.
 //       Loops haven't been combined atm as I wanted the intent to be clearer
 //       about what is happening.
-var updateData = (function() {
+var process = (function() {
     var updateRoot = function(messages, store) {
             Array.prototype.push.apply(store, messages);
         };
@@ -46,18 +52,38 @@ var updateData = (function() {
             return result;
         };
 
-    return function(messages, store, storeGroup) {
-        updateRoot(messages, store);
-        updateGrouped(messages, storeGroup);
+    // TODO: Got to be a better way, this works because the result is taretting
+    //       only the relevent data collection.
+    // NOTE: All summary messages are detail messages, but not all detail messages
+    //       are summary messages.
+    // NOTE: This assumes that the UI for the details will be listening to both
+    //       summary and detail messages.
+    return {
+        summary: function() {
+            function(messages, data) {
+                updateRoot(messages, data.summary.list);
+                updateRoot(messages, data.detials.list);
+                updateGrouped(messages, data.summary.grouping);
+                updateGrouped(messages, data.details.grouping);
 
-        return createResult(messages, store, storeGroup);
-    }
+                return createResult(messages, data.summary.list, data.summary.grouping);
+            };
+        },
+        details: function() {
+            function(messages, data) {
+                updateRoot(messages, data.detials.list);
+                updateGrouped(messages, data.details.grouping);
+
+                return createResult(messages, data.details.list, data.details.grouping);
+            };
+        }
+    };
 })();
 
 // republish Found Summary
 (function () {
     function republishFoundSummary(messages) {
-        var payload = updateData(messages, summaryData, summaryDataByRequest);
+        var payload = process(messages, data);
 
         glimpse.emit('data.message.summary.found', payload);
     }
@@ -69,7 +95,7 @@ var updateData = (function() {
 // republish Found Details
 (function () {
     function republishFoundDetail(messages) {
-        var payload = updateData(messages, detailData, detailDataByRequest);
+        var payload = process(messages, data);
 
         glimpse.emit('data.message.detail.found', payload);
     }
