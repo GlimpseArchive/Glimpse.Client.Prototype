@@ -91,7 +91,7 @@ var process = (function() {
 // republish Found Details
 (function () {
     function republishFoundDetail(messages) {
-        var payload = process.detail(messages, data);
+        var payload = process.details(messages, data);
 
         glimpse.emit('data.message.detail.found', payload);
     }
