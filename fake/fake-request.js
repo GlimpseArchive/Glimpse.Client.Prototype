@@ -2,10 +2,7 @@
 
 var glimpse = require('glimpse');
 var chance = require('./fake-extension'); // TODO: Can I just import chance and have this wired up differently
-var cache = {
-    summary: {},
-    details: {}
-};
+var cache = {};
 
 var triggerGetLastestSummaries = (function () {
     var moment = require('moment');
@@ -39,7 +36,7 @@ var triggerGetLastestSummaries = (function () {
             for (var i = 0; i < requests.length; i++) {
                 var request = requests[i];
 
-                cache.summary[request.context.id] = request;
+                cache[request.context.id] = request;
             }
         };
         var publishMessages = function(event, requests) {
@@ -107,25 +104,24 @@ var triggerGetDetailsFor = (function () {
     var fakeDetail = require('./fake-request-detail');
 
     function requestsFound(event, request) {
-        glimpse.emit('data.request.detail.found.' + event, request);
+        glimpse.emit('data.message.detail.found.' + event, request);
     }
 
     var generate = {
         local: function (id) {
-            if (cache.details[id]) {
-                requestsFound('local', cache.details[id]);
+            var record = cache[id];
+            if (record) {
+                requestsFound('local', record[id]);
             }
         },
-        message: function (id) {
-            var request = cache.details[id];
-            if (!request) {
-                request = fakeDetail.generate(cache.summary[id]);
+        remote: function (id) {
+            // TODO: Should probably throw an exeption if record not found
+            var record = cache[id];
+            if (record) {
+                var detailRecord = fakeDetail.generate(record);
 
-                cache.details[id] = request;
+                requestsFound('remote', detailRecord.messages);
             }
-
-            // TODO: Check if this needs to happen given the local logic above
-            requestsFound('message', request);
         }
     };
 
@@ -137,7 +133,7 @@ var triggerGetDetailsFor = (function () {
 
         // simulate messages from remote
         setTimeout(function () {
-            generate.message(id);
+            generate.remote(id);
         }, chance.integerRange(2000, 3000));
     };
 })();
