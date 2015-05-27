@@ -4,6 +4,7 @@
 var chance = require('./fake-extension');
 var _ = require('lodash');
 
+/*
 var store = {
     execution: [],
     log: [],
@@ -147,19 +148,19 @@ var core = {
     }
 };
 
-function setup(summary) {
-    var request = _.clone(summary, true);
+function setup(generationRecord) {
+    var request = _.clone(generationRecord.request, true);
 
     // Setup any root data
-    request._mvc.duration = request.abstract.actionTime;
+    generationRecord.data.duration = request.abstract.actionTime;
 
     return request;
 }
 
-function generate(summary) {
-    var request = setup(summary);
+function generate(generationRecord) {
+    var request = setup(generationRecord);
 
-    core.action(request._mvc, { user: request.user });
+    core.action(generationRecord.data, { user: request.user });
 
     request.data = {
         core_execution: {
@@ -260,6 +261,91 @@ function generate(summary) {
     };
 
     return request;
+}
+*/
+var request = {
+    generate: (function() {
+        var create = function() {
+
+        };
+
+        return function(generationRecord) {
+
+            return null;
+        }
+    })(),
+};
+var tabs = {
+    execution: (function() {
+        var create = function() {
+
+        };
+
+        return function() {
+            return {
+                    title: 'Execution',
+                    payload: create()
+                };
+        }
+    })(),
+    trace: (function() {
+        var create = function() {
+
+        };
+
+        return function() {
+            return {
+                    title: 'Trace',
+                    payload: create()
+                };
+        }
+    })(),
+    data: (function() {
+        var create = function() {
+
+        };
+
+        return function() {
+            return {
+                    title: 'Data',
+                    payload: create()
+                };
+        }
+    })(),
+    generic: (function() {
+        var create = function() {
+
+        };
+
+        return function() {
+            return {
+                    title: 'Generic',
+                    payload: create()
+                };
+        }
+    })(),
+};
+
+var generate = function(generationRecord) {
+    var context = generationRecord.context;
+    var messages = [
+        {
+            type: 'abc',
+            context: context
+        },
+        {
+            type: 'def',
+            context: context
+        },
+        {
+            type: 'ghi',
+            context: context
+        },
+    ];
+
+    return {
+        messages: messages
+    }
 }
 
 module.exports = { generate: generate };
