@@ -58,6 +58,7 @@ var triggerGetLastestSummaries = (function () {
     })();
 
     var generate = {
+        // TODO: BROKEN
         local: function () {
             // simulate requests happening more than a day ago
             batch(numLocal, 'local', 25 * 60 * 60 * -1);
@@ -66,6 +67,7 @@ var triggerGetLastestSummaries = (function () {
             // simulate requests happeing more than 10 seconds ago
             batch(numRemote, 'remote', 10 * -1);
         },
+        // TODO: BROKEN
         stream: function (position) {
             // simulate requests happeing more every interval
             console.log('[fake] stream - ' + position + ' of ' + maxEvents);
@@ -108,6 +110,7 @@ var triggerGetDetailsFor = (function () {
     }
 
     var generate = {
+        // TODO: BROKEN - local is at the request level not message level
         local: function (id) {
             var record = cache[id];
             if (record) {
@@ -138,6 +141,7 @@ var triggerGetDetailsFor = (function () {
     };
 })();
 
+// hook up listeners
 (function () {
     function requestReady() {
         triggerGetLastestSummaries();
@@ -151,5 +155,6 @@ var triggerGetDetailsFor = (function () {
         triggerGetDetailsFor(payload.requestId);
     }
 
+    // TODO: This trigger should be at the message level
     glimpse.on('data.request.detail.requested', detailRequested);
 })();
