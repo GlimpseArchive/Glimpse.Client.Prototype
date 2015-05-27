@@ -27,6 +27,7 @@ var create = (function() {
         }
     };
     var processMessageDetail = function(request, message) {
+        request.messages = [];
         request.messages.push(message);
     };
     var processMessage = function(messagesForRequest, processAction) {
