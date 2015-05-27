@@ -34,10 +34,10 @@ var detailData = [];
 
 // republish Found Details
 (function () {
-    function republishFoundDetail(request) {
-        detailData.push(request);
+    function republishFoundDetail(requests) {
+        Array.prototype.push.apply(detailData, requests); 
 
-        glimpse.emit('data.request.detail.found', { allRequests: detailData, newRequest: request });
+        glimpse.emit('data.request.detail.found', { allRequests: detailData, newRequests: requests });
     }
 
     // NOTE: the fact that we are listening to both local and remote,

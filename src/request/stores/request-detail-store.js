@@ -1,9 +1,11 @@
 'use strict';
 
+var _ = require('lodash');
 var glimpse = require('glimpse');
 var requestRepository = require('../repository/request-repository');
 
-// TODO: Not sure I need to store the requests
+// TODO: Not sure I need to store the requests, already storing in
+//       repository
 var _requests = {};
 var _viewModel = {
     selectedId: null,
@@ -29,12 +31,19 @@ function requestChanged(targetRequests) {
 // Found Request
 (function () {
     function dataFound(payload) {
-        var newRequest = payload.newRequest;
+        var targetRequest = null;
 
-        _requests[newRequest.id] = newRequest;
+        _.forEach(payload.newRequests, function(newRequest) {
+            _requests[newRequest.id] = newRequest;
 
-        if (_viewModel.selectedId === newRequest.id) {
-            _viewModel.request = newRequest;
+            if (newRequest.id == _viewModel.selectedId) {
+                targetRequest = newRequest;
+            }
+        });
+        
+
+        if (targetRequest) {
+            _viewModel.request = targetRequest;
 
             requestChanged(_viewModel);
         }
