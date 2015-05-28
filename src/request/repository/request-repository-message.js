@@ -27,7 +27,13 @@ var create = (function() {
         }
     };
     var processMessageDetail = function(request, message) {
-        request.messages = [];
+        // TODO: Don't like doing this check each time but there 
+        //       but I don't want the messages prop there for 
+        //       summary requests
+        if (!request.messages) {
+            request.messages = [];
+        }
+        
         request.messages.push(message);
     };
     var processMessage = function(messagesForRequest, processAction) {
