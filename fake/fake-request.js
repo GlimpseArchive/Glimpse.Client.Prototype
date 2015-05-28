@@ -105,8 +105,8 @@ var triggerGetLastestSummaries = (function () {
 var triggerGetDetailsFor = (function () {
     var fakeDetail = require('./fake-request-detail');
 
-    function requestsFound(event, request) {
-        glimpse.emit('data.message.detail.found.' + event, request);
+    function requestsFound(event, messages) {
+        glimpse.emit('data.message.detail.found.' + event, messages);
     }
 
     var generate = {
