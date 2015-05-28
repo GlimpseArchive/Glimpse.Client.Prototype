@@ -35,6 +35,19 @@ var create = (function() {
         }
         
         request.messages.push(message);
+        
+        // TODO: BAD BAD BAD HACK!!!! Only here to get things 
+        //       up and runnting
+        if (message.title) {
+            if (!request.tabs) {
+                request.tabs = {};
+            }
+             
+            request.tabs[message.type] = {
+                    title: message.title,
+                    payload: message.payload
+                };
+        }
     };
     var processMessage = function(messagesForRequest, processAction) {
         var request = {};
