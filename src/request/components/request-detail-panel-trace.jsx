@@ -40,7 +40,7 @@ module.exports = React.createClass({
     var requestTabController = require('../request-tab');
 
     requestTabController.registerTab({
-        key: 'core_trace',
+        key: 'tab.log',
         component: module.exports
     });
 })()

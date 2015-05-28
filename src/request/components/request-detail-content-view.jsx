@@ -16,7 +16,7 @@ module.exports = React.createClass({
         };
     },
     render: function () {
-        var data = this.props.details.data;
+        var data = this.props.details.tabs;
         var active = this.state.active;
         var navigation = [];
         var panel = null;
