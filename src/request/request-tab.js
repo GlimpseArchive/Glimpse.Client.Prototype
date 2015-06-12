@@ -8,7 +8,7 @@ module.exports = {
     resolveTab: function (key) {
         // TODO: strategy needs to be improved
         if (tabs[key]) {
-            return tabs[key].component;
+            return tabs[key];
         }
 
         return PanelGeneric;

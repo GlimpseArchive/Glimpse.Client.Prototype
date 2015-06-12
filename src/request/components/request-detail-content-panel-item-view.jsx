@@ -12,9 +12,9 @@ module.exports = React.createClass({
             'tab-pane': true,
             'active': this.props.isActive
         });
+        
         var component = requestTabController.resolveTab(key);
-        var componentResult = component({ key: key, data: data });
 
-        return <div className={containerClass}>{componentResult}</div>;
+        return <div className={containerClass}><component key={key} data={data} /></div>;
     }
 });
