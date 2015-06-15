@@ -3,17 +3,17 @@
 var React = require('react');
 
 var subItem = function (data, title, level) {
-    var results = {};
+    var results = [];
     for (var key in data) {
         var value = data[key] || '--';
         if (key == 'type' && level == 0) {
             title = value;
         }
         else if (typeof value === 'object') {
-            results[key] = subItem(value, key, level + 1);
+            results.push(subItem(value, key, level + 1));
         }
         else {
-            results[key] = <span><strong>{key}:</strong> {value} &nbsp; </span>;
+            results.push(<span><strong>{key}:</strong> {value} &nbsp; </span>);
         }
     }
 
