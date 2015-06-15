@@ -25,9 +25,9 @@ module.exports = React.createClass({
             var item = data[key];
             var isActive = active == key || (!active && navigation.length == 0);
 
-            navigation.push(<NavigationItem key={key} data={item} isActive={isActive} />);
+            navigation.push(<NavigationItem key={key} name={key} data={item} isActive={isActive} />);
             if (isActive) {
-                panel = <PanelItem key={key} data={item} isActive={isActive} />;
+                panel = <PanelItem key={key} name={key} data={item} isActive={isActive} />;
             }
         }
 

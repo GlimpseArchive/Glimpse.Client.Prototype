@@ -14,6 +14,6 @@ module.exports = React.createClass({
         return <li className={containerClass} onClick={this._onClick}><a href="#">{data.title}</a></li>;
     },
     _onClick: function (payload) {
-        glimpse.emit('shell.request.detail.focus.changed', { tab: this.props.key });
+        glimpse.emit('shell.request.detail.focus.changed', { tab: this.props.name });
     }
 });
