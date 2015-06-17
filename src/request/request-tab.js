@@ -11,7 +11,10 @@ module.exports = {
             return tabs[key];
         }
 
-        return PanelGeneric;
+        return {
+            key: 'generic',
+            component: PanelGeneric
+        };
     },
     registerTab: function (tab) {
         // TODO: validate key being in place
