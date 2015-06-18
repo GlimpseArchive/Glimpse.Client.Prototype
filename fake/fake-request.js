@@ -4,6 +4,7 @@ var glimpse = require('glimpse');
 var chance = require('./fake-extension'); // TODO: Can I just import chance and have this wired up differently
 var cache = {};
 
+// simulate summaries
 var triggerGetLastestSummaries = (function () {
     var moment = require('moment');
     var fakeSummary = require('./fake-request-summary');
