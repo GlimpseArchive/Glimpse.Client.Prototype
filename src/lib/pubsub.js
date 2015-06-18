@@ -24,10 +24,10 @@ module.exports = {
             data: data
         });
     },
-    off: function (topic) {
-        if (typeof topic !== 'string') {
-            throw new TypeError('Expected topic to be a string.');
+    off: function (subscription) {
+        if (subscription == null) {
+            throw new TypeError('Expected subscription to be not null.');
         }
-        return postal.unsubscribe({topic: topic});
+        subscription.unsubscribe();
     }
 };
