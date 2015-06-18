@@ -37,7 +37,12 @@ var detailData = [];
     function republishFoundDetail(requests) {
         Array.prototype.push.apply(detailData, requests); 
 
-        glimpse.emit('data.request.detail.found', { allRequests: detailData, newRequests: requests });
+        var payload = { 
+            allRequests: detailData, 
+            newRequests: requests 
+        };
+
+        glimpse.emit('data.request.detail.found', payload);
     }
 
     // NOTE: the fact that we are listening to both local and remote,
