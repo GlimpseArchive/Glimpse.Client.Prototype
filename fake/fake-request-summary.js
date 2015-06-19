@@ -38,7 +38,7 @@ function generate(dateTime) {
         },
         index: function () {
             return {
-                    uri: rawRequest.url,
+                    uri: rawRequest.uri,
                     dateTime: dateTime || moment().toISOString(),
                     method: chance.httpMethod(),
                     contentType: chance.httpContentType(),
@@ -63,7 +63,7 @@ function generate(dateTime) {
                 type: 'request-start',
                 context: context,
                 index: {
-                    uri: index.url,
+                    uri: index.uri,
                     dateTime: index.dateTime,
                     method: index.method,
                     contentType: index.contentType,

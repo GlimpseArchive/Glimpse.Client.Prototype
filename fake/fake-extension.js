@@ -25,7 +25,7 @@ chance.mixin({
         return chance.pick(mvcActions);
     },
     'httpPath': function () {
-        return chance.pick(mvcActions).url;
+        return chance.pick(mvcActions).uri;
     },
     'httpMethod': function () {
         return chance.pick(methods);
@@ -89,7 +89,7 @@ function generateMvc() {
         var genre = chance.word();
 
         mvcActions.push({
-            url: '/Store/Browse?Genre=' + genre,
+            uri: '/Store/Browse?Genre=' + genre,
             controller: 'Store',
             action: 'Browse',
             route: generateRoute.normal('store', 'browse', null),
@@ -113,7 +113,7 @@ function generateMvc() {
     for (i = 0; i < chance.integerRange(10, 15); i++) {
         var id = chance.integerRange(1000, 2000);
 
-        mvcActions.push({ url: '/Store/Details/' + id, controller: 'Store', action: 'Details',
+        mvcActions.push({ uri: '/Store/Details/' + id, controller: 'Store', action: 'Details',
                 route: generateRoute.normal('store', 'details', id),
                 activities: [
                     { access: 'SQL', operation: 'Select', target: 'Albums', affected: 1, command: 'SELECT TOP (2) \n[Extent1].[AlbumId] AS [AlbumId], \n[Extent1].[GenreId] AS [GenreId], \n[Extent1].[ArtistId] AS [ArtistId], \n[Extent1].[Title] AS [Title], \n[Extent1].[Price] AS [Price], \n[Extent1].[AlbumArtUrl] AS [AlbumArtUrl]\nFROM [dbo].[Albums] AS [Extent1]\nWHERE [Extent1].[AlbumId] = 1 /* @p0 */' },
@@ -132,7 +132,7 @@ function generateMvc() {
 
     // Generate
     var standard = [
-        { url: '/', controller: 'Home', action: 'Index',
+        { uri: '/', controller: 'Home', action: 'Index',
                 route: generateRoute.normal('home', 'index', null),
                 activities: [
                     { access: 'SQL', operation: 'Select', target: 'Albums', affected: chance.integerRange(2, 50), command: 'SELECT TOP (5) \n[Project1].[AlbumId] AS [AlbumId], \n[Project1].[GenreId] AS [GenreId], \n[Project1].[ArtistId] AS [ArtistId], \n[Project1].[Title] AS [Title], \n[Project1].[Price] AS [Price], \n[Project1].[AlbumArtUrl] AS [AlbumArtUrl]\nFROM ( SELECT \n    [Extent1].[AlbumId] AS [AlbumId], \n    [Extent1].[GenreId] AS [GenreId], \n    [Extent1].[ArtistId] AS [ArtistId], \n    [Extent1].[Title] AS [Title], \n    [Extent1].[Price] AS [Price], \n    [Extent1].[AlbumArtUrl] AS [AlbumArtUrl], \n    (SELECT \n        COUNT(1) AS [A1]\n        FROM [dbo].[OrderDetails] AS [Extent2]\n        WHERE [Extent1].[AlbumId] = [Extent2].[AlbumId]) AS [C1]\n    FROM [dbo].[Albums] AS [Extent1]\n)  AS [Project1]\nORDER BY [Project1].[C1] DESC'  }
@@ -144,7 +144,7 @@ function generateMvc() {
                 trace: [
                     { message: 'Initial page loaded.' }
                 ] },
-        { url: '/ShoppingCart/', controller: 'ShoppingCart', action: 'Index',
+        { uri: '/ShoppingCart/', controller: 'ShoppingCart', action: 'Index',
                 route: generateRoute.normal('shoppingcart', 'index', null),
                 activities: [
                     { access: 'SQL', operation: 'Select', target: 'Carts', affected: 1, command: 'SELECT \n[Extent1].[RecordId] AS [RecordId], \n[Extent1].[CartId] AS [CartId], \n[Extent1].[AlbumId] AS [AlbumId], \n[Extent1].[Count] AS [Count], \n[Extent1].[DateCreated] AS [DateCreated]\nFROM [dbo].[Carts] AS [Extent1]\nWHERE [Extent1].[CartId] = "df0238d4-5bd4-49b5-97f0-9ba2c9957dc1" /* @p__linq__0 */' },
@@ -158,7 +158,7 @@ function generateMvc() {
                     { message: 'Cart applied tax rates correctly.' },
                     { template: { mask: 'Cart tax rates processed in {0}ms', values: { '0': chance.durationRange(0, 1) } } }
                 ] },
-        { url: '/Store/', controller: 'Store', action: 'Index',
+        { uri: '/Store/', controller: 'Store', action: 'Index',
                 route: generateRoute.normal('store', 'index', null),
                 activities: [
                     { access: 'SQL', operation: 'Select', target: 'Genres', affected: 10, command: 'SELECT \n[Extent1].[GenreId] AS [GenreId], \n[Extent1].[Name] AS [Name], \n[Extent1].[Description] AS [Description]\nFROM [dbo].[Genres] AS [Extent1]' }
@@ -170,7 +170,7 @@ function generateMvc() {
                 trace: [
                     { message: 'Processing menu options for selection.' }
                 ] },
-        { url: '/Account/LogOn/', controller: 'Account', action: 'LogOn',
+        { uri: '/Account/LogOn/', controller: 'Account', action: 'LogOn',
                 route: generateRoute.normal('account', 'logon', null),
                 actions: [
                     gernateShoppingCart(),
