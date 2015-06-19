@@ -156,7 +156,8 @@ var tabs = {
             type: 'tab.' + tab.title.toLowerCase(),
             title: tab.title,
             payload: tab.payload,
-            context: context
+            context: context,
+            id: chance.guid()
         };
         
         return message;

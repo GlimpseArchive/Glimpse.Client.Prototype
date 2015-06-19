@@ -68,12 +68,14 @@ function generate(dateTime) {
                     method: index.method,
                     contentType: index.contentType,
                     user: index.user
-                }
+                },
+                id: chance.guid()
             },
             {
                 type: 'request-framework',
                 context: context,
-                abstract: abstract
+                abstract: abstract,
+                id: chance.guid()
             },
             {
                 type: 'request-end',
@@ -82,7 +84,8 @@ function generate(dateTime) {
                     duration: index.duration,
                     statusCode: index.statusCode,
                     statusText: index.statusText,
-                }
+                },
+                id: chance.guid()
             }
         ];
 
