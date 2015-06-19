@@ -1,6 +1,7 @@
 'use strict';
 
 var glimpse = require('glimpse');
+var requestStore = require('./request-store-manage');
 
 // store Found Summary
 (function() {
@@ -26,13 +27,15 @@ module.exports = {
     triggerGetSummariesLastest: function () {
         // TODO: Need to complete
         //       Pull from local storage
+        
+        // TODO: Push data into requestStore before publishing
 
         glimpse.emit('data.request.summary.found.local', []);
     },
     triggerGetDetailsFor: function (requestId) {
-        // TODO: Need to complete
-        //       Pull from local storage
-
-        glimpse.emit('data.request.detail.found.local', []);
+        var request = requestStore.data.index[requestId];
+        if (request) {
+            glimpse.emit('data.request.detail.found.local', []);
+        }
     }
 };

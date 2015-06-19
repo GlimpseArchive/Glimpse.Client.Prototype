@@ -1,25 +1,34 @@
 'use strict';
 
+var _ = require('lodash');
 var glimpse = require('glimpse');
+ 
+var data = {
+    index: {},
+    values: []
+};
 
-// TODO: Not sure if the data will ultimately live here or not
-var summaryData = [];
-var detailData = [];
+var processRequests = function(requestRepositoryPayload) {
+        _.forEach(requestRepositoryPayload.newRequests, function(request) {
+            // TODO: BIG BIG BIG PROBLEM HERE!!!!! datetime isn't always going to be here 
+            //       most of the time datetime will come later and hence we 
+            data.values.splice(_.sortedIndex(data.values, request, 'datetime'), 0, request);
+        });
+        
+        return {
+                newRequests: requestRepositoryPayload.newRequests,
+                updatedRequests: requestRepositoryPayload.updatedRequests,
+                affectedRequests: requestRepositoryPayload.affectedRequests,
+                allRequests: data.values
+            };
+};
 
 // republish Found Summary
 (function () {
-    function republishFoundSummary(requests) {
-        // TODO: This is very naive atm, no sorting or indexing, etc present
-        for (var i = requests.length - 1; i >= 0; i--) {
-            summaryData.unshift(requests[i]);
-        }
-
-        var payload = {
-            allRequests: summaryData,
-            newRequests: requests
-        };
-
-        glimpse.emit('data.request.summary.found', payload);
+    function republishFoundSummary(requestRepositoryPayload) { 
+        var requestPayload = processRequests(requestRepositoryPayload);
+        
+        glimpse.emit('data.request.summary.found', requestPayload);
     }
 
     // NOTE: the fact that we are listening to both local and message,
@@ -35,14 +44,9 @@ var detailData = [];
 // republish Found Details
 (function () {
     function republishFoundDetail(requests) {
-        Array.prototype.push.apply(detailData, requests); 
+        var requestPayload = processRequests(requestRepositoryPayload);
 
-        var payload = { 
-            allRequests: detailData, 
-            newRequests: requests 
-        };
-
-        glimpse.emit('data.request.detail.found', payload);
+        glimpse.emit('data.request.detail.found', requestPayload);
     }
 
     // NOTE: the fact that we are listening to both local and remote,
@@ -54,3 +58,7 @@ var detailData = [];
     glimpse.on('data.request.detail.found.local', republishFoundDetail);
     glimpse.on('data.request.detail.found.message', republishFoundDetail);  //TODO: not yet implemented
 })();
+
+module.exports = {
+    data: data
+};

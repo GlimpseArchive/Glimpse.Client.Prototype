@@ -4,8 +4,8 @@ var glimpse = require('glimpse');
 
 // store Found Summary
 (function () {
-    function processFoundSummary(requests) {
-        glimpse.emit('data.user.detail.found.internal', requests);
+    function processFoundSummary(requestRepositoryPayload) {
+        glimpse.emit('data.user.detail.found.internal', requestRepositoryPayload.newRequests);
     }
  
     glimpse.on('data.request.summary.found.message', processFoundSummary);

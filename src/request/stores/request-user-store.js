@@ -77,7 +77,7 @@ function notifyUsersChanged() {
             if (rawRequest) {
                 var request = {
                         id: rawRequest.id,
-                        uri: rawRequest.uri
+                        uri: rawRequest.id // TODO: temp hack as we don't have URIs yet rawRequest.uri
                     };
 
                 user.latestRequests.unshift(request);
