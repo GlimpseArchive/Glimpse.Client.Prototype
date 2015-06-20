@@ -33,7 +33,9 @@ function requestChanged(targetRequests) {
     function dataFound(payload) {
         var targetRequest = null;
 
-        _.forEach(payload.newRequests, function(request) {
+        // TODO: since this has updated records as well not sure if this is right,
+        //       does the UI need to know about new vs update
+        _.forEach(payload.affectedRequests, function(request) {
             _requests[request.id] = request;
 
             if (request.id == _viewModel.selectedId) {
