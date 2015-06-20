@@ -183,6 +183,7 @@ var filterRequests = (function () {
         // Store data locally
         _requests = payload.allRequests;
 
+        // TODO: BIG DEAL!!!!!! This should be affectedRequests
         for (var i = 0; i < payload.newRequests.length; i++) {
             var request = payload.newRequests[i];
             _requestIndex[request.id] = request;

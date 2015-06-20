@@ -6,7 +6,7 @@ var requestRepository = require('../repository/request-repository');
 
 // TODO: Not sure I need to store the requests, already storing in
 //       repository
-var _requests = {};
+var _requests = {};   // TODO: Remove this, don't need to store
 var _viewModel = {
     selectedId: null,
     request: null

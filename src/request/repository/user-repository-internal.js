@@ -5,6 +5,7 @@ var glimpse = require('glimpse');
 // store Found Summary
 (function () {
     function processFoundSummary(requestRepositoryPayload) {
+        // TODO: BIG DEAL confirm that this is ok being newRequests
         glimpse.emit('data.user.detail.found.internal', requestRepositoryPayload.newRequests);
     }
  
