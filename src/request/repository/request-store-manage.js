@@ -1,6 +1,7 @@
 'use strict';
 
 var _ = require('lodash');
+var moment = require('moment');
 var glimpse = require('glimpse');
  
 var data = {
@@ -12,7 +13,10 @@ var processRequests = function(requestRepositoryPayload) {
         _.forEach(requestRepositoryPayload.newRequests, function(request) {
             // TODO: BIG BIG BIG PROBLEM HERE!!!!! datetime isn't always going to be here 
             //       most of the time datetime will come later and hence we 
-            data.values.splice(_.sortedIndex(data.values, request, 'datetime'), 0, request);
+            var sortedIndex = _.sortedIndex(data.values, request, function(value) {
+                return moment(value.dateTime).valueOf() * -1;   // decending order 
+            });
+            data.values.splice(sortedIndex, 0, request);
         });
         
         return {
