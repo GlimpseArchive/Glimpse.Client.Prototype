@@ -44,6 +44,25 @@ var processMessages = (function() {
                 
                 return didUpdate;
             },
+            tabs: function(request, message) {
+                var didUpdate = false; 
+                
+                // TODO: BAD BAD BAD HACK!!!! Only here to get things 
+                //       up and runnting
+                if (message.title) {
+                    if (!request.tabs) {
+                        request.tabs = {};
+                    }
+                     
+                    request.tabs[message.type] = {
+                            title: message.title,
+                            payload: message.payload
+                        };
+                    didUpdate = true;
+                }
+                
+                return didUpdate;
+            }
         };
     })();
     
@@ -53,7 +72,6 @@ var processMessages = (function() {
             messages: {}
         };
     };
-    
     var tryUpdateRequest = function(request, messages) {
         var didUpdate = false;
         
