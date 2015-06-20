@@ -43,7 +43,7 @@ var processRequests = function(requestRepositoryPayload) {
 
 // republish Found Details
 (function () {
-    function republishFoundDetail(requests) {
+    function republishFoundDetail(requestRepositoryPayload) {
         var requestPayload = processRequests(requestRepositoryPayload);
 
         glimpse.emit('data.request.detail.found', requestPayload);
