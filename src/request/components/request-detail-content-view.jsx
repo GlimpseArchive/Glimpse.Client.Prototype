@@ -2,6 +2,7 @@
 
 var React = require('react');
 var EmitterMixin = require('lib/components/emitter-mixin');
+var Loading = require('lib/components/loading');
 var NavigationItem = require('./request-detail-content-navigation-item-view');
 var PanelItem = require('./request-detail-content-panel-item-view');
 
@@ -17,30 +18,35 @@ module.exports = React.createClass({
     },
     render: function () {
         var data = this.props.details.tabs;
-        var active = this.state.active;
-        var navigation = [];
-        var panel = null;
-
-        for (var key in data) {
-            var item = data[key];
-            var isActive = active == key || (!active && navigation.length == 0);
-
-            navigation.push(<NavigationItem key={key} name={key} data={item} isActive={isActive} />);
-            if (isActive) {
-                panel = <PanelItem key={key} name={key} data={item} isActive={isActive} />;
+        if (data) {
+            var active = this.state.active;
+            var navigation = [];
+            var panel = null;
+    
+            for (var key in data) {
+                var item = data[key];
+                var isActive = active == key || (!active && navigation.length == 0);
+    
+                navigation.push(<NavigationItem key={key} name={key} data={item} isActive={isActive} />);
+                if (isActive) {
+                    panel = <PanelItem key={key} name={key} data={item} isActive={isActive} />;
+                }
             }
-        }
-
-        return (
-            <div>
-                <ul className="nav nav-tabs">
-                    {navigation}
-                </ul>
-                <div className="tab-content">
-                    {panel}
+    
+            return (
+                <div>
+                    <ul className="nav nav-tabs">
+                        {navigation}
+                    </ul>
+                    <div className="tab-content">
+                        {panel}
+                    </div>
                 </div>
-            </div>
-        );
+            );
+        }
+        else {
+            return <Loading />;
+        }
     },
     _detailTabChanged: function (payload) {
         this.setState({ active: payload.tab });

@@ -143,10 +143,26 @@ var triggerGetDetailsFor = (function () {
     var requestsFound = function(messageType, messageSource, results) {
         glimpse.emit('data.' + messageType + '.detail.found.' + messageSource, results);
     }
+    
+    var modifyForSummaryRequest = function(request) {
+        
+    }
 
     var generate = { 
         local: function (id) { 
             var rawRequest = detailsRetrievedCache[id];
+            
+            if (!rawRequest) {
+                // simulate returning the summary of the request object that we have
+                // in reality we would always have this, but its good to make the 
+                // system more pesimistic than not 
+                if (chance.integerRange(1, 2) > 1) { 
+                    rawRequest = _.clone(rawRequestCache[id], true); 
+                    rawRequest.request.tabs = undefined;
+                    
+                }
+            }
+            
             if (rawRequest) { 
                 requestsFound('request', 'local', requestProcessor.requests.detail(rawRequest));
             } 
