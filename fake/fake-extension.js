@@ -406,11 +406,27 @@ var generateMvcMessages = (function() {
 var generateSystemRequest = function(source) {
     var request = {
         abstract: {},
-        messages: _.indexBy(source.messages, 'id')
+        messages: _.indexBy(source.messages, 'id'),
+        tabs: {}
     };
      
     mapProperties(source, request, [ 'id', 'uri', 'dateTime', 'method', 'contentType', 'user',  'duration', 'statusCode', 'statusText' ]);
     mapProperties(source, request.abstract, [ 'networkTime', 'serverTime', 'clientTime', 'controller', 'action', 'actionTime', 'viewTime', 'queryTime', 'queryCount' ]);
+    
+    // TODO: update when tab data is handelled differently 
+    request.tabs = _(source.messages)
+        .filter(function(message) {
+            return message.title != null;
+        })
+        .map(function(message) {
+            return {
+                title: message.title,
+                payload: message.payload,
+                type: message.type
+            };
+        })
+        .indexBy('type')
+        .value();
     
     return request;
 };
