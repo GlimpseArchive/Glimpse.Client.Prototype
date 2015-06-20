@@ -33,11 +33,11 @@ function requestChanged(targetRequests) {
     function dataFound(payload) {
         var targetRequest = null;
 
-        _.forEach(payload.newRequests, function(newRequest) {
-            _requests[newRequest.id] = newRequest;
+        _.forEach(payload.newRequests, function(request) {
+            _requests[request.id] = request;
 
-            if (newRequest.id == _viewModel.selectedId) {
-                targetRequest = newRequest;
+            if (request.id == _viewModel.selectedId) {
+                targetRequest = request;
             }
         });
         
