@@ -98,7 +98,7 @@ var processMessages = (function() {
             var request = requestStoreData.index[requestId];
             var isNew = false;
             if (!request) { 
-                request = (requestStoreData.index[requestId] = createRequest(requestId)); 
+                request = createRequest(requestId);
                 isNew = true;
             } 
             

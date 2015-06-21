@@ -13,10 +13,20 @@ var processRequests = function(requestRepositoryPayload) {
         _.forEach(requestRepositoryPayload.newRequests, function(request) {
             // TODO: BIG BIG BIG PROBLEM HERE!!!!! datetime isn't always going to be here 
             //       most of the time datetime will come later and hence we 
-            var sortedIndex = _.sortedIndex(data.values, request, function(value) {
-                return moment(value.dateTime).valueOf() * -1;   // decending order 
-            });
-            data.values.splice(sortedIndex, 0, request);
+            if (!data.index[request.id]) {
+                var sortedIndex = _.sortedIndex(data.values, request, function(value) {
+                    return moment(value.dateTime).valueOf() * -1;   // decending order 
+                }); 
+                
+                data.values.splice(sortedIndex, 0, request); 
+            }
+            else { 
+                // TODO: Perf wise this isn't great in terms of perf, fix later
+                var currentIndex = _.findIndex(data.values, 'id', request.id); 
+                data.values[currentIndex] = request;
+            } 
+            
+            data.index[request.id] = request; 
         });
         
         return {
