@@ -145,12 +145,8 @@ var triggerGetLastestSummaries = (function () {
 var triggerGetDetailsFor = (function () { 
     var requestsFound = function(messageType, messageSource, results) {
         glimpse.emit('data.' + messageType + '.detail.found.' + messageSource, results);
-    }
+    };
     
-    var modifyForSummaryRequest = function(request) {
-        
-    }
-
     var generate = { 
         local: function (id) { 
             var rawRequest = detailsRetrievedCache[id];
