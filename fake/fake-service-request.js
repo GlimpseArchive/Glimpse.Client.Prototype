@@ -89,7 +89,7 @@ var triggerGetLastestSummaries = (function () {
         return function(count, messageType, messageSource, offset, publishAction) {
             leftEvents -= parseInt(count);
             
-            console.log('[fake] ' + messageType + ':' + messageSource + ' - ' + parseInt(count) + ' of ' + maxEvents + ' (' + leftEvents + ' left)');
+            console.log('[fake] ' + messageType + ':' + messageSource + ' - ' + (maxEvents - leftEvents) + ' of ' + maxEvents + ' (' + leftEvents + ' left, ' + parseInt(count) + ' just rendered)');
             
             var rawResults = generateResults(count, offset);
             cacheResults(rawResults);
