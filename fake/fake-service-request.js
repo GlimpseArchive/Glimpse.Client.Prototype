@@ -108,6 +108,9 @@ var triggerGetLastestSummaries = (function () {
         }, 
         stream: function (position) {
             // simulate message happening now and possibly coming in at the same time
+            
+            // TODO: stream should not be subject to random time generation, currently is
+            
             var count = chance.integerRange(0, 100) > 75 ? 2 : 1;  
             batch(count, 'message', 'stream', 0, requestProcessor.messages.summary);
             
