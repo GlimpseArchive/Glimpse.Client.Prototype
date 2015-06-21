@@ -412,6 +412,12 @@ var generateSystemRequest = function(source) {
      
     mapProperties(source, request, [ 'id', 'uri', 'dateTime', 'method', 'contentType', 'user',  'duration', 'statusCode', 'statusText' ]);
     mapProperties(source, request.abstract, [ 'networkTime', 'serverTime', 'clientTime', 'controller', 'action', 'actionTime', 'viewTime', 'queryTime', 'queryCount' ]);
+
+    // This has been removed for the moment, could be brought back if trying
+    // to sinulate full detail requests that are stored in cache, but not doing that 
+    // at the moment. 
+    // TODO: Detect when requests are generated for initial local storage requests,
+    //       then randmonly give some of those full details, 
     
     // TODO: update when tab data is handelled differently 
     request.tabs = _(source.messages)

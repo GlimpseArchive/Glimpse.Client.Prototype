@@ -101,6 +101,8 @@ var triggerGetLastestSummaries = (function () {
         local: function () { 
             // simulate requests happening more than a day ago
             batch(maxEvents * 0.25, 'request', 'local', 25 * 60 * 60 * -1, requestProcessor.requests.summary);
+            
+            // TODO: detail summary request objects just for these, and create full details just for some
         },
         remote: function () { 
             // simulate messages happening more than 10 seconds ago
@@ -154,11 +156,12 @@ var triggerGetDetailsFor = (function () {
             if (!rawRequest) {
                 // simulate returning the summary of the request object that we have
                 // in reality we would always have this, but its good to make the 
-                // system more pesimistic than not 
+                // system more pesimistic than not. 
+                // TODO: When getting details for requests that orginially came from 
+                //       local storage, we should not have full details for all,
+                //       currently full details will be there.
                 if (chance.integerRange(1, 2) > 1) { 
-                    rawRequest = _.clone(rawRequestCache[id], true); 
-                    rawRequest.request.tabs = undefined;
-                    
+                    rawRequest = rawRequestCache[id]; 
                 }
             }
             
@@ -209,4 +212,23 @@ var triggerGetDetailsFor = (function () {
     }
  
     glimpse.on('data.request.detail.requested', detailRequested);
+})();
+
+
+(function() {
+    // This is needed because the message repository can create requests 
+    // and because we are faking out all of local stroage and it is 
+    // responsible for maintaing the request cache, we need get these back in.
+    // if we create, request-repository-cache.js, this should be removed (i think)
+    var trackNewRequests = function(requestRepositoryPayload) {
+        _.forEach(requestRepositoryPayload.newRequests, function(newRequest) { 
+            rawRequestCache[newRequest.id].request = newRequest;
+            if (detailsRetrievedCache[newRequest.id]) {
+                detailsRetrievedCache[newRequest.id].request = newRequest;
+            }
+        })
+    }
+    
+    glimpse.on('data.request.summary.found.message', trackNewRequests);
+    glimpse.on('data.request.detail.found.message', trackNewRequests); 
 })();
