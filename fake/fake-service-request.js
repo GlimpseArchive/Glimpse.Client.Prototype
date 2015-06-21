@@ -110,10 +110,10 @@ var triggerGetLastestSummaries = (function () {
             // simulate message happening now and possibly coming in at the same time
             var count = chance.integerRange(0, 100) > 75 ? 2 : 1;  
             batch(count, 'message', 'stream', 0, requestProcessor.messages.summary);
-             
+            
             // lets make more happen
             setTimeout(function () {
-                if (position < leftEvents) {
+                if (leftEvents > 0) {
                     generate.stream(position + count);
                 }
             }, chance.integerRange(500, 15000));
