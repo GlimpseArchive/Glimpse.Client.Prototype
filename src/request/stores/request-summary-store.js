@@ -1,5 +1,7 @@
 'use strict';
 
+var _ = require('lodash');
+var moment = require('moment');
 var glimpse = require('glimpse');
 var requestRepository = require('../repository/request-repository');
 
@@ -62,15 +64,18 @@ var filterRequests = (function () {
     function applyFilters(targetRequests, destinationRequests, filters) {
         var matchFound = false;
 
-        for (var i = targetRequests.length - 1; i >= 0; i--) {
-            var sourceRequest = targetRequests[i];
-
+        _.forEach(targetRequests, function(sourceRequest) {
             if (checkMatch(sourceRequest, filters)) {
-                destinationRequests.unshift(sourceRequest);
+                var sortedIndex = _.sortedIndex(destinationRequests, sourceRequest, function(value) {
+                    return moment(value.dateTime).valueOf() * -1;   // decending order 
+                }); 
+                
+                destinationRequests.splice(sortedIndex, 0, sourceRequest); 
+                
                 matchFound = true;
             }
-        }
-
+        });
+        
         return matchFound;
     }
 
