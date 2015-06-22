@@ -63,13 +63,13 @@ var processRequests = function(requestRepositoryPayload) {
         glimpse.emit('data.request.detail.found', requestPayload);
     }
 
-    // NOTE: the fact that we are listening to both local and remote,
+    // NOTE: the fact that we are listening to both cache and remote,
     //       means that we will get notifications from first and then
     //       from remote. This means that the same record could get
     //       multiple notifications for the one record. This is by design
     //       and shouldn't cause any side effects.
 
-    glimpse.on('data.request.detail.found.local', republishFoundDetail);
+    glimpse.on('data.request.detail.found.cache', republishFoundDetail);
     glimpse.on('data.request.detail.found.message', republishFoundDetail);  //TODO: not yet implemented
 })();
 

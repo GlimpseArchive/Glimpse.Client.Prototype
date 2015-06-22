@@ -2,6 +2,7 @@
 
 require('./request-store-manage');
 
+var cacheRequestRepository = require('./request-repository-cache');
 var localRequestRepository = require('./request-repository-local');
 var messageRequestRepository = require('./request-repository-message');
 var messageRepository = require('./message-repository');
@@ -19,11 +20,12 @@ module.exports = {
         }
     },
     triggerGetDetailsFor: function (requestId) {
+        // find the request in cache
+        cacheRequestRepository.triggerGetDetailsFor(requestId);
+            
         if (!FAKE_SERVER) {
             // find the messages from server
             messageRepository.triggerGetDetailsFor(requestId);
-            // find the request in stroage
-            localRequestRepository.triggerGetDetailsFor(requestId);
 
             // make sure we get updates for the request as they happen
             messageRepository.subscribeToDetailsFor(requestId);

@@ -5,8 +5,7 @@ var chance = require('./fake-extension'); // TODO: Can I just import chance and 
 var moment = require('moment'); 
 var glimpse = require('glimpse');
     
-var rawRequestCache = {};
-var detailsRetrievedCache = {};
+var _rawRequestCache = {};
  
 var requestProcessor = {
     requests: {  
@@ -77,7 +76,7 @@ var triggerGetLastestSummaries = (function () {
         };
         var cacheResults = function(rawResults) {
             _.forEach(rawResults, function(rawResult) {
-                rawRequestCache[rawResult.id] = rawResult;
+                _rawRequestCache[rawResult.id] = rawResult;
             });
         };
         var publishResults = function(rawResults, publishAction, messageType, messageSource) {
@@ -149,33 +148,11 @@ var triggerGetDetailsFor = (function () {
         glimpse.emit('data.' + messageType + '.detail.found.' + messageSource, results);
     };
     
-    var generate = { 
-        local: function (id) { 
-            var rawRequest = detailsRetrievedCache[id];
-            
-            if (!rawRequest) {
-                // simulate returning the summary of the request object that we have
-                // in reality we would always have this, but its good to make the 
-                // system more pesimistic than not. 
-                // TODO: When getting details for requests that orginially came from 
-                //       local storage, we should not have full details for all,
-                //       currently full details will be there.
-                if (chance.integerRange(1, 2) > 1) { 
-                    rawRequest = rawRequestCache[id]; 
-                }
-            }
-            
-            if (rawRequest) { 
-                requestsFound('request', 'local', requestProcessor.requests.detail(rawRequest));
-            } 
-        },
+    var generate = {  
         remote: function (id) { 
             // TODO: Should probably throw an exeption if record not found
-            var rawRequest = rawRequestCache[id];
-            if (rawRequest) { 
-                // store it for next time to help simulate local storeage caching
-                detailsRetrievedCache[id] = rawRequest;
-
+            var rawRequest = _rawRequestCache[id];
+            if (rawRequest) {  
                 requestsFound('message', 'remote', requestProcessor.messages.detail(rawRequest));
             }
             else { 
@@ -184,12 +161,7 @@ var triggerGetDetailsFor = (function () {
         }
     };
 
-    return function (id) {
-        // simulate messages from local store
-        setTimeout(function () {
-            generate.local(id);
-        }, chance.integerRange(10, 50));
-
+    return function (id) { 
         // simulate messages from remote
         setTimeout(function () {
             generate.remote(id);
@@ -212,23 +184,4 @@ var triggerGetDetailsFor = (function () {
     }
  
     glimpse.on('data.request.detail.requested', detailRequested);
-})();
-
-
-(function() {
-    // This is needed because the message repository can create requests 
-    // and because we are faking out all of local stroage and it is 
-    // responsible for maintaing the request cache, we need get these back in.
-    // if we create, request-repository-cache.js, this should be removed (i think)
-    var trackNewRequests = function(requestRepositoryPayload) {
-        _.forEach(requestRepositoryPayload.newRequests, function(newRequest) { 
-            rawRequestCache[newRequest.id].request = newRequest;
-            if (detailsRetrievedCache[newRequest.id]) {
-                detailsRetrievedCache[newRequest.id].request = newRequest;
-            }
-        })
-    }
-    
-    glimpse.on('data.request.summary.found.message', trackNewRequests);
-    glimpse.on('data.request.detail.found.message', trackNewRequests); 
 })();

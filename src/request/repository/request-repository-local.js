@@ -31,11 +31,12 @@ module.exports = {
         // TODO: Push data into requestStore before publishing
 
         glimpse.emit('data.request.summary.found.local', []);
-    },
-    triggerGetDetailsFor: function (requestId) {
-        var request = requestStore.data.index[requestId];
-        if (request) {
-            glimpse.emit('data.request.detail.found.local', []);
-        }
     }
+    // Removeing under that asumption that any request object stored 
+    // will be as "complete" as it can be for the information we have,
+    // hence getting details here is pointless, as it represents the 
+    // record that was retireved as a summary.
+    // triggerGetDetailsFor: function (requestId) {
+    //     ...
+    // }
 };
