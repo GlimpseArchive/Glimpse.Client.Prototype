@@ -38,4 +38,5 @@ module.exports = {
     registerStrategy(require('./request-converter-strategy-abstract'));
     registerStrategy(require('./request-converter-strategy-message'));
     registerStrategy(require('./request-converter-strategy-tab'));
+    registerStrategy(require('./request-converter-strategy-tab-temp'));
 })();
