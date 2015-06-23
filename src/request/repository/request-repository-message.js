@@ -3,87 +3,9 @@
 var _ = require('lodash');
 var glimpse = require('glimpse');
 var requestStore = require('./request-store-manage');
+var requestConverter = require('./converter/request-converter');
 
 var processMessages = (function() {
-    var actions = (function() {
-        var copyProperties = function(source, target) { 
-            var didUpdate = false; 
-            
-            _.forEach(source, function(value, key) { 
-                    if (value !== target[key]) {
-                        target[key] = value; 
-                        didUpdate = true;
-                    }
-                });
-                    
-             return didUpdate;
-        };
-        
-        return {
-            index: function(request, message) {  
-                return copyProperties(message.index, request);
-            },
-            abstract: function(request, message) {
-                var didUpdate = false; 
-                
-                if (message.abstract) {
-                    var abstract = request.abstract || (request.abstract = {}); 
-                    
-                    didUpdate = copyProperties(message.abstract, abstract);
-                }
-                
-                return didUpdate;
-            },
-            message: function(request, message) {
-                var didUpdate = false; 
-                
-                if (!request.messages[message.id]) {
-                    request.messages[message.id] = message; 
-                    didUpdate = true;
-                } 
-                
-                return didUpdate;
-            },
-            tabs: function(request, message) {
-                var didUpdate = false; 
-                
-                // TODO: BAD BAD BAD HACK!!!! Only here to get things 
-                //       up and runnting
-                if (message.title) {
-                    if (!request.tabs) {
-                        request.tabs = {};
-                    }
-                     
-                    request.tabs[message.type] = {
-                            title: message.title,
-                            payload: message.payload
-                        };
-                    didUpdate = true;
-                }
-                
-                return didUpdate;
-            }
-        };
-    })();
-    
-    var createRequest = function(requestId) {
-        return {
-            id: requestId,
-            messages: {}
-        };
-    };
-    var tryUpdateRequest = function(request, messages) {
-        var didUpdate = false;
-        
-        _.forEach(messages, function(message) {  
-            _.forEach(actions, function(action) { 
-                didUpdate = action(request, message) || didUpdate; 
-            });  
-        });  
-        
-        return didUpdate;
-    };
-    
     return function(messagePayload) { 
         var requestStoreData = requestStore.data; 
         
@@ -98,11 +20,11 @@ var processMessages = (function() {
             var request = requestStoreData.index[requestId];
             var isNew = false;
             if (!request) { 
-                request = createRequest(requestId);
+                request = requestConverter.createRequest(requestId);
                 isNew = true;
             } 
             
-            var affectedRequest = tryUpdateRequest(request, messages);
+            var affectedRequest = requestConverter.convertMessages(request, messages);
             
             // store result for payload
             if (affectedRequest) {
