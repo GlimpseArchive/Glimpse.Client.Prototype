@@ -56,12 +56,7 @@ chance.mixin({
 
 
 var mapProperties = function(source, target, properties) {
-    _.forEach(properties, function(property) {
-        if (source[property] == undefined) {
-            // Since this is dev time, we are trying to help catch problems here
-            throw new TypeError('Property doesnt exist on source');
-        }
-        
+    _.forEach(properties, function(property) { 
         target[property] = source[property];
     });
     
@@ -271,318 +266,264 @@ var seedUsers = function() {
     ];
 };
 
-// TODO: Should be brought into a different file/module 
-var generateMvcRequest = function(dateTime) {
-    var source = chance.mvcAction();
-    
-    // TODO: Need to go through and update child actions and queries
-    
-	// NOTE: now that we have cloned the this request source, need to go through 
-	//       and setup the request for this instance 
-    var serverLowerTime = chance.integerRange(5, 10);
-    var serverUpperTime = chance.integerRange(60, 100);
-    var httpStatus = chance.httpStatus();
-    
-    source.id = chance.guid();
-    source.dateTime = dateTime || moment().toISOString();
-    source.networkTime = chance.integerRange(0, 15);
-    source.serverTime = chance.integerRange(serverLowerTime, serverUpperTime); // TODO: Bug with these two lines
-    source.actionTime = chance.integerRange(serverLowerTime - 1, source.serverTime); // TODO: Need to verify that this works
-    source.viewTime = source.serverTime - source.actionTime;
-    source.clientTime = chance.integerRange(20, 120);
-    source.queryTime = chance.integerRange(2, Math.max(source.actionTime / 3, 3)); // TODO: derive from queries
-    source.queryCount = chance.integerRange(1, 4); // TODO: derive from queries
-    source.user = chance.mvcUser();
-    source.method = chance.httpMethod();
-    source.contentType = chance.httpContentType();
-    source.duration = source.clientTime + source.serverTime + source.networkTime;
-    source.statusCode = httpStatus.code;   
-    source.statusText = httpStatus.text;
-    source.context = { type: 'request', id: source.id };
-    source.messages = generateMvcMessages(source); 
-    source.request = generateSystemRequest(source);
-    
-    return source; 
-};
 
-// TODO: Should be brought into a different file/module 
-// TODO: This could be more advanced than it is
-var generateMvcMessages = (function() {    
-    var generate = {
-        common: {
-            message: function(type, context) {
-                return {
-                    type: type,
-                    context: context,
-                    id: chance.guid()
-                };
-            },
-            tabMessage: function(title, payload, context) { 
-                var message = {
-                    type: 'tab.' + title.toLowerCase(),
-                    title: title,
-                    payload: payload,
-                    context: context,
-                    id: chance.guid()
-                };
-                
-                return message; 
-            }
+// TODO: Should be brought into a different file/module
+var generateMvcRequest = (function() {    
+    // generate source
+    var SourceGenerator = function() { 
+    };
+    SourceGenerator.prototype.processRequest = function(dateTime) { 
+        var source = chance.mvcAction();
+        
+        // NOTE: now that we have cloned the this request source, need to go through 
+        //       and setup the request for this instance 
+        var serverLowerTime = chance.integerRange(5, 10);
+        var serverUpperTime = chance.integerRange(60, 100);
+        var httpStatus = chance.httpStatus();
+        
+        source.id = chance.guid();
+        source.dateTime = dateTime || moment().toISOString();
+        source.networkTime = chance.integerRange(0, 15);
+        source.serverTime = chance.integerRange(serverLowerTime, serverUpperTime); // TODO: Bug with these two lines
+        source.actionTime = chance.integerRange(serverLowerTime - 1, source.serverTime); // TODO: Need to verify that this works
+        source.viewTime = source.serverTime - source.actionTime;
+        source.clientTime = chance.integerRange(20, 120);
+        source.queryTime = chance.integerRange(2, Math.max(source.actionTime / 3, 3)); // TODO: derive from queries
+        source.queryCount = chance.integerRange(1, 4); // TODO: derive from queries
+        source.user = chance.mvcUser();
+        source.method = chance.httpMethod();
+        source.contentType = chance.httpContentType();
+        source.duration = source.clientTime + source.serverTime + source.networkTime;
+        source.statusCode = httpStatus.code;   
+        source.statusText = httpStatus.text;
+        source.context = { type: 'request', id: source.id };
+        
+        return source;  
+    };
+    
+    // generate messages
+    var MessageGenerator = function() {
+        this.messages = [];
+        this.counter = 0;
+        this.stats = {
+            queryDuration: 0,
+            queryCount: 0
+        };
+    };
+    MessageGenerator.support = {
+        applyTiming: function(payload, time, offset) {
+            payload.time = time;
+            payload.offset = offset; 
         },
-        instance: {
-            start: function(source) {
-                var message = generate.common.message('request-start', source.context);
-                message.index = mapProperties(source, {}, [ 'uri', 'dateTime', 'method', 'contentType', 'user' ]);
-                
-                return message;
-            },
-            framework: function(source) {
-                var message = generate.common.message('request-framework', source.context);
-                message.abstract = mapProperties(source, {}, [ 'networkTime', 'serverTime', 'clientTime', 'controller', 'action', 'actionTime', 'viewTime', 'queryTime', 'queryCount' ]);
-                
-                return message;
-            },
-            end: function(source) {
-                var message = generate.common.message('request-end', source.context);
-                message.index = mapProperties(source, {}, [ 'duration', 'statusCode', 'statusText' ]);
-                
-                return message;
-            }
+        applyDuration: function(payload, duration, time, offset) { 
+            payload.duration = duration;
+            
+            MessageGenerator.support.applyTiming(payload, time, offset); 
         },
-        dynamic: {
-            tabs: {
-                execution: function(requestData, source) {
-                    var message = generate.common.tabMessage('Execution', requestData.execution, source.context);
-                    
-                    return message;
-                },
-                log: function(requestData, source) {
-                    var message = generate.common.tabMessage('Log', requestData.log, source.context);
-                    
-                    return message; 
-                },
-                data: function(requestData, source) {
-                    var message = generate.common.tabMessage('Data', requestData.dataAccess, source.context);
-                    
-                    return message;
-                },
-                generic: function(requestData, source) {
-                    var payload = [ {'Actor':'MarkHamill','Character':'LukeSkywalker','Gender':'Male','Age':'21'},{'Character':'DarthVader','Actor':'JamesEarlJones','Gender':'Male','Age':'45'},{'Actor':'HarrisonFord','Character':{'MarkHamill':'LukeSkywalker','JamesEarlJones':'DarthVader','HarrisonFord':'HanSolo'},'Gender':'Male','Age':'25'},{'Actor':'CarrieFisher','Character':'PrincessLeiaOrgana','Gender':'Female','Age':'21'},{'Actor':'PeterCushing','Character':[{'Actor':'MarkHamill','Character':'LukeSkywalker','Gender':'Male','Age':'21'},{'Actor':'JamesEarlJones','Character':'DarthVader','Gender':'Male','Age':'45'},{'Actor':'HarrisonFord','Character':'HanSolo','Gender':'Male','Age':'25'},{'Actor':'CarrieFisher','Character':'PrincessLeiaOrgana','Gender':'Female','Age':'21'},{'Actor':'PeterCushing','Character':'GrandMoffTarkin','Gender':'Female','Age':'69'},{'Actor':'AlecGuinness','Character':'BenObi-WanKenobi','Gender':'Female','Age':'70'},{'Actor':'AnthonyDaniels','Character':'C-3PO','Gender':'Droid','Age':'101'},{'Actor':'KennyBaker','Character':'R2-D2','Gender':'Droid','Age':'150'}],'Gender':'Female','Age':'69'},{'Actor':'AlecGuinness','Character':'BenObi-WanKenobi','Gender':'Female','Age':'70'},{'Actor':'AnthonyDaniels','Character':'C-3PO','Gender':'Droid','Age':'101'} ];
-                    
-                    var message = generate.common.tabMessage('Generic', payload, source.context);
-                    
-                    return message;
+        childTimings: function (events, availableTime) {
+            // TODO: Need to calculate offsets
+            var usedTime = 0;
+    
+            if (events) {
+                var timeParts = availableTime / (events.length * 100 * 2.5);
+                var upperParts = events.length * 100;
+                var lowerParts = upperParts * 0.5;
+    
+                for (var i = 0; i < events.length; i++) {
+                    var newActivityTime = timeParts * chance.integerRange(lowerParts, upperParts);
+    
+                    events[i].duration = newActivityTime;
+    
+                    usedTime += newActivityTime;
                 }
             }
+    
+            return usedTime;
+        }
+    };
+    MessageGenerator.prototype = { 
+        createMessage: function(type, context) {
+            return {
+                type: type,
+                context: context,
+                id: chance.guid(),
+                payload: {},
+                count: this.counter++
+            };
+        }, 
+        createStart: function(source) {
+            var message = this.createMessage('request-start', source.context);
+            message.index = mapProperties(source, {}, [ 'uri', 'dateTime', 'method', 'contentType', 'user' ]);
+            
+            return message;
+        },
+        createFramework: function(source) {
+            var message = this.createMessage('request-framework', source.context);
+            message.abstract = mapProperties(source, {}, [ 'networkTime', 'serverTime', 'clientTime', 'controller', 'action', 'actionTime', 'viewTime', 'queryTime', 'queryCount' ]);
+            
+            return message;
+        },
+        createEnd: function(source) {
+            var message = this.createMessage('request-end', source.context);
+            message.index = mapProperties(source, {}, [ 'duration', 'statusCode', 'statusText' ]);
+            
+            return message;
+        },
+        createLog: function(log, context) { 
+            var message = this.createMessage('request-framework-log', context);
+            mapProperties(log, message.payload, [ 'template', 'message' ]);
+            
+            MessageGenerator.support.applyTiming(message.payload,  null, null); // TODO: need to fix offset timings
+            
+            return message;
+        },
+        createQuery: function(query, context) {
+            var message = this.createMessage('request-framework-query', context);
+            mapProperties(query, message.payload, [ 'access', 'operation', 'target', 'affected', 'command' ]); 
+            
+            MessageGenerator.support.applyDuration(message.payload, query.duration, null, null); // TODO: need to fix offset timings
+            
+            this.stats.queryCount++;
+            this.stats.queryDuration += query.duration;
+            
+            return message;
+        },
+        createRoute: function(route, context) {
+            var message = this.createMessage('request-framework-route', context);
+            mapProperties(route, message.payload, [ 'name', 'mask', 'resolution' ]); 
+            
+            MessageGenerator.support.applyDuration(message.payload, chance.durationRange(0, 1), null, null); // TODO: need to fix offset timings
+        
+            return message;
+        },
+        createFilter: function(targetClass, targetMethod, filterType, category, origin, context) {
+            var message = this.createMessage('request-framework-filter', context);
+            
+            var payload = message.payload;  
+            payload.targetClass = targetClass + 'Controller';
+            payload.targetMethod = targetMethod;
+            payload.filterType = filterType;
+            payload.category = category;
+            payload.filterOrigin = origin || 'system'; 
+            
+            MessageGenerator.support.applyDuration(payload, chance.durationRange(0, 1), null, null); // TODO: need to fix offset timings
+            
+            return message;
+        },
+        createBinding: function(bindings, context) {
+            var message = this.createMessage('request-framework-binding', context);
+            
+            var payload = message.payload;  
+            payload.bindings = bindings;
+            
+            MessageGenerator.support.applyDuration(payload, chance.durationRange(0, 1), null, null); // TODO: need to fix offset timings
+            
+            return message; 
+        },
+        createAction: function(action, context) {
+            var message = this.createMessage('request-framework-query', context);
+            var payload = message.payload;   
+            payload.targetClass = action.controller + 'Controller';
+            payload.targetMethod = action.action;
+            payload.physicalFile = 'Controller/' + action.controller + 'Controller.cs';
+            
+            MessageGenerator.support.applyDuration(payload, action.duration, null, null); // TODO: need to fix offset timings
+            
+            return message; 
+        },
+        processAction: (function() { 
+            var applyTimings = function(action) {
+                var availableTime = action.duration;
+                availableTime -= MessageGenerator.support.childTimings(action.actions, availableTime, 2.5);
+                availableTime -= MessageGenerator.support.childTimings(action.activities, availableTime, 1.5);  
+            };
+            
+            return function(action, request, context) {
+                applyTimings(action);
+                 
+                // route
+                this.messages.push(this.createRoute(action.route, context));
+                
+                // filter
+                this.messages.push(this.createFilter(action.controller, 'OnAuthorization', 'Authorization', 'Authorization', null, context));
+                this.messages.push(this.createLog({ template: { mask: 'User {0} authorized to execute this action', values: { '0': request.user.name } } }, context));
+                this.messages.push(this.createFilter(action.controller, 'OnActionExecuting', 'Action', 'Executing', null, context));
+                
+                // action
+                this.messages.push(this.createAction(action, context));
+                if (action.binding) {
+                    this.messages.push(this.createBinding(action.binding, context));
+                }
+                if (action.activities) {
+                    _.forEach(action.activities, function(activity) {
+                        this.messages.push(this.createQuery(activity, context));
+                    }, this);
+                }
+                if (action.trace) {
+                    _.forEach(action.trace, function(log) {
+                        this.messages.push(this.createLog(log, context));
+                    }, this);
+                }
+                
+                // filter
+                this.messages.push(this.createFilter(action.controller, 'OnActionExecuted', 'Action', 'Executed', null, context));
+                this.messages.push(this.createFilter(action.controller, 'OnActionExecuting', 'Result', 'Executing', null, context));
+                
+                // child actions
+                if (action.actions) {
+                    _.forEach(action.actions, function(childAction) {
+                        this.processAction(childAction, request, context);
+                    }, this);
+                }
+                
+                // fitler
+                this.messages.push(this.createFilter(action.controller, 'OnActionExecuted', 'Result', 'Executed', null, context));
+            };
+        })(this),
+        processRequest: function(source) {
+            this.messages.push(this.createStart(source));
+            
+            this.processAction(source, source, source.context);
+            
+            this.messages.push(this.createFramework(source));
+            this.messages.push(this.createEnd(source)); 
+            
+            return this.messages;
+        },
+        modifySource: function(source) {
+            source.queryTime = this.stats.queryDuration;
+            source.queryCount = this.stats.queryCount;
         }
     };
     
-    var executeInstanceMessages = function(source, target) {
-        _.forEach(generate.instance, function(strategy) {
-            target.push(strategy(source));
-        });
+    // generate request
+    var RequestGenerator = function() { 
     };
-    var executeTabMessages = function(source, target) {
-        var modelProcessor = new RequestModelProcessor();
-        modelProcessor.processAction(source, source); 
+    RequestGenerator.prototype.processRequest = function(source) {
+        var request = mapProperties(source, {}, [ 'id', 'uri', 'dateTime', 'method', 'contentType', 'user',  'duration', 'statusCode', 'statusText' ]);
+        request.abstract = mapProperties(source, {}, [ 'networkTime', 'serverTime', 'clientTime', 'controller', 'action', 'actionTime', 'viewTime', 'queryTime', 'queryCount' ]);
+        request.messages = _.indexBy(source.messages, 'id');
         
-        _.forEach(generate.dynamic.tabs, function(strategy) {
-            target.push(strategy(modelProcessor.model, source))
-        });
+        return request;
     };
     
-    return function(source) {
-        var messages = [];
+    return function(dateTime) {
+        var sourceGenerator = new SourceGenerator();
+        var source = sourceGenerator.processRequest(dateTime);
         
-        executeInstanceMessages(source, messages);
-        executeTabMessages(source, messages);
+        var messageGenerator = new MessageGenerator();
+        var messages = messageGenerator.processRequest(source);
         
-        return messages;
+        source.messages = messages; 
+         
+        var requestGenerator = new RequestGenerator();
+        var request = requestGenerator.processRequest(source);
+        source.request = request;
+        
+        return source;
     };
 })();
 
-// TODO: In the end this should be pulled into the main app, as this model should be derived there somehow
-// TODO: THIS REALLY ISN'T GREAT but wanted an independent way of doing this
-var generateSystemRequest = function(source) {
-    var request = {
-        abstract: {},
-        messages: _.indexBy(source.messages, 'id'),
-        tabs: {}
-    };
-     
-    mapProperties(source, request, [ 'id', 'uri', 'dateTime', 'method', 'contentType', 'user',  'duration', 'statusCode', 'statusText' ]);
-    mapProperties(source, request.abstract, [ 'networkTime', 'serverTime', 'clientTime', 'controller', 'action', 'actionTime', 'viewTime', 'queryTime', 'queryCount' ]);
-
-    // This has been removed for the moment, could be brought back if trying
-    // to sinulate full detail requests that are stored in cache, but not doing that 
-    // at the moment. 
-    // TODO: Detect when requests are generated for initial local storage requests,
-    //       then randmonly give some of those full details, 
-    
-    // TODO: update when tab data is handelled differently 
-    request.tabs = _(source.messages)
-        .filter(function(message) {
-            return message.title != null;
-        })
-        .map(function(message) {
-            return {
-                title: message.title,
-                payload: message.payload,
-                type: message.type
-            };
-        })
-        .indexBy('type')
-        .value();
-    
-    return request;
-};
-
-// TODO: In the end this should be pulled into the main app, as this model should be derived there somehow
-var RequestModelProcessor = function() {
-    this.model = {
-        dataAccess: [],
-        execution: [],
-        log: []  
-    }; 
-};
-RequestModelProcessor.support = {
-    log: (function () {
-        function processTemplate(template) {
-            var message = template.mask;
-            for (var key in template.values) {
-                message = message.replace('{' + key + '}', template.values[key]);
-            }
-
-            return message;
-        }
-
-        return function (log) {
-            if (log.template) {
-                log.message = processTemplate(log.template);
-            }
-
-            return log;
-        };
-    })(),
-    childTimings: function (events, availableTime, offset) {
-        var usedTime = 0;
-
-        if (events) {
-            var timeParts = availableTime / (events.length * 100 * 2.5);
-            var upperParts = events.length * 100;
-            var lowerParts = upperParts * 0.5;
-
-            for (var i = 0; i < events.length; i++) {
-                var newActivityTime = timeParts * chance.integerRange(lowerParts, upperParts);
-
-                events[i].duration = newActivityTime;
-
-                usedTime += newActivityTime;
-            }
-        }
-
-        return usedTime;
-    }
-};
-RequestModelProcessor.prototype = {
-    registerActivities: function(activities) {
-        if (activities) {
-            for (var i = 0; i < activities.length; i++) {
-                var activity = activities[i];
-                activity.type = 'data';
-                activity.duration = activity.duration.toFixed(2);
-                // activity.time = '1411576658503';
-                // activity.offset = 124.12;
-
-                this.model.dataAccess.push(activity);
-            }
-        }
-    },
-    registerLogs: function(logs) {
-        if (logs) {
-            for (var i = 0; i < logs.length; i++) {
-                var log = RequestModelProcessor.support.log(logs[i]);
-                log.type = 'log';
-                // log.time = '1411576658503';
-                // log.offset = 124.12;
-
-                this.model.log.push(log);
-            }
-        }
-    },
-    registerRoute: function(record) {
-        var route = {
-            type: 'route',
-            duration: chance.durationRange(0, 1),
-            // time: '1411576658503',
-            // offset: 124.12,
-            name: record.name,
-            mask: record.mask,
-            resolution: record.resolution
-        };
-
-        this.model.execution.push(route);
-    },
-    registerFilter: function(controller, targetMethod, filterType, category, origin, activities, logs) {
-        var filter = {
-            type: 'filter',
-            duration: chance.durationRange(0, 1),
-            // time: '1411576658503',
-            // offset: 124.12,
-            targetClass: controller + 'Controller',
-            targetMethod: targetMethod,
-            filterType: filterType,
-            category: category,
-            filterOrigin: origin || 'system'
-        };
-
-        this.model.execution.push(filter);
-
-        // filters are logged and can have activities
-        this.registerActivities(activities);
-        this.registerLogs(logs);
-    },
-    registerAction: function(controller, actionTime, binding, activities, logs) {
-        var action = {
-            type: 'action',
-            duration: actionTime.toFixed(2),
-            // time: '1411576658503',
-            // offset: 124.12,
-            targetClass: controller + 'Controller',
-            targetMethod: 'Index',
-            physicalFile: 'Controller/' + controller + 'Controller.cs',
-            binding: binding
-        };
-
-        this.model.execution.push(action);
-
-        // actions are logged and can have activities
-        this.registerActivities(activities);
-        this.registerLogs(logs);
-    },
-
-    processSubActions: function(actions, request) {
-        if (actions) {
-            for (var i = 0; i < actions.length; i++) {
-                this.processAction(actions[i], request);
-            }
-        }
-    },
-    processAction: function(action, request) {
-        var availableTime = action.duration;
-        availableTime -= RequestModelProcessor.support.childTimings(action.actions, availableTime, 2.5);
-        availableTime -= RequestModelProcessor.support.childTimings(action.activities, availableTime, 1.5);
-
-        this.registerRoute(action.route);
-        this.registerFilter(action.controller, 'OnAuthorization', 'Authorization', 'Authorization', null, null, [ { template: { mask: 'User {0} authorized to execute this action', values: { '0': request.user.name } } } ]);
-        this.registerFilter(action.controller, 'OnActionExecuting', 'Action', 'Executing');
-        this.registerAction(action.controller, action.duration, action.binding, action.activities, action.trace);
-        this.registerFilter(action.controller, 'OnActionExecuted', 'Action', 'Executed');
-        this.registerFilter(action.controller, 'OnActionExecuting', 'Result', 'Executing');
-        this.processSubActions(action.actions, request);
-        this.registerFilter(action.controller, 'OnActionExecuted', 'Result', 'Executed');
-    }
-};
 
 // TODO: when aboves are shifted this setting should be changed
 mvcActions = seedMvcActions();
