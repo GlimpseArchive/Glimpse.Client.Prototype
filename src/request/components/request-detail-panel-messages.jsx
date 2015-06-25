@@ -10,9 +10,7 @@ module.exports = React.createClass({
             <table>
                 <thead>
                     <th>Type</th>
-                    <th>Index</th>
-                    <th>Abstract</th>
-                    <th>Payload</th>
+                    <th>Details</th>
                 </thead>
                 {_.map(this.props.data.payload, function (item) { 
                     var index = item.index ? <PanelGeneric payload={item.index} /> : '--';
@@ -20,10 +18,15 @@ module.exports = React.createClass({
                     var payload = item.payload ? <PanelGeneric payload={item.payload} /> : '--';
                     return (
                         <tr>
-                            <td>{item.type}</td>
-                            <td>{index}</td>
-                            <td>{abstract}</td>
-                            <td>{payload}</td>
+                            <th>{item.type} ({item.count})</th>
+                            <td>
+                                <h4>Index</h4>
+                                <div>{index}</div>
+                                <h4>Abstract</h4>
+                                <div>{abstract}</div>
+                                <h4>Payload</h4>
+                                <div>{payload}</div>
+                            </td>
                         </tr>
                     );
                 })}
