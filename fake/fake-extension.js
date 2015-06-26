@@ -388,44 +388,55 @@ var generateMvcRequest = (function() {
             
             return message;
         },
-        createRoute: function(route, context) {
+        createRoute: function(action, route, context) {
             var message = this.createMessage('request-framework-route', context);
-            mapProperties(route, message.payload, [ 'name', 'mask', 'resolution' ]); 
+            var payload = message.payload;  
+            
+            mapProperties(route, payload, [ 'name', 'mask', 'resolution' ]); 
+            
+            payload.controller = action.controller;
+            payload.action = action.action; 
             
             MessageGenerator.support.applyDuration(message.payload, chance.durationRange(0, 1), null, null); // TODO: need to fix offset timings
         
             return message;
         },
-        createFilter: function(targetClass, targetMethod, filterType, category, origin, context) {
+        createFilter: function(action, targetMethod, filterType, category, origin, context) {
             var message = this.createMessage('request-framework-filter', context);
             
             var payload = message.payload;  
-            payload.targetClass = targetClass + 'Controller';
+            payload.targetClass = action.targetClass + 'Controller';
             payload.targetMethod = targetMethod;
             payload.filterType = filterType;
             payload.category = category;
-            payload.filterOrigin = origin || 'system'; 
+            payload.filterOrigin = origin || 'system';
+            payload.controller = action.controller;
+            payload.action = action.action; 
             
             MessageGenerator.support.applyDuration(payload, chance.durationRange(0, 1), null, null); // TODO: need to fix offset timings
             
             return message;
         },
-        createBinding: function(bindings, context) {
+        createBinding: function(action, bindings, context) {
             var message = this.createMessage('request-framework-binding', context);
             
             var payload = message.payload;  
             payload.bindings = bindings;
+            payload.controller = action.controller;
+            payload.action = action.action; 
             
             MessageGenerator.support.applyDuration(payload, chance.durationRange(0, 1), null, null); // TODO: need to fix offset timings
             
             return message; 
         },
         createAction: function(action, context) {
-            var message = this.createMessage('request-framework-query', context);
+            var message = this.createMessage('request-framework-action', context);
             var payload = message.payload;   
             payload.targetClass = action.controller + 'Controller';
             payload.targetMethod = action.action;
             payload.physicalFile = 'Controller/' + action.controller + 'Controller.cs';
+            payload.controller = action.controller;
+            payload.action = action.action; 
             
             MessageGenerator.support.applyDuration(payload, action.duration, null, null); // TODO: need to fix offset timings
             
@@ -442,17 +453,17 @@ var generateMvcRequest = (function() {
                 applyTimings(action);
                  
                 // route
-                this.messages.push(this.createRoute(action.route, context));
+                this.messages.push(this.createRoute(action, action.route, context));
                 
                 // filter
-                this.messages.push(this.createFilter(action.controller, 'OnAuthorization', 'Authorization', 'Authorization', null, context));
+                this.messages.push(this.createFilter(action, 'OnAuthorization', 'Authorization', 'Authorization', null, context));
                 this.messages.push(this.createLog({ template: { mask: 'User {0} authorized to execute this action', values: { '0': request.user.name } } }, context));
-                this.messages.push(this.createFilter(action.controller, 'OnActionExecuting', 'Action', 'Executing', null, context));
+                this.messages.push(this.createFilter(action, 'OnActionExecuting', 'Action', 'Executing', null, context));
                 
                 // action
                 this.messages.push(this.createAction(action, context));
                 if (action.binding) {
-                    this.messages.push(this.createBinding(action.binding, context));
+                    this.messages.push(this.createBinding(action, action.binding, context));
                 }
                 if (action.activities) {
                     _.forEach(action.activities, function(activity) {
@@ -466,8 +477,8 @@ var generateMvcRequest = (function() {
                 }
                 
                 // filter
-                this.messages.push(this.createFilter(action.controller, 'OnActionExecuted', 'Action', 'Executed', null, context));
-                this.messages.push(this.createFilter(action.controller, 'OnActionExecuting', 'Result', 'Executing', null, context));
+                this.messages.push(this.createFilter(action, 'OnActionExecuted', 'Action', 'Executed', null, context));
+                this.messages.push(this.createFilter(action, 'OnActionExecuting', 'Result', 'Executing', null, context));
                 
                 // child actions
                 if (action.actions) {
@@ -477,7 +488,7 @@ var generateMvcRequest = (function() {
                 }
                 
                 // fitler
-                this.messages.push(this.createFilter(action.controller, 'OnActionExecuted', 'Result', 'Executed', null, context));
+                this.messages.push(this.createFilter(action, 'OnActionExecuted', 'Result', 'Executed', null, context));
             };
         })(this),
         processRequest: function(source) {
