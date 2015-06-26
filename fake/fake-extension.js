@@ -441,6 +441,18 @@ var generateMvcRequest = (function() {
             MessageGenerator.support.applyDuration(payload, action.duration, null, null); // TODO: need to fix offset timings
             
             return message; 
+        }, 
+        createResult: function(action, result, context) {
+            var message = this.createMessage('request-framework-result', context);
+            var payload = message.payload;   
+            payload.controller = action.controller;
+            payload.action = action.action; 
+            
+            // TODO: Need to finish this!
+            
+            //MessageGenerator.support.applyDuration(payload, result.duration, null, null); // TODO: need to fix offset timings
+            
+            return message; 
         },
         processAction: (function() { 
             var applyTimings = function(action) {
@@ -479,6 +491,9 @@ var generateMvcRequest = (function() {
                 // filter
                 this.messages.push(this.createFilter(action, 'OnActionExecuted', 'Action', 'Executed', null, context));
                 this.messages.push(this.createFilter(action, 'OnActionExecuting', 'Result', 'Executing', null, context));
+                
+                // result
+                //this.messages.push(this.createResult(action, action.result, context));
                 
                 // child actions
                 if (action.actions) {
