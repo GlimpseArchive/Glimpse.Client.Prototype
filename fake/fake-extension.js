@@ -490,7 +490,7 @@ var generateMvcRequest = (function() {
                 
                 // filter
                 this.messages.push(this.createFilter(action, 'OnActionExecuted', 'Action', 'Executed', null, context));
-                this.messages.push(this.createFilter(action, 'OnActionExecuting', 'Result', 'Executing', null, context));
+                this.messages.push(this.createFilter(action, 'OnResultExecuting', 'Result', 'Executing', null, context));
                 
                 // result
                 //this.messages.push(this.createResult(action, action.result, context));
@@ -503,7 +503,7 @@ var generateMvcRequest = (function() {
                 }
                 
                 // fitler
-                this.messages.push(this.createFilter(action, 'OnActionExecuted', 'Result', 'Executed', null, context));
+                this.messages.push(this.createFilter(action, 'OnResultExecuted', 'Result', 'Executed', null, context));
             };
         })(this),
         processRequest: function(source) {
