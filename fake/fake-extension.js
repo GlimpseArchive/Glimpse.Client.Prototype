@@ -72,9 +72,9 @@ var seedMvcActions = (function() {
                     name: 'Default',
                     mask: '{controller}/{action}/{id}',
                     resolution: [
-                        { key: 'controller', value: controller, default: 'home' },
-                        { key: 'action', value: action, default: 'index' },
-                        { key: 'id', value: id, default: null }
+                        { tag: 'controller', value: controller, default: 'home', required: false },
+                        { tag: 'action', value: action, default: 'index', required: false },
+                        { tag: 'id', value: id, default: null, required: false }
                     ]
                 };
             }
@@ -377,11 +377,16 @@ var generateMvcRequest = (function() {
             
             return message;
         },
-        createQuery: function(query, context) {
+        createQuery: function(action, query, context) {
             var message = this.createMessage('request-framework-query', context);
-            mapProperties(query, message.payload, [ 'access', 'operation', 'target', 'affected', 'command' ]); 
+            var payload = message.payload;  
             
-            MessageGenerator.support.applyDuration(message.payload, query.duration, null, null); // TODO: need to fix offset timings
+            payload.controller = action.controller;
+            payload.action = action.action
+            
+            mapProperties(query, payload, [ 'access', 'operation', 'target', 'affected', 'command' ]); 
+            
+            MessageGenerator.support.applyDuration(payload, query.duration, null, null); // TODO: need to fix offset timings
             
             this.stats.queryCount++;
             this.stats.queryDuration += query.duration;
@@ -397,7 +402,7 @@ var generateMvcRequest = (function() {
             payload.controller = action.controller;
             payload.action = action.action; 
             
-            MessageGenerator.support.applyDuration(message.payload, chance.durationRange(0, 1), null, null); // TODO: need to fix offset timings
+            MessageGenerator.support.applyDuration(payload, chance.durationRange(0, 1), null, null); // TODO: need to fix offset timings
         
             return message;
         },
@@ -447,8 +452,8 @@ var generateMvcRequest = (function() {
             var payload = message.payload;   
             payload.controller = action.controller;
             payload.action = action.action; 
-            
-            // TODO: Need to finish this!
+            payload.provider = 'Razor'; 
+            payload.physicalFile = 'View/' + action.controller + '/' + action.action + '.cshtml';
             
             //MessageGenerator.support.applyDuration(payload, result.duration, null, null); // TODO: need to fix offset timings
             
@@ -479,7 +484,7 @@ var generateMvcRequest = (function() {
                 }
                 if (action.activities) {
                     _.forEach(action.activities, function(activity) {
-                        this.messages.push(this.createQuery(activity, context));
+                        this.messages.push(this.createQuery(action, activity, context));
                     }, this);
                 }
                 if (action.trace) {
