@@ -434,7 +434,7 @@ var generateMvcRequest = (function() {
             
             return message; 
         },
-        createAction: function(action, context) {
+        createAction: function(action, isPrimary, context) {
             var message = this.createMessage('request-framework-action', context);
             var payload = message.payload;   
             payload.targetClass = action.controller + 'Controller';
@@ -442,6 +442,7 @@ var generateMvcRequest = (function() {
             payload.physicalFile = 'Controller/' + action.controller + 'Controller.cs';
             payload.controller = action.controller;
             payload.action = action.action; 
+            payload.isPrimary = isPrimary;
             
             MessageGenerator.support.applyDuration(payload, action.duration, null, null); // TODO: need to fix offset timings
             
@@ -478,7 +479,7 @@ var generateMvcRequest = (function() {
                 this.messages.push(this.createFilter(action, 'OnActionExecuting', 'Action', 'Executing', null, context));
                 
                 // action
-                this.messages.push(this.createAction(action, context));
+                this.messages.push(this.createAction(action, action == request, context));
                 if (action.binding) {
                     this.messages.push(this.createBinding(action, action.binding, context));
                 }
