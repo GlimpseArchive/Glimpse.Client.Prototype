@@ -35,7 +35,7 @@ module.exports = {
     var registerStrategy = module.exports.registerStrategy;
     
     registerStrategy(require('./request-converter-strategy-index'));
-    registerStrategy(require('./request-converter-strategy-abstract'));
+    registerStrategy(require('./request-converter-strategy-highlight'));
     registerStrategy(require('./request-converter-strategy-message'));
     registerStrategy(require('./request-converter-strategy-tab'));
     registerStrategy(require('./request-converter-strategy-tab-temp'));
