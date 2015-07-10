@@ -499,7 +499,7 @@ var generateMvcRequest = (function() {
                 this.messages.push(this.createFilter(action, 'OnResultExecuting', 'Result', 'Executing', null, context));
                 
                 // result
-                //this.messages.push(this.createResult(action, action.result, context));
+                this.messages.push(this.createResult(action, action.result, context));
                 
                 // child actions
                 if (action.actions) {
