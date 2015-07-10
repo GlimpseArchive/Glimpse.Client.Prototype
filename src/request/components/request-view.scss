@@ -52,3 +52,8 @@
     border-spacing: 10px;
     border-collapse: separate;
 }
+
+.row-devider > td, .row-devider > th {
+    border-bottom: 1px solid black;
+    padding-bottom: 20px;
+}
