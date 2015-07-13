@@ -1,24 +1,25 @@
 'use strict';
 
+var request = require('superagent');
 var glimpse = require('glimpse');
 
 module.exports = {
     triggerGetSummariesLastest: function () {
-        // TODO: Need to complete
-        //       Ajax call to REST endpoint
-
-        // simulate success callback
-        setTimeout(function () {
-            glimpse.emit('data.message.summary.found.remote', []);
-        }, 0);
+        request
+            .get('/glimpse/api/messages') 
+            .query({ latest: true })
+            .set('Accept', 'application/json')
+            .end(function(err, res){
+                glimpse.emit('data.message.summary.found.remote', []);
+            }); 
     },
     triggerGetDetailsFor: function (requestId) {
-        // TODO: Need to complete
-        //       Ajax call to REST endpoint
-
-        // simulate success callback
-        setTimeout(function () {
-            glimpse.emit('data.message.detail.found.remote', []);
-        }, 0);
+        request
+            .get('/glimpse/api/messages') 
+            .query({ context: requestId })
+            .set('Accept', 'application/json')
+            .end(function(err, res){
+                glimpse.emit('data.message.summary.found.remote', []);
+            }); 
     }
 };
