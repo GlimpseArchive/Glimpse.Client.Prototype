@@ -66,6 +66,9 @@ module.exports = {
             DIAGNOSTICS: true,
             FAKE_SERVER: true
         }),
+        new webpack.ProvidePlugin({
+            'window.jQuery': require.resolve('jquery/src/core.js'),
+        }),
         progressPlugin
     ],
     log: {

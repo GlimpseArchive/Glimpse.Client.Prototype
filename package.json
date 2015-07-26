@@ -30,8 +30,10 @@
   "dependencies": {
     "bootstrap-sass": "^3.3.4",
     "classnames": "^2.1.1",
+    "jquery": "^2.1.4",
     "lodash": "^3.8.0",
     "moment": "^2.10.2",
+    "ms-signalr-client": "^2.2.2",
     "postal": "~1.0.3",
     "postal.diagnostics": "~0.7.4",
     "react": "^0.13.3",
