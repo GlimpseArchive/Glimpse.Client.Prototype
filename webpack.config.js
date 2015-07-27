@@ -76,11 +76,6 @@ module.exports = {
         hash: true,
         timings: true,
         assets: true,
-        chunks: false,
-        chunkModules: false,
-        modules: false,
-        children: true,
-        cached: true
+        chunkModules: false
     }
-    // verbose: true
 };
