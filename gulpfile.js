@@ -80,7 +80,11 @@ gulp.task('pages', function () {
         .pipe(gif(WATCH, browserSync.reload({ stream: true })));
 });
 
-gulp.task('build', ['pages', 'bundle']);
+// NOTE: was running in parallel but don't like the output
+//gulp.task('build', ['pages', 'bundle']);
+gulp.task('build', function (cb) { 
+    runSequence('pages', 'bundle', cb);
+});
 
 gulp.task('server', function (cb) {
     browserSync({
