@@ -37,7 +37,9 @@ module.exports = {
     registerStrategy(require('./request-converter-strategy-index'));
     registerStrategy(require('./request-converter-strategy-highlight'));
     registerStrategy(require('./request-converter-strategy-message'));
-    registerStrategy(require('./request-converter-strategy-relationship'));
+    // NOTE: Removing for the time being... doesn't looks like this will be needed
+    // TODO: Check if this can be removed
+    //registerStrategy(require('./request-converter-strategy-relationship'));
     registerStrategy(require('./request-converter-strategy-tab___TEMP'));
     registerStrategy(require('./request-converter-strategy-tab-message___TEMP'));
 })();
