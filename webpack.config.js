@@ -69,6 +69,7 @@ module.exports = {
         new webpack.ProvidePlugin({
             'window.jQuery': require.resolve('jquery/src/core.js'),
         }),
+        new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
         progressPlugin
     ],
     log: {
