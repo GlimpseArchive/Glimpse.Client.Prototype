@@ -8,7 +8,7 @@ module.exports = React.createClass({
     mixins: [ LinkedStateMixin ],
     getInitialState: function () {
         return {
-            uri: '',
+            url: '',
             method: '',
             contentType: '',
             statusCode: ''
@@ -19,8 +19,8 @@ module.exports = React.createClass({
             <div className="request-session-holder">
                 <h2>Filter</h2>
                 <div>
-                    <label htmlFor="request-fitler-uri">Uri</label><br />
-                    <input type="text" id="request-fitler-uri" valueLink={this.linkState('uri')} />
+                    <label htmlFor="request-fitler-url">Url</label><br />
+                    <input type="text" id="request-fitler-url" valueLink={this.linkState('url')} />
                 </div><br />
                 <div>
                     <label htmlFor="request-fitler-method">Method</label><br />

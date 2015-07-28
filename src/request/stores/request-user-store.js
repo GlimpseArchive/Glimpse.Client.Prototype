@@ -77,7 +77,7 @@ function notifyUsersChanged() {
             if (rawRequest) {
                 var request = {
                         id: rawRequest.id,
-                        uri: rawRequest.uri 
+                        url: rawRequest.url 
                     };
 
                 user.latestRequests.unshift(request);

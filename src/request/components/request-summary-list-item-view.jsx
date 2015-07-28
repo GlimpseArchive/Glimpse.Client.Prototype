@@ -25,7 +25,7 @@ module.exports = React.createClass({
                     <tr>
                         <td width="90">{summary.duration}ms</td>
                         <td colSpan="6">
-                            {summary.uri} &nbsp; {summary.method} &nbsp; {summary.statusCode} ({summary.statusText}) - {summary.contentType}
+                            {summary.url} &nbsp; {summary.method} &nbsp; {summary.statusCode} ({summary.statusText}) - {summary.contentType}
                         </td>
                         <td><Timeago time={summary.dateTime} /></td>
                     </tr>

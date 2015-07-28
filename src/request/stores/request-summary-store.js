@@ -24,7 +24,7 @@ var filterRequests = (function () {
             type: 'exact',
             get: function (request) { return request.user.id; }
         },
-        uri: { type: 'exact' }, // TODO: Switch over to `regex` at some point
+        url: { type: 'exact' }, // TODO: Switch over to `regex` at some point
         method: { type: 'array' },
         contentType: { type: 'array' },
         statusCode: { type: 'array' }

@@ -36,7 +36,7 @@ chance.mixin({
         return _.clone(chance.pick(currentUsers), true);  
     },
     'httpPath': function() {
-        return chance.pick(mvcActions).uri;
+        return chance.pick(mvcActions).url;
     },
     'httpMethod': function() {
         return chance.pick(methods);
@@ -110,7 +110,7 @@ var seedMvcActions = (function() {
                     var genre = chance.word();
                     
                     return {
-                        uri: '/Store/Browse?Genre=' + genre,
+                        url: '/Store/Browse?Genre=' + genre,
                         controller: 'Store',
                         action: 'Browse',
                         route: generate.common.route('store', 'browse', null),
@@ -133,7 +133,7 @@ var seedMvcActions = (function() {
                     var id = chance.integerRange(1000, 2000);
             
                     return { 
-                        uri: '/Store/Details/' + id, 
+                        url: '/Store/Details/' + id, 
                         controller: 'Store', 
                         action: 'Details',
                         route: generate.common.route('store', 'details', id),
@@ -153,7 +153,7 @@ var seedMvcActions = (function() {
                 },
                 home: function() {
                     return { 
-                        uri: '/', 
+                        url: '/', 
                         controller: 'Home', 
                         action: 'Index',
                         route: generate.common.route('home', 'index', null),
@@ -171,7 +171,7 @@ var seedMvcActions = (function() {
                 },
                 cart: function() {
                     return { 
-                        uri: '/ShoppingCart/', 
+                        url: '/ShoppingCart/', 
                         controller: 'ShoppingCart', 
                         action: 'Index',
                         route: generate.common.route('shoppingcart', 'index', null),
@@ -191,7 +191,7 @@ var seedMvcActions = (function() {
                 },
                 store: function() {
                     return { 
-                        uri: '/Store/', 
+                        url: '/Store/', 
                         controller: 'Store', 
                         action: 'Index',
                         route: generate.common.route('store', 'index', null),
@@ -209,7 +209,7 @@ var seedMvcActions = (function() {
                 },
                 login: function() {
                     return { 
-                        uri: '/Account/LogIn/', 
+                        url: '/Account/LogIn/', 
                         controller: 'Account', 
                         action: 'LogIn',
                         route: generate.common.route('account', 'login', null),
@@ -532,7 +532,7 @@ var generateMvcRequest = (function() {
     var RequestGenerator = function() { 
     };
     RequestGenerator.prototype.processRequest = function(source) {
-        var request = mapProperties(source, {}, [ 'id', 'uri', 'dateTime', 'method', 'contentType', 'user',  'duration', 'statusCode', 'statusText' ]);
+        var request = mapProperties(source, {}, [ 'id', 'url', 'dateTime', 'method', 'contentType', 'user',  'duration', 'statusCode', 'statusText' ]);
         request.abstract = mapProperties(source, {}, [ 'networkTime', 'serverTime', 'clientTime', 'controller', 'action', 'actionTime', 'viewTime', 'queryTime', 'queryCount' ]);
         request.messages = _.indexBy(source.messages, 'id');
         

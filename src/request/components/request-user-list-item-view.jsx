@@ -29,7 +29,7 @@ module.exports = React.createClass({
                     <tr>
                         <td colSpan="2">
                             {user.latestRequests.map(function (request) {
-                                return <div key={request.id}>{request.uri}</div>;
+                                return <div key={request.id}>{request.url}</div>;
                             })}
                         </td>
                     </tr>
