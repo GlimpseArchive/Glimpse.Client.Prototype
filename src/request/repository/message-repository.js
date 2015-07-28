@@ -8,15 +8,15 @@ var streamRepository = require('./message-repository-stream');
 // TODO: take groups of messages and translate into a request
 
 module.exports = {
-    triggerGetSummariesLastest: function () {
-        remoteRepository.triggerGetSummariesLastest();
+    triggerGetLastestSummaries: function () {
+        remoteRepository.triggerGetLastestSummaries();
     },
     triggerGetDetailsFor: function (requestId) {
         remoteRepository.triggerGetDetailsFor(requestId);
     },
-    subscribeToSummariesLastest: function () {
+    subscribeToLastestSummaries: function () {
         // make sure we get new messages from server as they happen
-        streamRepository.subscribeToSummariesLastest();
+        streamRepository.subscribeToLastestSummaries();
     },
     subscribeToDetailsFor: function (requestId) {
         // make sure we get updates for the request as they happen

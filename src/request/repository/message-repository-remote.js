@@ -4,7 +4,7 @@ var request = require('superagent');
 var glimpse = require('glimpse');
 
 module.exports = {
-    triggerGetSummariesLastest: function () {
+    triggerGetLastestSummaries: function () {
         request
             .get('/glimpse/api/messages') 
             .query({ latest: true })

@@ -32,7 +32,7 @@ var socket = (function() {
 })();
 
 module.exports = {
-    subscribeToSummariesLastest: function () {
+    subscribeToLastestSummaries: function () {
         socket.check();
     },
     subscribeToDetailsFor: function (requestId) {

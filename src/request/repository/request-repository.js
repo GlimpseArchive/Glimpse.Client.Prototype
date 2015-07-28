@@ -8,15 +8,15 @@ var messageRequestRepository = require('./request-repository-message');
 var messageRepository = require('./message-repository');
 
 module.exports = {
-    triggerGetSummariesLastest: function () {
+    triggerGetLastestSummaries: function () {
         if (!FAKE_SERVER) {
             // find any messages from server
-            messageRepository.triggerGetSummariesLastest();
+            messageRepository.triggerGetLastestSummaries();
             // find any requests in stroage
-            localRequestRepository.triggerGetSummariesLastest();
+            localRequestRepository.triggerGetLastestSummaries();
 
             // make sure we get new messages from server as they happen
-            messageRepository.subscribeToSummariesLastest();
+            messageRepository.subscribeToLastestSummaries();
         }
     },
     triggerGetDetailsFor: function (requestId) {

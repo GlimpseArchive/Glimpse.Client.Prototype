@@ -24,7 +24,7 @@ var requestStore = require('./request-store-manage');
 })();
 
 module.exports = {
-    triggerGetSummariesLastest: function () {
+    triggerGetLastestSummaries: function () {
         // TODO: Need to complete
         //       Pull from local storage
         
