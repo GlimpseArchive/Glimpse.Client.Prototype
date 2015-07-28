@@ -16,7 +16,7 @@ module.exports = React.createClass({
                     </thead>
                     <tbody>
                     {_.map(this.props.data.payload, function (item) { 
-                        var index = item.index && !_.isEmpty(item.index) ? <PanelGeneric payload={item.index} /> : '--';
+                        var index = item.indices && !_.isEmpty(item.indices) ? <PanelGeneric payload={item.indices} /> : '--';
                         var abstract = item.abstract && !_.isEmpty(item.abstract) ? <PanelGeneric payload={item.abstract} /> : '--';
                         var payload = item.payload && !_.isEmpty(item.payload) ? <PanelGeneric payload={item.payload} /> : '--';
                         var links = item.links && !_.isEmpty(item.links) ? <PanelGeneric payload={item.links} /> : '--';

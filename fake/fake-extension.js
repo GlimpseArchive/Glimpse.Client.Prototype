@@ -353,7 +353,7 @@ var generateMvcRequest = (function() {
         }, 
         createStart: function(source) {
             var message = this.createMessage('request-start', source.context);
-            message.index = mapProperties(source, {}, [ 'uri', 'dateTime', 'method', 'contentType', 'user' ]);
+            message.indices = mapProperties(source, {}, [ 'url', 'dateTime', 'method', 'contentType', 'user' ]);
             
             return message;
         },

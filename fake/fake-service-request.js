@@ -33,7 +33,7 @@ var requestProcessor = {
             var messages = [];
             _.forEach(rawRequests, function(request) { 
                 _.forEach(request.messages, function(message) {  
-                    if (!_.isEmpty(message.index) || !_.isEmpty(message.abstract)) { 
+                    if (!_.isEmpty(message.indices) || !_.isEmpty(message.abstract)) { 
                         messages.push(message);
                     }
                 });
