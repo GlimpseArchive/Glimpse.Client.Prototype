@@ -30,7 +30,8 @@ module.exports = {
         
         // TODO: Push data into requestStore before publishing
 
-        glimpse.emit('data.request.summary.found.local', []);
+
+        //glimpse.emit('data.request.summary.found.local', []);
     }
     // Removeing under that asumption that any request object stored 
     // will be as "complete" as it can be for the information we have,
