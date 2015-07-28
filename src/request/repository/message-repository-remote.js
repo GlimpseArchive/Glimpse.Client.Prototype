@@ -11,7 +11,7 @@ module.exports = {
             .get('/Glimpse/Data/History')  //TODO: this will probably change in time to the above
             .set('Accept', 'application/json')
             .end(function(err, res){
-                if (err.status == 200) {
+                if (!err) {
                     glimpse.emit('data.message.summary.found.remote', []);
                 }
             }); 
@@ -22,7 +22,7 @@ module.exports = {
             .query({ context: requestId })
             .set('Accept', 'application/json')
             .end(function(err, res){
-                if (err.status == 200) {
+                if (!err) {
                     glimpse.emit('data.message.summary.found.remote', []);
                 }
             }); 
