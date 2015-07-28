@@ -41,6 +41,7 @@
     "superagent": "^1.2.0"
   },
   "devDependencies": {
+    "amd-define-factory-patcher-loader": "^1.0.0",
     "autoprefixer-loader": "^2.0.0",
     "browser-sync": "^2.7.1",
     "chance": "^0.7.4",
