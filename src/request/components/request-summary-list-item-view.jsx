@@ -8,10 +8,16 @@ var classNames = require('classnames');
 module.exports = React.createClass({
     render: function () {
         var summary = this.props.summary;
+        // ******* TEMP CODE *******
+        var user = summary.user || {};
+        var abstract = summary.abstract || {};
+        // ******* TEMP CODE *******
+        
         var containerClass = classNames({
             'request-summary-item-holder': true,
             'request-summary-shell-selected': summary._selected
         });
+        
 
         return (
             <div className={containerClass} onClick={this.onSelect}>
@@ -24,14 +30,14 @@ module.exports = React.createClass({
                         <td><Timeago time={summary.dateTime} /></td>
                     </tr>
                     <tr>
-                        <td>{summary.user.name}</td>
-                        <td>{summary.abstract.networkTime}ms</td>
-                        <td>{summary.abstract.serverTime}ms</td>
-                        <td>{summary.abstract.clientTime}ms</td>
-                        <td>{summary.abstract.controller}.{summary.abstract.action}(...)</td>
-                        <td>{summary.abstract.actionTime}ms</td>
-                        <td>{summary.abstract.viewTime}ms</td>
-                        <td>{summary.abstract.queryTime}ms / {summary.abstract.queryCount}</td>
+                        <td>{user.name}</td>
+                        <td>{abstract.networkTime}ms</td>
+                        <td>{abstract.serverTime}ms</td>
+                        <td>{abstract.clientTime}ms</td>
+                        <td>{abstract.controller}.{abstract.action}(...)</td>
+                        <td>{abstract.actionTime}ms</td>
+                        <td>{abstract.viewTime}ms</td>
+                        <td>{abstract.queryTime}ms / {abstract.queryCount}</td>
                     </tr>
                 </table>
             </div>
