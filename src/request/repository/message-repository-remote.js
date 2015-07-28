@@ -10,7 +10,9 @@ module.exports = {
             .query({ latest: true })
             .set('Accept', 'application/json')
             .end(function(err, res){
-                glimpse.emit('data.message.summary.found.remote', []);
+                if (err.status == 200) {
+                    glimpse.emit('data.message.summary.found.remote', []);
+                }
             }); 
     },
     triggerGetDetailsFor: function (requestId) {
@@ -19,7 +21,9 @@ module.exports = {
             .query({ context: requestId })
             .set('Accept', 'application/json')
             .end(function(err, res){
-                glimpse.emit('data.message.summary.found.remote', []);
+                if (err.status == 200) {
+                    glimpse.emit('data.message.summary.found.remote', []);
+                }
             }); 
     }
 };
