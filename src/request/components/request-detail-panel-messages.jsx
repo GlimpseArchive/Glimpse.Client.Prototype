@@ -19,7 +19,6 @@ module.exports = React.createClass({
                         var index = item.indices && !_.isEmpty(item.indices) ? <PanelGeneric payload={item.indices} /> : '--';
                         var abstract = item.abstract && !_.isEmpty(item.abstract) ? <PanelGeneric payload={item.abstract} /> : '--';
                         var payload = item.payload && !_.isEmpty(item.payload) ? <PanelGeneric payload={item.payload} /> : '--';
-                        var links = item.links && !_.isEmpty(item.links) ? <PanelGeneric payload={item.links} /> : '--';
                         return (
                             <tr className="row-devider">
                                 <th>{item.type} ({item.count})</th>
@@ -29,9 +28,7 @@ module.exports = React.createClass({
                                     <h3>Abstract</h3>
                                     <div>{abstract}</div>
                                     <h3>Payload</h3>
-                                    <div>{payload}</div>
-                                    <h3>Links</h3>
-                                    <div>{links}</div>
+                                    <div>{payload}</div> 
                                 </td>
                             </tr>
                         );
