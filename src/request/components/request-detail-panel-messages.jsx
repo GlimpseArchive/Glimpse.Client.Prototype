@@ -9,11 +9,7 @@ module.exports = React.createClass({
         return (
             <div>
                 <div><h3>Message Count - {_.size(this.props.data.payload)}</h3></div>
-                <table>
-                    <thead>
-                        <th>Type</th>
-                        <th>Details</th>
-                    </thead>
+                <table> 
                     <tbody>
                     {_.map(this.props.data.payload, function (item) { 
                         var index = item.indices && !_.isEmpty(item.indices) ? <PanelGeneric payload={item.indices} /> : '--';
@@ -21,8 +17,8 @@ module.exports = React.createClass({
                         var payload = item.payload && !_.isEmpty(item.payload) ? <PanelGeneric payload={item.payload} /> : '--';
                         return (
                             <tr className="row-devider">
-                                <th>{item.type} ({item.count})</th>
                                 <td>
+                                    <h2>{item.type} ({item.count})</h2>
                                     <h3>Index</h3>
                                     <div>{index}</div>
                                     <h3>Abstract</h3>
