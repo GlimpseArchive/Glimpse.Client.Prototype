@@ -31,7 +31,7 @@ Assuming you have [Git](http://git-scm.com/) installed, clone a copy of the
 Glimpse.Client git repo by running:
 
 ```sh
-git clone https://github.com/Glimpse/Glimpse.Client.git
+git clone https://github.com/Glimpse/Glimpse.Client.Prototype.git
 ```
 
 ### Getting Running
