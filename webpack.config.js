@@ -65,8 +65,8 @@ module.exports = {
     },
     plugins: [
         new webpack.DefinePlugin({
-            DIAGNOSTICS: false,
-            FAKE_SERVER: false
+            DIAGNOSTICS: true,
+            FAKE_SERVER: true
         }),
         new webpack.ProvidePlugin({
             'window.jQuery': require.resolve('jquery/src/core.js'),
