@@ -14,6 +14,9 @@ module.exports = {
                 if (res.ok) {
                     glimpse.emit('data.message.summary.found.remote', res.body);
                 }
+                else {
+                    console.log('ERROR: Error reaching server for summary request')
+                }  
             }); 
     },
     triggerGetDetailsFor: function (requestId) {
@@ -25,6 +28,9 @@ module.exports = {
                 if (res.ok) {
                     glimpse.emit('data.message.summary.found.remote', res.body);
                 }
+                else {
+                    console.log('ERROR: Error reaching server for summary request')
+                }  
             }); 
     }
 };
