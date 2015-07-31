@@ -8,7 +8,7 @@ module.exports = React.createClass({
         var summary = this.props.summary;
         // ******* TEMP CODE *******
         var user = summary.user || {};
-        var abstract = abstract || {};
+        var abstract = summary.abstract || {};
         // ******* TEMP CODE *******
 
         return (
