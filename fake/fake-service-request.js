@@ -14,6 +14,15 @@ var requestProcessor = {
         summary: function(rawRequests) {
             var requests = _.map(rawRequests, 'request');
             
+            // since the message is on the client it is assumed the payload is hydrated
+            _.each(requests, function(request) {
+                _.each(request.messages, function(message) {
+                    if (message.payload && message.payload != '') {
+                        message.payload = JSON.parse(message.payload);
+                    }
+                })
+            })
+            
             return {
                 newRequests: requests,
                 updatedRequests: [],
