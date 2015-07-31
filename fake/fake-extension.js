@@ -365,7 +365,7 @@ var generateMvcRequest = (function() {
         },
         createEnd: function(source) {
             var message = this.createMessage('request-end', source.context);
-            message.index = mapProperties(source, {}, [ 'duration', 'statusCode', 'statusText' ]);
+            message.indices = mapProperties(source, {}, [ 'duration', 'statusCode', 'statusText' ]);
             
             return message;
         },
