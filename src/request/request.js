@@ -4,11 +4,9 @@ var glimpse = require('glimpse');
 var requestRepository = require('./repository/request-repository');
 var userRepository = require('./repository/user-repository');
 
-function initialize() {
-    if (!FAKE_SERVER) {
-        requestRepository.triggerGetLastestSummaries();
-        userRepository.triggerGetLastestUsers();
-    }
+function initialize() { 
+    requestRepository.triggerGetLastestSummaries();
+    userRepository.triggerGetLastestUsers(); 
 
     glimpse.emit('shell.request.ready', {});
 }

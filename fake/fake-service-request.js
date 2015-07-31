@@ -3,6 +3,8 @@
 var _ = require('lodash');
 var chance = require('./fake-extension'); // TODO: Can I just import chance and have this wired up differently
 var moment = require('moment'); 
+var request = require('superagent');
+var mock = require('superagent-mocker')(request);
 var glimpse = require('glimpse');
     
 var _rawRequestCache = {};
@@ -49,7 +51,7 @@ var requestProcessor = {
 
 
 // simulate summaries
-var triggerGetLastestSummaries = (function () {
+var summaries = (function () {
     var maxEvents = chance.integerRange(25, 35);
     var leftEvents = maxEvents;
     
@@ -124,26 +126,30 @@ var triggerGetLastestSummaries = (function () {
         }
     };
 
-    return function () {
-        // simulate requests from local store
-        setTimeout(function () {
-            generate.local();
-        }, chance.integerRange(50, 100));
-
-        // simulate messages from remote
-        setTimeout(function () {
-            generate.remote();
-        }, chance.integerRange(2000, 2500));
-
-        // simulate messages from stream
-        setTimeout(function () {
-            generate.stream(0);
-        }, chance.integerRange(4000, 6000));
+    return {
+        local: function() {
+            // simulate requests from local store
+            setTimeout(function () {
+                generate.local();
+            }, chance.integerRange(50, 100));
+        },
+        remote: function() {
+            // simulate messages from remote
+            setTimeout(function () {
+                generate.remote();
+            }, chance.integerRange(2000, 2500));
+        },
+        stream: function() {
+            // simulate messages from stream
+            setTimeout(function () {
+                generate.stream(0);
+            }, chance.integerRange(4000, 6000));
+        }
     };
 })();
 
-// simulate details
-var triggerGetDetailsFor = (function () { 
+// simulate details 
+var details = (function () { 
     var requestsFound = function(messageType, messageSource, results) {
         glimpse.emit('data.' + messageType + '.detail.found.' + messageSource, results);
     };
@@ -161,27 +167,28 @@ var triggerGetDetailsFor = (function () {
         }
     };
 
-    return function (id) { 
-        // simulate messages from remote
-        setTimeout(function () {
-            generate.remote(id);
-        }, chance.integerRange(2000, 3000));
+    return {
+        remote: function (id) { 
+            // simulate messages from remote
+            setTimeout(function () {
+                generate.remote(id);
+            }, chance.integerRange(2000, 3000));
+        }
     };
 })();
 
 // hook up listeners
 (function () {
-    function requestReady() {
-        triggerGetLastestSummaries();
-    }
-
-    glimpse.on('shell.request.ready', requestReady);
-})();
-
-(function () {
-    function detailRequested(payload) {
-        triggerGetDetailsFor(payload.requestId);
-    }
- 
-    glimpse.on('data.request.detail.requested', detailRequested);
+    glimpse.on('shell.request.ready', function() { 
+        summaries.local();
+        summaries.stream();
+    });
+    
+    mock.get('/glimpse/data/history', function(req) { 
+        summaries.remote();
+    });
+    
+    mock.get('/glimpse/data/messages/:id', function(req) {
+        details.remote(req.params.id);
+    });
 })();

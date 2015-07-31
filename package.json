@@ -64,6 +64,7 @@
     "sass-loader": "^0.4.2",
     "source-map-loader": "^0.1.5",
     "style-loader": "^0.12.1",
+    "superagent-mocker": "^0.1.6",
     "webpack": "^1.9.4"
   }
 }

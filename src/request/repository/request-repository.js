@@ -9,9 +9,10 @@ var messageRepository = require('./message-repository');
 
 module.exports = {
     triggerGetLastestSummaries: function () {
+        // find any messages from server
+        messageRepository.triggerGetLastestSummaries();
+        
         if (!FAKE_SERVER) {
-            // find any messages from server
-            messageRepository.triggerGetLastestSummaries();
             // find any requests in stroage
             localRequestRepository.triggerGetLastestSummaries();
 
@@ -22,11 +23,11 @@ module.exports = {
     triggerGetDetailsFor: function (requestId) {
         // find the request in cache
         cacheRequestRepository.triggerGetDetailsFor(requestId);
-            
+        
+        // find the messages from server
+        messageRepository.triggerGetDetailsFor(requestId);
+        
         if (!FAKE_SERVER) {
-            // find the messages from server
-            messageRepository.triggerGetDetailsFor(requestId);
-
             // make sure we get updates for the request as they happen
             messageRepository.subscribeToDetailsFor(requestId);
         }
