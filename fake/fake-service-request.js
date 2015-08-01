@@ -20,8 +20,8 @@ var requestProcessor = {
                     if (message.payload && message.payload != '') {
                         message.payload = JSON.parse(message.payload);
                     }
-                })
-            })
+                });
+            });
             
             return {
                 newRequests: requests,
