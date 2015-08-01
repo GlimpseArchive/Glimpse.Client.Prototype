@@ -7,7 +7,7 @@ var socket = (function() {
     var connection;
 
     var setup = function() {
-        connection = $.hubConnection("/Glimpse/Data/Stream", { useDefaultPath: false });
+        connection = $.hubConnection('/Glimpse/Data/Stream', { useDefaultPath: false });
         
         var messageProxy = connection.createHubProxy('messageClientChannelSender');
         messageProxy.on('summaryMessage', function(message) {  
