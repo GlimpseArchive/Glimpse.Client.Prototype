@@ -11,10 +11,14 @@ var socket = (function() {
         
         var messageProxy = connection.createHubProxy('messageClientChannelSender');
         messageProxy.on('summaryMessage', function(message) {  
-            glimpse.emit('data.message.summary.found.stream', [ message ]);
+            if (!FAKE_SERVER) {
+                glimpse.emit('data.message.summary.found.stream', [ message ]);
+            }
         });
         messageProxy.on('detailMessage', function(message) {  
-            glimpse.emit('data.message.detail.found.stream', [ message ]);
+            if (!FAKE_SERVER) {
+                glimpse.emit('data.message.detail.found.stream', [ message ]);
+            }
         });
         
         connection.start({ withCredentials: false })

@@ -4,8 +4,50 @@ var _ = require('lodash');
 var chance = require('./fake-extension'); // TODO: Can I just import chance and have this wired up differently
 var moment = require('moment'); 
 var request = require('superagent');
-var mock = require('superagent-mocker')(request);
+var requestMock = require('superagent-mocker')(request);
+var $ = require('lib/modules/jquery-signalr.js');
+var $hubConnectionMock;
 var glimpse = require('glimpse');
+
+// TODO: remove into its own module
+$hubConnectionMock = (function() {
+    var mocks = {};
+    
+    return {
+        on: function(topic, mockCallback) {
+            mocks[topic] = mockCallback;
+        },
+        trigger: function(topic, userCallback) {
+            if (mocks[topic]) {
+                var result = mocks[topic](); 
+                userCallback(result);
+            }
+        }
+    }
+})();
+$.hubConnection = function() {
+    var connection = {
+            createHubProxy: function() {
+                return {
+                    on: function(topic, callback) {
+                        $hubConnectionMock.trigger(topic, callback);
+                    }
+                };
+            },
+            start: function() {
+                // open up fake socket
+                return connection;
+            },
+            done: function(doneCallback) {
+                return connection;
+            },
+            fail: function(failCallback) {
+                return connection;
+            }
+        };
+    return connection;
+};
+    
     
 var _rawRequestCache = {};
  
@@ -190,14 +232,21 @@ var details = (function () {
 (function () {
     glimpse.on('shell.request.ready', function() { 
         summaries.local();
-        summaries.stream();
     });
     
-    mock.get('/glimpse/data/history', function(req) { 
+    // remote triggers
+    requestMock.get('/glimpse/data/history', function(req) { 
         summaries.remote();
+        
+        // TODO: need to return data
+        //return data;
+    }); 
+    requestMock.get('/glimpse/data/messages/:id', function(req) {
+        details.remote(req.params.id); 
     });
     
-    mock.get('/glimpse/data/messages/:id', function(req) {
-        details.remote(req.params.id);
+    // stream subscribers
+    $hubConnectionMock.on('summaryMessage', function() {
+        summaries.stream();
     });
 })();

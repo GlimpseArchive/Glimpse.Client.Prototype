@@ -11,13 +11,13 @@ module.exports = {
     triggerGetLastestSummaries: function () {
         // find any messages from server
         messageRepository.triggerGetLastestSummaries();
+
+        // make sure we get new messages from server as they happen
+        messageRepository.subscribeToLastestSummaries();
         
         if (!FAKE_SERVER) {
             // find any requests in stroage
             localRequestRepository.triggerGetLastestSummaries();
-
-            // make sure we get new messages from server as they happen
-            messageRepository.subscribeToLastestSummaries();
         }
     },
     triggerGetDetailsFor: function (requestId) {
