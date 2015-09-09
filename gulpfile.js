@@ -1,8 +1,8 @@
 'use strict';
 
+var _ = require('lodash');
 var gulp = require('gulp');
 var argv = require('minimist')(process.argv.slice(2));
-var extend = require('extend');
 var webpack = require('webpack');
 var browserSync = require('browser-sync');
 var htmlcompress = require('gulp-minify-html');
@@ -23,7 +23,7 @@ var RELEASE = !!argv.release;
 var DEBUG = !!argv.debug;
 
 function getBundleConfig() {
-    var config = extend(true, {}, require('./webpack.config'));
+    var config = _.defaultsDeep({}, require('./webpack.config'));
 
     config.entry = settings.entry;
     config.output.path = settings.output;
