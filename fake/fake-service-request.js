@@ -5,11 +5,13 @@ var chance = require('./fake-extension'); // TODO: Can I just import chance and 
 var moment = require('moment'); 
 var request = require('superagent');
 var requestMock = require('superagent-mocker')(request);
-var $ = require('lib/modules/jquery-signalr.js');
-var $hubConnectionMock;
 var glimpse = require('glimpse');
 
 // TODO: remove into its own module
+// TODO: switch to SSE code
+/*
+var $ = require('lib/modules/jquery-signalr.js');
+var $hubConnectionMock;
 $hubConnectionMock = (function() {
     var mocks = {};
     
@@ -47,7 +49,7 @@ $.hubConnection = function() {
         };
     return connection;
 };
-    
+*/
     
 var _rawRequestCache = {};
  
@@ -246,7 +248,10 @@ var details = (function () {
     });
     
     // stream subscribers
+    // TODO: Switch to SSE code
+    /*
     $hubConnectionMock.on('summaryMessage', function() {
         summaries.stream();
     });
+    */
 })();
