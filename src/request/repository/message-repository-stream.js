@@ -1,6 +1,7 @@
 'use strict';
 
 var glimpse = require('glimpse');
+var EventSource = require('event-source')
 
 module.exports = {
     subscribeToLastestSummaries: function () {
