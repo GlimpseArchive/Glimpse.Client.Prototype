@@ -536,11 +536,6 @@ var generateMvcRequest = (function() {
         request.abstract = mapProperties(source, {}, [ 'networkTime', 'serverTime', 'clientTime', 'controller', 'action', 'actionTime', 'viewTime', 'queryTime', 'queryCount' ]);
         request.messages = _.indexBy(source.messages, 'id');
         
-        // server stores payload as sting so got to try and match that
-        _.each(request.messages, function(message) {
-            message.payload = JSON.stringify(message.payload);
-        });
-        
         return request;
     };
     
