@@ -10,7 +10,7 @@ var socket = (function() {
         connection = new polyfill.EventSource('/Glimpse/MessageStream');
         connection.onmessage = function(e) {
             if (!FAKE_SERVER) {
-                glimpse.emit('data.message.summary.found.stream', e.data);
+                glimpse.emit('data.message.summary.found.stream', JSON.parse(e.data));
             }
         };
     }; 
