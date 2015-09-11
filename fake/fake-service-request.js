@@ -6,50 +6,31 @@ var moment = require('moment');
 var request = require('superagent');
 var requestMock = require('superagent-mocker')(request);
 var glimpse = require('glimpse');
+var polyfill = require('event-source');
 
 // TODO: remove into its own module
-// TODO: switch to SSE code
-/*
-var $ = require('lib/modules/jquery-signalr.js');
-var $hubConnectionMock;
-$hubConnectionMock = (function() {
+var streamMock = (function() {
     var mocks = {};
     
     return {
-        on: function(topic, mockCallback) {
-            mocks[topic] = mockCallback;
+        on: function(url, mockCallback) {
+            mocks[url] = mockCallback;
         },
-        trigger: function(topic, userCallback) {
-            if (mocks[topic]) {
-                var result = mocks[topic](); 
+        trigger: function(url, userCallback) {
+            if (mocks[url]) {
+                var result = mocks[url](); 
                 userCallback(result);
             }
         }
     }
 })();
-$.hubConnection = function() {
-    var connection = {
-            createHubProxy: function() {
-                return {
-                    on: function(topic, callback) {
-                        $hubConnectionMock.trigger(topic, callback);
-                    }
-                };
-            },
-            start: function() {
-                // open up fake socket
-                return connection;
-            },
-            done: function(doneCallback) {
-                return connection;
-            },
-            fail: function(failCallback) {
-                return connection;
-            }
-        };
-    return connection;
+
+polyfill.EventSource = function(url) {
+    this.url = url; 
+    
+    streamMock.trigger(url, function() {});
 };
-*/
+
     
 var _rawRequestCache = {};
  
@@ -248,10 +229,7 @@ var details = (function () {
     });
     
     // stream subscribers
-    // TODO: Switch to SSE code
-    /*
-    $hubConnectionMock.on('summaryMessage', function() {
+    streamMock.on('/Glimpse/MessageStream', function() {
         summaries.stream();
     });
-    */
 })();
