@@ -23,10 +23,12 @@ module.exports = function(request, message) {
         if (message.types[0] == 'end-request-message') {
             setIndex(message, 'duration', message.payload.duration);
             setIndex(message, 'method', message.payload.method);
+            setIndex(message, 'contentType', message.payload.contentType);
+            setIndex(message, 'statusCode', message.payload.statusCode);
+            setIndex(message, 'dateTime', message.payload.startTime);
         }
     }
     //TEMP CODE TO GET WORKING WITH SERVER
-    
     
     return helper.copyProperties(message.indices, request);
 };
