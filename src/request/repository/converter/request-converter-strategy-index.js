@@ -2,6 +2,31 @@
 
 var helper = require('./request-converter-helper');
 
+var setIndex = function(message, key, value) {
+    if (!message.indices) {
+        message.indices = {};
+    }
+    
+    message.indices[key] = value;
+}
+
 module.exports = function(request, message) { 
+    //TEMP CODE TO GET WORKING WITH SERVER
+    if (message.types) {
+        message.type = message.types.join(', ');
+        
+        if (message.types[0] == 'begin-request-message') {
+            setIndex(message, 'url', message.payload.url);
+            setIndex(message, 'id', message.context.id);
+        }
+        
+        if (message.types[0] == 'end-request-message') {
+            setIndex(message, 'duration', message.payload.duration);
+            setIndex(message, 'method', message.payload.method);
+        }
+    }
+    //TEMP CODE TO GET WORKING WITH SERVER
+    
+    
     return helper.copyProperties(message.indices, request);
 };
