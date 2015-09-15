@@ -27,9 +27,7 @@ module.exports = {
         // find the messages from server
         messageRepository.triggerGetDetailsFor(requestId);
         
-        if (!FAKE_SERVER) {
-            // make sure we get updates for the request as they happen
-            messageRepository.subscribeToDetailsFor(requestId);
-        }
+        // make sure we get updates for the request as they happen
+        messageRepository.subscribeToDetailsFor(requestId);
     }
 };
