@@ -19,7 +19,7 @@ var processMessages = function(messages) {
     }
 
     glimpse.on('data.message.summary.found.stream', republishFoundSummary);
-    glimpse.on('data.message.summary.found.remote', republishFoundSummary);  //TODO: not yet implemented
+    glimpse.on('data.message.summary.found.remote', republishFoundSummary);
 })();
 
 // republish Found Details
@@ -31,5 +31,5 @@ var processMessages = function(messages) {
     }
 
     glimpse.on('data.message.detail.found.stream', republishFoundDetail);
-    glimpse.on('data.message.detail.found.remote', republishFoundDetail);  //TODO: not yet implemented
+    glimpse.on('data.message.detail.found.remote', republishFoundDetail);
 })();
