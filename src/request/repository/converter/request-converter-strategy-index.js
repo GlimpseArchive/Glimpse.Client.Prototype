@@ -27,6 +27,15 @@ module.exports = function(request, message) {
             setIndex(message, 'statusCode', message.payload.statusCode);
             setIndex(message, 'dateTime', message.payload.startTime);
         }
+        
+        if (message.types[0] == 'user-identification') {
+            var user = { 
+                id: message.payload.userId, 
+                name: message.payload.username, 
+                avatarUrl: message.payload.image };
+                
+            setIndex(message, 'user', user);
+        }
     }
     //TEMP CODE TO GET WORKING WITH SERVER
     
