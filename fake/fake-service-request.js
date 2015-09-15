@@ -38,20 +38,13 @@ var requestProcessor = {
     requests: {  
         summary: function(rawRequests) {
             var requests = _.map(rawRequests, 'request');
-            
-            // since the message is on the client it is assumed the payload is hydrated
-            _.each(requests, function(request) {
-                _.each(request.messages, function(message) {
-                    if (message.payload && message.payload != '') {
-                        message.payload = JSON.parse(message.payload);
-                    }
-                });
-            });
+            var messages = _.union.apply(undefined, _.map(rawRequests, 'messages'));
             
             return {
                 newRequests: requests,
                 updatedRequests: [],
-                affectedRequests: requests
+                affectedRequests: requests,
+                newMessage: messages
             };
         },
         detail: function(rawRequest) {
@@ -218,7 +211,7 @@ var details = (function () {
     });
     
     // remote triggers
-    requestMock.get('/glimpse/data/history', function(req) { 
+    requestMock.get('/glimpse/MessageHistory', function(req) {
         summaries.remote();
         
         // TODO: need to return data
