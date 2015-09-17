@@ -76,7 +76,8 @@ var requestProcessor = {
             var messages = [];
             _.forEach(rawRequests, function(request) { 
                 _.forEach(request.messages, function(message) {  
-                    if (!_.isEmpty(message.indices) || !_.isEmpty(message.abstract)) { 
+                    // TODO: Need different logic here to targe which requests we should be sending down
+                    if (!_.isEmpty(message.indices) || !_.isEmpty(message.abstract) || message.types[0] == 'user-identification') { 
                         messages.push(message);
                     }
                 });
