@@ -3,11 +3,11 @@
 var _ = require('lodash');
 var glimpse = require('glimpse');
 
-var _straties = []; 
+var _strategies = []; 
 
 module.exports = { 
     registerStrategy: function(strategy) {
-        _straties.push(strategy);
+        _strategies.push(strategy);
 
         glimpse.emit('system.request.converter.strategy.added', { strategy: strategy });
     },
@@ -21,9 +21,15 @@ module.exports = {
         var didUpdate = false;
         
         _.forEach(messages, function(message) {  
-            _.forEach(_straties, function(action) { 
-                didUpdate = action(request, message) || didUpdate; 
-            });  
+            if (!request.messages[message.id]) {
+                request.messages[message.id] = message; 
+
+                _.forEach(_strategies, function(action) { 
+                    action(request, message) || didUpdate; 
+                }); 
+                
+                didUpdate = true;
+            } 
         });  
         
         return didUpdate;
@@ -36,7 +42,7 @@ module.exports = {
     
     registerStrategy(require('./request-converter-strategy-index'));
     registerStrategy(require('./request-converter-strategy-highlight'));
-    registerStrategy(require('./request-converter-strategy-message'));
+    registerStrategy(require('./request-converter-strategy-types'));
     // NOTE: Removing for the time being... doesn't looks like this will be needed
     // TODO: Check if this can be removed
     //registerStrategy(require('./request-converter-strategy-relationship'));
