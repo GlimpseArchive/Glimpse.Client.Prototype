@@ -344,7 +344,7 @@ var generateMvcRequest = (function() {
     MessageGenerator.prototype = { 
         createMessage: function(type, context) {
             return {
-                type: type,
+                types:  [ type ],
                 context: context,
                 id: chance.guid(),
                 payload: {},
