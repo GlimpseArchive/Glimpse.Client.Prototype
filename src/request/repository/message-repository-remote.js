@@ -27,7 +27,7 @@ module.exports = {
     },
     triggerGetDetailsFor: function(requestId) {
         // TODO: need to pull this out different source
-        var uri = '/Glimpse/MessageHistory/' + requestId;
+        var uri = '/Glimpse/MessageDetail/' + requestId;
         
         request
             .get(uri) 

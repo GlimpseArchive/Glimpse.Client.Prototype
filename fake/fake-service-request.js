@@ -231,7 +231,7 @@ var details = (function () {
         // TODO: need to return data
         //return data;
     }); 
-    requestMock.get('/glimpse/data/messages/:id', function(req) {
+    requestMock.get('/glimpse/MessageDetail/:id', function(req) {
         details.remote(req.params.id); 
     });
     
