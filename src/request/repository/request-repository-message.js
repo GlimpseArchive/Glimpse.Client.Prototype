@@ -12,7 +12,9 @@ var processMessages = (function() {
         var requestRepositoryPayload = {
                 newRequests: [],
                 updatedRequests: [],
-                affectedRequests: []
+                affectedRequests: [],
+                newMessages: messagePayload.messages,
+                newMessageTypes: {}
             };
         
         _.forEach(messagePayload.groupedById, function(messages, requestId) { 
@@ -36,6 +38,17 @@ var processMessages = (function() {
                 } 
                 requestRepositoryPayload.affectedRequests.push(request);
             }
+        });
+        
+        // process message types
+        _.forEach(messagePayload.messages, function(message) {
+            _.forEach(message.types, function(type) {
+                if (!requestRepositoryPayload.newMessageTypes[type]) {
+                    requestRepositoryPayload.newMessageTypes[type] = [];
+                }
+                
+                requestRepositoryPayload.newMessageTypes[type].push(message);
+            });
         });
         
         return requestRepositoryPayload;

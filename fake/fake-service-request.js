@@ -39,12 +39,26 @@ var requestProcessor = {
         summary: function(rawRequests) {
             var requests = _.map(rawRequests, 'request');
             var messages = _.union.apply(undefined, _.map(rawRequests, 'messages'));
+            var newMessageTypes = {};
+            
+            // TODO: Would prefer not to have duplicate work work here (as request-repository-message)
+            // process message types
+            _.forEach(messages, function(message) {
+                _.forEach(message.types, function(type) {
+                    if (!newMessageTypes[type]) {
+                        newMessageTypes[type] = [];
+                    }
+                    
+                    newMessageTypes[type].push(message);
+                });
+            });
             
             return {
                 newRequests: requests,
                 updatedRequests: [],
                 affectedRequests: requests,
-                newMessage: messages
+                newMessages: messages,
+                newMessageTypes: newMessageTypes
             };
         },
         detail: function(rawRequest) {

@@ -33,7 +33,9 @@ var processRequests = function(requestRepositoryPayload) {
                 newRequests: requestRepositoryPayload.newRequests,
                 updatedRequests: requestRepositoryPayload.updatedRequests,
                 affectedRequests: requestRepositoryPayload.affectedRequests,
-                allRequests: data.values
+                allRequests: data.values,
+                newMessages: requestRepositoryPayload.newMessages,
+                newMessageTypes: requestRepositoryPayload.newMessageTypes
             };
 };
 
