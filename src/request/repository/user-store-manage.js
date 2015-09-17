@@ -11,25 +11,33 @@ var userDataIndex = {};
         // TODO: Need to support if the user is missing
         // TODO: This is very naive atm, no sorting or indexing, etc present
         var newUsers = [];
+        var foundAny = false;
+        
         for (var i = 0; i < requests.length; i++) {
             var user = requests[i].user;
-            var currentIndex = userDataIndex[user.id];
-            if (currentIndex === undefined) {
-                currentIndex = userData.length;
-                userDataIndex[user.id] = currentIndex;
-                newUsers.push(user);
+            if (user) {
+                if (!userDataIndex[user.id]) {
+                    userDataIndex[user.id] = userData.length;
+                    userData.push(user);
+                    
+                    newUsers.push(user);
+                }
+    
+                foundAny = true;
             }
-
-            userData[currentIndex] = user;
         }
 
-        var payload = {
-            allUsers: userData,
-            newUsers: newUsers,
-            newRequests: requests
-        };
-
-        glimpse.emit('data.user.detail.found', payload);
+        // requests can come in without us knowing anything about users,
+        // so only worth doing something if we have anything
+        if (foundAny) {
+            var payload = {
+                allUsers: userData,
+                newUsers: newUsers,
+                newRequests: requests
+            };
+    
+            glimpse.emit('data.user.detail.found', payload);
+        }
     }
 
     glimpse.on('data.user.detail.found.local', republishFoundEntry);
