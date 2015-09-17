@@ -8,6 +8,8 @@ var localRepository = require('./user-repository-local');
 
 module.exports = {
     triggerGetLastestUsers: function () {
-        localRepository.triggerGetLastestUsers();
+        if (!FAKE_SERVER) {
+            localRepository.triggerGetLastestUsers();
+        }
     }
 };
