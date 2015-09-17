@@ -12,17 +12,11 @@ module.exports = React.createClass({
                 <table> 
                     <tbody>
                     {_.map(this.props.data.payload, function (item) { 
-                        var index = item.indices && !_.isEmpty(item.indices) ? <PanelGeneric payload={item.indices} /> : '--';
-                        var abstract = item.abstract && !_.isEmpty(item.abstract) ? <PanelGeneric payload={item.abstract} /> : '--';
                         var payload = item.payload && !_.isEmpty(item.payload) ? <PanelGeneric payload={item.payload} /> : '--';
                         return (
                             <tr className="row-devider">
                                 <td>
                                     <h2>{item.type} ({item.count})</h2>
-                                    <h3>Index</h3>
-                                    <div>{index}</div>
-                                    <h3>Abstract</h3>
-                                    <div>{abstract}</div>
                                     <h3>Payload</h3>
                                     <div>{payload}</div> 
                                 </td>
