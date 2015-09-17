@@ -117,22 +117,23 @@ function notifyUsersChanged() {
             };
     }
 
-    function foundUser(payload) {
+    function foundUser(userStoreMessage) {
         // TODO: This needs to be cleaned up bit messy atm but will do
-        var rawRequests = payload.newRequests;
-        for (var i = rawRequests.length - 1; i >= 0; i--) {
-            var rawRequest = rawRequests[i];
-            var rawUser = rawRequest.user;
+        // TODO: Probably need to do some sorting here
+        
+        _.forEachRight(userStoreMessage.userRequests, function(userRequest) {
+            var request = userRequest.request;
+            var rawUser = userRequest.user.payload;
 
-            var user = _users[rawUser.id];
-            if (user === undefined) {
-                user = createUser(rawUser);
-                _users[rawUser.id] = user;
+            var userViewModel = _users[rawUser.userId];
+            if (userViewModel === undefined) {
+                userViewModel = createUser(rawUser);
+                _users[rawUser.userId] = userViewModel;
             }
 
-            manageRequest(user, rawRequest);
-            manageOnline(user, rawRequest);
-        }
+            manageRequest(userViewModel, request);
+            manageOnline(userViewModel, request);
+        });
 
         notifyUsersChanged();
     }

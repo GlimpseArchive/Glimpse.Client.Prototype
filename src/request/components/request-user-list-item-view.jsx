@@ -19,9 +19,9 @@ module.exports = React.createClass({
                 <table className={containerClass}>
                     <tr>
                         <td width="50" rowSpan="2">
-                            <img src={user.details.avatarUrl} width="40" />
+                            <img src={user.details.image} width="40" />
                         </td>
-                        <td>{user.details.name}</td>
+                        <td>{user.details.username}</td>
                     </tr>
                     <tr>
                         <td colSpan="2"><Timeago time={user.lastActive} /></td>

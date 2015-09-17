@@ -253,16 +253,16 @@ var seedMvcActions = (function() {
 // TODO: Should be brought into a different file/module 
 var seedUsers = function() {
     return [
-        { id: chance.guid(), name: 'Anthony', avatarUrl: 'https://avatars.githubusercontent.com/u/585619' },
-        { id: chance.guid(), name: 'Nik', avatarUrl: 'https://avatars.githubusercontent.com/u/199026' },
-        { id: chance.guid(), name: 'Christophe', avatarUrl: 'https://avatars.githubusercontent.com/u/1467346' },
-        { id: chance.guid(), name: 'Bjorn', avatarUrl: 'https://avatars.githubusercontent.com/u/1607579' },
-        { id: chance.guid(), name: 'Ian', avatarUrl: 'https://avatars.githubusercontent.com/u/52329?' },
-        { id: chance.guid(), name: 'Keith', avatarUrl: 'https://avatars.githubusercontent.com/u/133987?' },
-        { id: chance.guid(), name: 'Aaron', avatarUrl: 'https://avatars.githubusercontent.com/u/434140?' },
-        { id: chance.guid(), name: 'Jeff', avatarUrl: 'https://avatars.githubusercontent.com/u/683658?' },
-        { id: chance.guid(), name: 'Kristian', avatarUrl: 'https://avatars.githubusercontent.com/u/582487?' },
-        { id: chance.guid(), name: 'James', avatarUrl: 'https://avatars.githubusercontent.com/u/1197383?' }
+        { userId: chance.guid(), username: 'Anthony', image: 'https://avatars.githubusercontent.com/u/585619' },
+        { userId: chance.guid(), username: 'Nik', image: 'https://avatars.githubusercontent.com/u/199026' },
+        { userId: chance.guid(), username: 'Christophe', image: 'https://avatars.githubusercontent.com/u/1467346' },
+        { userId: chance.guid(), username: 'Bjorn', image: 'https://avatars.githubusercontent.com/u/1607579' },
+        { userId: chance.guid(), username: 'Ian', image: 'https://avatars.githubusercontent.com/u/52329?' },
+        { userId: chance.guid(), username: 'Keith', image: 'https://avatars.githubusercontent.com/u/133987?' },
+        { userId: chance.guid(), username: 'Aaron', image: 'https://avatars.githubusercontent.com/u/434140?' },
+        { userId: chance.guid(), username: 'Jeff', image: 'https://avatars.githubusercontent.com/u/683658?' },
+        { userId: chance.guid(), username: 'Kristian', image: 'https://avatars.githubusercontent.com/u/582487?' },
+        { userId: chance.guid(), username: 'James', image: 'https://avatars.githubusercontent.com/u/1197383?' }
     ];
 };
 
@@ -353,7 +353,13 @@ var generateMvcRequest = (function() {
         }, 
         createStart: function(source) {
             var message = this.createMessage('request-start', source.context);
-            message.indices = mapProperties(source, {}, [ 'url', 'dateTime', 'method', 'contentType', 'user' ]);
+            message.indices = mapProperties(source, {}, [ 'url', 'dateTime', 'method', 'contentType' ]);
+            
+            return message;
+        },
+        createUser: function(source) {
+            var message = this.createMessage('user-identification', source.context);
+            message.payload = source.user;
             
             return message;
         },
@@ -514,6 +520,7 @@ var generateMvcRequest = (function() {
         })(this),
         processRequest: function(source) {
             this.messages.push(this.createStart(source));
+            this.messages.push(this.createUser(source));
             
             this.processAction(source, source, source.context);
             
@@ -532,9 +539,20 @@ var generateMvcRequest = (function() {
     var RequestGenerator = function() { 
     };
     RequestGenerator.prototype.processRequest = function(source) {
-        var request = mapProperties(source, {}, [ 'id', 'url', 'dateTime', 'method', 'contentType', 'user',  'duration', 'statusCode', 'statusText' ]);
+        var request = mapProperties(source, {}, [ 'id', 'url', 'dateTime', 'method', 'contentType', 'duration', 'statusCode', 'statusText' ]);
         request.abstract = mapProperties(source, {}, [ 'networkTime', 'serverTime', 'clientTime', 'controller', 'action', 'actionTime', 'viewTime', 'queryTime', 'queryCount' ]);
         request.messages = _.indexBy(source.messages, 'id');
+        request.types = {};
+        
+        _.forEach(request.messages, function(message) {
+            _.forEach(message.types, function(type) {
+                if (!request.types[type]) {
+                    request.types[type] = [];
+                }
+                
+                request.types[type].push(message.id);
+            });
+        });
         
         return request;
     };

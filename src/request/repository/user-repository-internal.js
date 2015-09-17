@@ -1,13 +1,28 @@
 'use strict';
 
+var _ = require('lodash');
 var glimpse = require('glimpse');
 
 // store Found Summary
 (function () {
     function processFoundSummary(requestRepositoryPayload) {
-        var targetRequests = requestRepositoryPayload.newMessageTypes['user-identification'];
-        if (targetRequests) {
-            glimpse.emit('data.user.detail.found.internal', targetRequests);
+        var messages = requestRepositoryPayload.newMessageTypes['user-identification'];
+        if (messages) {
+            var messageIndex = _.indexBy(messages, 'context.id');
+            
+            var matchedData = [];
+            _.forEach(requestRepositoryPayload.affectedRequests, function(request) {
+                var message = messageIndex[request.id];
+                if (message) {
+                    matchedData.push({ request: request, user: message });
+                }
+            });
+            
+            var userRepositoryMessage = {
+                userRequests: matchedData
+            };
+            
+            glimpse.emit('data.user.detail.found.internal', userRepositoryMessage);
         }
     }
  
