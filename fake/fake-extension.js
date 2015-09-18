@@ -352,8 +352,9 @@ var generateMvcRequest = (function() {
             };
         }, 
         createStart: function(source) {
-            var message = this.createMessage('request-start', source.context);
-            message.indices = mapProperties(source, {}, [ 'url', 'dateTime', 'method', 'contentType' ]);
+            var message = this.createMessage('begin-request-message', source.context);
+            //message.indices = mapProperties(source, {}, [ 'url' ]);
+            message.payload = mapProperties(source, {}, [ 'url' ]);
             
             return message;
         },
@@ -370,9 +371,13 @@ var generateMvcRequest = (function() {
             return message;
         },
         createEnd: function(source) {
-            var message = this.createMessage('request-end', source.context);
-            message.indices = mapProperties(source, {}, [ 'duration', 'statusCode', 'statusText' ]);
+            var message = this.createMessage('end-request-message', source.context);
+            //message.indices = mapProperties(source, {}, [ 'duration', 'statusCode', 'statusText', 'dateTime', 'method', 'contentType' ]);
+            message.payload = mapProperties(source, {}, [ 'duration', 'statusCode', 'statusText', 'url', 'method', 'contentType' ]);
             
+            // TODO: at some point we need to rename the fake property names 
+            message.payload.startTime = source.dateTime;  
+             
             return message;
         },
         createLog: function(log, context) { 
