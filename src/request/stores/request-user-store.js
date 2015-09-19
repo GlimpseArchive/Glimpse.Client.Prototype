@@ -59,8 +59,6 @@ function notifyUsersChanged() {
 
 // Found User
 (function () {
-    // TODO: Need to update to make sure it can work with out of order/old
-    //       requests coming in.
     // TODO: Timeouts should probably come from config
     // TODO: Should probably be abstracted out into its own module
     var manageRequest = (function () {
