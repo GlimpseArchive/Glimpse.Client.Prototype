@@ -2,6 +2,19 @@
 
 var helper = require('./request-converter-helper');
 
+var stateTextIndex = {
+    200: 'OK',
+    201: 'Created',
+    302: 'Found',
+    303: 'See Other',
+    304: 'Not Modified',
+    400: 'Bad Request',
+    401: 'Unauthorized',
+    403: 'Forbidden',
+    404: 'Not Found',
+    500: 'Internal Server Error'
+};
+
 var setIndex = function(message, key, value) {
     if (!message.indices) {
         message.indices = {};
@@ -25,6 +38,7 @@ module.exports = function(request, message) {
             setIndex(message, 'method', message.payload.method);
             setIndex(message, 'contentType', message.payload.contentType);
             setIndex(message, 'statusCode', message.payload.statusCode);
+            setIndex(message, 'statusText', stateTextIndex[message.payload.statusCode]);
             setIndex(message, 'dateTime', message.payload.startTime);
         }
         
