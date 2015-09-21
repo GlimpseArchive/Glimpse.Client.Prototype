@@ -9,7 +9,7 @@ var EmitterMixin = require('lib/components/emitter-mixin');
 
 function getState(payload) {
     return {
-        allUsers: (payload && payload.allUsers) ? payload.allUsers : {},
+        allUsers: (payload && payload.allUsers) ? payload.allUsers : [],
         selectedUserId: (payload && payload.selectedUserId) ? payload.selectedUserId : null
     };
 }

@@ -5,11 +5,14 @@ var moment = require('moment');
 var glimpse = require('glimpse');
 
 var _users = {};
+var _usersIndex = [];
 var _userSelected = null;
 
 function notifyUsersChanged() {
+    var orderedUsers = _usersIndex.sort(function(a, b) {return b.lastActive.valueOf() - a.lastActive.valueOf(); });
+    
     glimpse.emit('shell.request.user.detail.changed', {
-            allUsers: _users,
+            allUsers: orderedUsers,
             selectedUserId: _userSelected
         });
 }
@@ -150,7 +153,9 @@ function notifyUsersChanged() {
             var userViewModel = _users[rawUser.userId];
             if (userViewModel === undefined) {
                 userViewModel = createUser(rawUser);
+                
                 _users[rawUser.userId] = userViewModel;
+                _usersIndex.push(userViewModel);
             }
 
             manageRequest(userViewModel, request);
