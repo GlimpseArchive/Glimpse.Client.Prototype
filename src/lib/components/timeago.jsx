@@ -7,7 +7,8 @@ var moment = require('moment');
 module.exports = React.createClass({
     mixins: [ SetIntervalMixin ],
     render: function () {
-        return <span title={moment(this.props.time).format('MMM Do YYYY, h:mm:ss a')}>{moment(this.props.time).fromNow()}</span>;
+        var time = moment(this.props.time);
+        return <span title={time.format('MMM Do YYYY, h:mm:ss a')}>{time.fromNow()}</span>;
     },
     componentDidMount: function () {
         var interval = this.props.time || 60000;
