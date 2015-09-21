@@ -282,7 +282,7 @@ var generateMvcRequest = (function() {
         var httpStatus = chance.httpStatus();
         
         source.id = chance.guid();
-        source.dateTime = dateTime || moment().toISOString();
+        source.dateTime = dateTime || moment().utc().toISOString();
         source.networkTime = chance.integerRange(0, 15);
         source.serverTime = chance.integerRange(serverLowerTime, serverUpperTime); // TODO: Bug with these two lines
         source.actionTime = chance.integerRange(serverLowerTime - 1, source.serverTime); // TODO: Need to verify that this works
