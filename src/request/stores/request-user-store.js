@@ -1,6 +1,9 @@
 'use strict';
 
+var _ = require('lodash');
+var moment = require('moment');
 var glimpse = require('glimpse');
+
 var _users = {};
 var _userSelected = null;
 
@@ -10,7 +13,7 @@ function notifyUsersChanged() {
             selectedUserId: _userSelected
         });
 }
-
+ 
 // Clear User
 (function () {
     function clearUser() {
@@ -24,7 +27,7 @@ function notifyUsersChanged() {
 })();
 
 // Select User
-(function () {
+(function() {
     function clear(oldUserId, users) {
         if (oldUserId) {
             var oldUser = users[oldUserId];
@@ -62,46 +65,67 @@ function notifyUsersChanged() {
     // TODO: Timeouts should probably come from config
     // TODO: Should probably be abstracted out into its own module
     var manageRequest = (function () {
-        function removeRequest(user, request) {
-            var index = user.latestRequests.indexOf(request);
+        // TODO: Switch offline timeout to settings
+        var activityTimeout = 2 * 60 * 1000;
+        
+        function removeRequest(userViewModel, requestViewModel) {
+            var index = userViewModel.latestRequests.indexOf(requestViewModel);
             if (index > -1) {
-                user.latestRequests.splice(index, 1);
+                userViewModel.latestRequests.splice(index, 1);
             }
 
             notifyUsersChanged();
         }
 
-        return function (user, rawRequest) {
-            if (rawRequest) {
-                var request = {
+        return function (userViewModel, rawRequest) {
+            var requestDateTime = moment(rawRequest.dateTime).utc();
+            var windowDateTime = moment().utc().subtract(activityTimeout, 'millisecond');
+            var diffTime = requestDateTime.diff(windowDateTime);
+            
+            if (diffTime > 0) {
+                var requestViewModel = {
                         id: rawRequest.id,
                         url: rawRequest.url 
                     };
 
-                user.latestRequests.unshift(request);
+                userViewModel.latestRequests.unshift(requestViewModel);
 
-                // TODO: Switch offline timeout to settings
-                setTimeout(function () { removeRequest(user, request); }, 5000);
+                // setup callback to clear out request
+                setTimeout(function () { removeRequest(userViewModel, requestViewModel); }, diffTime);
             }
         };
     })();
     var manageOnline = (function () {
-        function setOffline(user) {
-            user.online = false;
+        // TODO: Switch offline timeout to settings
+        var onlineTimeout = 3 * 60 * 1000;
+        
+        var setOffline = function(userViewModel) {
+            userViewModel.online = false;
 
             notifyUsersChanged();
-        }
+        };
 
-        return function (user, rawRequest) {
-            user.lastActive = rawRequest.dateTime;
-            user.online = true;
-
-            if (user.onlineCallback) {
-                clearTimeout(user.onlineCallback);
+        return function (userViewModel, rawRequest) {
+            var requestDateTime = moment(rawRequest.dateTime).utc();
+            var windowDateTime = moment().utc().subtract(onlineTimeout, 'millisecond');
+            var diffTime = requestDateTime.diff(windowDateTime);
+            
+            // only update if newer
+            if (!userViewModel.lastActive || requestDateTime.isAfter(userViewModel.lastActive)) {
+                userViewModel.lastActive = requestDateTime; 
             }
-
-            // TODO: Switch offline timeout to settings
-            user.onlineCallback = setTimeout(function () { setOffline(user); }, 12000);
+            
+            // detect if online or not 
+            if (diffTime > 0) {
+                userViewModel.online = true;
+    
+                if (userViewModel.onlineCallback) {
+                    clearTimeout(userViewModel.onlineCallback);
+                }
+    
+                // setup callback to clear out online status
+                userViewModel.onlineCallback = setTimeout(function () { setOffline(userViewModel); }, diffTime);
+            }
         };
     })();
 
@@ -110,7 +134,7 @@ function notifyUsersChanged() {
                 details: rawUser,
                 latestRequests: [],
                 lastActive: null,
-                online: true,
+                online: false,
                 selected: false
             };
     }
