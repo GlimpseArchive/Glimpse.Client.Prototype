@@ -545,7 +545,7 @@ var generateMvcRequest = (function() {
     };
     RequestGenerator.prototype.processRequest = function(source) {
         var request = mapProperties(source, {}, [ 'id', 'url', 'dateTime', 'method', 'contentType', 'duration', 'statusCode', 'statusText' ]);
-        request.abstract = mapProperties(source, {}, [ 'networkTime', 'serverTime', 'clientTime', 'controller', 'action', 'actionTime', 'viewTime', 'queryTime', 'queryCount' ]);
+        //request.abstract = mapProperties(source, {}, [ 'networkTime', 'serverTime', 'clientTime', 'controller', 'action', 'actionTime', 'viewTime', 'queryTime', 'queryCount' ]);
         request.messages = _.indexBy(source.messages, 'id');
         request.types = {};
         
