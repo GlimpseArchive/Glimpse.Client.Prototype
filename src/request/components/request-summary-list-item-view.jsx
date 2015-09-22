@@ -1,13 +1,15 @@
 'use strict';
 
 var glimpse = require('glimpse');
+var messageProcessor = require('../util/request-message-processor.js');
+
 var React = require('react');
 var Timeago = require('lib/components/timeago');
 var classNames = require('classnames');
 
 module.exports = React.createClass({
     render: function () {
-        var summary = this.props.summary;
+        var summary = this.props.request;
         // ******* TEMP CODE *******
         var user = summary.user || {};
         var abstract = summary.abstract || {};

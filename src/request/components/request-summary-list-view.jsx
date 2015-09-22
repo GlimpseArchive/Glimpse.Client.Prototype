@@ -7,16 +7,16 @@ var SummaryItem = require('./request-summary-list-item-view');
 
 module.exports = React.createClass({
     render: function () {
-        var allSummaries = this.props.allSummaries;
+        var allRequets = this.props.allRequets;
 
         return (
             <div className="request-summary-list-holder">
                 <ReactCSSTransitionGroup component="div" transitionName="request-summary-item-holder">
-                    {allSummaries.map(function (summary) {
-                        return <SummaryItem key={summary.id} summary={summary} />;
+                    {allRequets.map(function(request) {
+                        return <SummaryItem key={request.id} request={request} />;
                     })}
                 </ReactCSSTransitionGroup>
-                {glimpse.util.isEmpty(allSummaries) ?
+                {glimpse.util.isEmpty(allRequets) ?
                     <em>No found entries.</em> :
                     null
                 }
