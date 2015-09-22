@@ -7,32 +7,45 @@ var React = require('react');
 var Timeago = require('lib/components/timeago');
 var classNames = require('classnames');
 
+function getSummaryPayloads(request) {
+    var processItem = messageProcessor.getTypeMessageItem;
+    
+    var options = {
+        'user-identification': processItem,
+        'end-request-message': processItem,
+        'begin-request-message': processItem
+    };
+    
+    return messageProcessor.getTypeMessages(request, options); 
+}
+
 module.exports = React.createClass({
     render: function () {
-        var summary = this.props.request;
-        // ******* TEMP CODE *******
-        var user = summary.user || {};
-        var abstract = summary.abstract || {};
-        // ******* TEMP CODE *******
+        var request = this.props.request;
         
         var containerClass = classNames({
             'request-summary-item-holder': true,
-            'request-summary-shell-selected': summary._selected
+            'request-summary-shell-selected': request._selected
         });
         
-
+        var payload = getSummaryPayloads(request);
+        var user = payload.userIdentification;
+        var beginRequest = payload.beginRequestMessage;
+        var endRequest = payload.endRequestMessage;
+        var abstract = {};
+        
         return (
             <div className={containerClass} onClick={this.onSelect}>
                 <table className="table table-bordered">
                     <tr>
-                        <td width="90">{summary.duration}ms</td>
+                        <td width="90">{request.duration}ms</td>
                         <td colSpan="6">
-                            {summary.url} &nbsp; {summary.method} &nbsp; {summary.statusCode} ({summary.statusText}) - {summary.contentType}
+                            {beginRequest.url} &nbsp; {endRequest.method} &nbsp; {endRequest.statusCode} ({endRequest.statusText}) - {endRequest.contentType}
                         </td>
-                        <td><Timeago time={summary.dateTime} /></td>
+                        <td><Timeago time={request.dateTime} /></td>
                     </tr>
                     <tr>
-                        <td>{user.name}</td>
+                        <td>{user.username}</td>
                         <td>{abstract.networkTime}ms</td>
                         <td>{abstract.serverTime}ms</td>
                         <td>{abstract.clientTime}ms</td>
@@ -46,6 +59,6 @@ module.exports = React.createClass({
         );
     },
     onSelect: function () {
-        glimpse.emit('shell.request.summary.selected', { requestId: this.props.summary.id });
+        glimpse.emit('shell.request.summary.selected', { requestId: this.props.request.id });
     }
 });
