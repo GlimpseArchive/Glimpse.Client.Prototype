@@ -1,27 +1,31 @@
 'use strict';
 
+var messageProcessor = require('../util/request-message-processor.js');
+
 var React = require('react');
 var Timeago = require('lib/components/timeago');
 
 module.exports = React.createClass({
     render: function () {
-        var summary = this.props.summary;
-        // ******* TEMP CODE *******
-        var user = summary.user || {};
-        var abstract = summary.abstract || {};
-        // ******* TEMP CODE *******
+        var request = this.props.request;
+        
+        var payload = messageProcessor.getSummaryMessages(request);
+        var user = payload.userIdentification;
+        var beginRequest = payload.beginRequestMessage;
+        var endRequest = payload.endRequestMessage;
+        var abstract = {};
 
         return (
             <table className="table table-bordered">
                 <tr>
-                    <td width="90">{summary.duration}ms</td>
+                    <td width="90">{request.duration}ms</td>
                     <td colSpan="6">
-                        {summary.url} &nbsp; {summary.method} &nbsp; {summary.statusCode} ({summary.statusText}) - {summary.contentType}
+                        {beginRequest.url} &nbsp; {endRequest.method} &nbsp; {endRequest.statusCode} ({endRequest.statusText}) - {endRequest.contentType}
                     </td>
-                    <td><Timeago time={summary.dateTime} /></td>
+                    <td><Timeago time={request.dateTime} /></td>
                 </tr>
                 <tr>
-                    <td>{user.name}</td>
+                    <td>{user.username}</td>
                     <td>{abstract.networkTime}ms</td>
                     <td>{abstract.serverTime}ms</td>
                     <td>{abstract.clientTime}ms</td>

@@ -22,5 +22,16 @@ module.exports = {
 		if (messageIds)	{
 			return _.map(messageIds, function(id) { return request.messages[id].payload; });
 		}
+	},
+	getSummaryMessages: function(request) {
+		var processItem = module.exports.getTypeMessageItem;
+		
+		var options = {
+			'user-identification': processItem,
+			'end-request-message': processItem,
+			'begin-request-message': processItem
+		};
+		
+		return module.exports.getTypeMessages(request, options); 
 	}
 };

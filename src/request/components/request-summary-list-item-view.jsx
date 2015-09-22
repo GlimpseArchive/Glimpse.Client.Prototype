@@ -7,18 +7,6 @@ var React = require('react');
 var Timeago = require('lib/components/timeago');
 var classNames = require('classnames');
 
-function getSummaryPayloads(request) {
-    var processItem = messageProcessor.getTypeMessageItem;
-    
-    var options = {
-        'user-identification': processItem,
-        'end-request-message': processItem,
-        'begin-request-message': processItem
-    };
-    
-    return messageProcessor.getTypeMessages(request, options); 
-}
-
 module.exports = React.createClass({
     render: function () {
         var request = this.props.request;
@@ -28,7 +16,7 @@ module.exports = React.createClass({
             'request-summary-shell-selected': request._selected
         });
         
-        var payload = getSummaryPayloads(request);
+        var payload = messageProcessor.getSummaryMessages(request);
         var user = payload.userIdentification;
         var beginRequest = payload.beginRequestMessage;
         var endRequest = payload.endRequestMessage;

@@ -3,6 +3,7 @@
 require('../stores/request-detail-store');
 
 var glimpse = require('glimpse');
+
 var React = require('react');
 var EmitterMixin = require('lib/components/emitter-mixin');
 var Summary = require('./request-detail-summary-view');
@@ -24,7 +25,7 @@ module.exports = React.createClass({
                         {!model.request ?
                             <Loading /> :
                             <div>
-                                <Summary summary={model.request} />
+                                <Summary request={model.request} />
                                 <Content details={model.request} />
                             </div>
                         }
