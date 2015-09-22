@@ -548,6 +548,7 @@ var generateMvcRequest = (function() {
         //request.abstract = mapProperties(source, {}, [ 'networkTime', 'serverTime', 'clientTime', 'controller', 'action', 'actionTime', 'viewTime', 'queryTime', 'queryCount' ]);
         request.messages = _.indexBy(source.messages, 'id');
         request.types = {};
+        request.tabs = { 'tab.messages': { title: 'Messages', payload: source.messages } };
         
         _.forEach(request.messages, function(message) {
             _.forEach(message.types, function(type) {
