@@ -38,7 +38,7 @@ function processArray(data) {
 function processObject(item) {
     var body = [];
     for (var key in item) {
-        body.push(<tr key={key}><th>{key}</th><td>{item[key]}</td></tr>);
+        body.push(<tr key={key}><th>{key}</th><td>{process(item[key])}</td></tr>);
     }
 
     return <table><thead><th>Key</th><th>Value</th></thead><tbody>{body}</tbody></table>;
