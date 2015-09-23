@@ -10,6 +10,12 @@ function process(data) {
     else if (glimpse.util.isObject(data)) {
         return processObject(data);
     }
+    else if (data === null || data === undefined) {
+        return '--';
+    }
+    else if (data === true || data === false) {
+        return data ? 'true' : 'false';
+    }
     else {
         return data;
     }
