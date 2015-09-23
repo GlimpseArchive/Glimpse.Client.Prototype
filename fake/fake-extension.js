@@ -70,11 +70,11 @@ var seedMvcActions = (function() {
             route: function (controller, action, id) {
                 return {
                     name: 'Default',
-                    mask: '{controller}/{action}/{id}',
-                    resolution: [
-                        { tag: 'controller', value: controller, default: 'home', required: false },
-                        { tag: 'action', value: action, default: 'index', required: false },
-                        { tag: 'id', value: id, default: null, required: false }
+                    pattern: '{controller=home}/{action=index}/{id?}',
+                    data: [
+                        { tag: 'controller', match: controller, default: 'home', required: false },
+                        { tag: 'action', match: action, default: 'index', required: false },
+                        { tag: 'id', match: id, default: null, required: false }
                     ]
                 };
             }
@@ -372,7 +372,6 @@ var generateMvcRequest = (function() {
         },
         createEnd: function(source) {
             var message = this.createMessage('end-request-message', source.context);
-            //message.indices = mapProperties(source, {}, [ 'duration', 'statusCode', 'statusText', 'dateTime', 'method', 'contentType' ]);
             message.payload = mapProperties(source, {}, [ 'duration', 'statusCode', 'statusText', 'url', 'method', 'contentType' ]);
             
             // TODO: at some point we need to rename the fake property names 
@@ -405,13 +404,12 @@ var generateMvcRequest = (function() {
             return message;
         },
         createRoute: function(action, route, context) {
-            var message = this.createMessage('request-framework-route', context);
+            var message = this.createMessage('action-route-found-message', context);
             var payload = message.payload;  
             
-            mapProperties(route, payload, [ 'name', 'mask', 'resolution' ]); 
+            mapProperties(route, payload, [ 'name', 'pattern', 'data' ]); 
             
-            payload.controller = action.controller;
-            payload.action = action.action; 
+            payload.actionId = action.actionId; 
             
             MessageGenerator.support.applyDuration(payload, chance.durationRange(0, 1), null, null); // TODO: need to fix offset timings
         
@@ -472,14 +470,16 @@ var generateMvcRequest = (function() {
             return message; 
         },
         processAction: (function() { 
-            var applyTimings = function(action) {
+            var modifyInstance = function(action) {
                 var availableTime = action.duration;
                 availableTime -= MessageGenerator.support.childTimings(action.actions, availableTime, 2.5);
                 availableTime -= MessageGenerator.support.childTimings(action.activities, availableTime, 1.5);  
+                
+                action.actionId = chance.guid();
             };
             
             return function(action, request, context) {
-                applyTimings(action);
+                modifyInstance(action);
                  
                 // route
                 this.messages.push(this.createRoute(action, action.route, context));
