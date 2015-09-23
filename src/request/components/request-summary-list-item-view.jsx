@@ -17,9 +17,9 @@ module.exports = React.createClass({
         });
         
         var payload = messageProcessor.getSummaryMessages(request);
-        var user = payload.userIdentification;
-        var beginRequest = payload.beginRequestMessage;
-        var endRequest = payload.endRequestMessage;
+        var user = payload.userIdentification || {};
+        var beginRequest = payload.beginRequestMessage || {};
+        var endRequest = payload.endRequestMessage || {};
         var abstract = {};
         
         return (
