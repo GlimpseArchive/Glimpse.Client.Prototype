@@ -353,7 +353,6 @@ var generateMvcRequest = (function() {
         }, 
         createStart: function(source) {
             var message = this.createMessage('begin-request-message', source.context);
-            //message.indices = mapProperties(source, {}, [ 'url' ]);
             message.payload = mapProperties(source, {}, [ 'url' ]);
             
             return message;
