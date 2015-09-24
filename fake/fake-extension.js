@@ -430,11 +430,11 @@ var generateMvcRequest = (function() {
             
             return message;
         },
-        createBinding: function(action, bindings, context) {
-            var message = this.createMessage('request-framework-binding', context);
+        createBinding: function(action, binding, context) {
+            var message = this.createMessage('action-content-processed-message', context);
             
             var payload = message.payload;  
-            payload.bindings = bindings;
+            payload.binding = binding;
             payload.controller = action.controller;
             payload.action = action.action; 
             
