@@ -16,7 +16,7 @@ module.exports = React.createClass({
                         return (
                             <tr className="row-devider">
                                 <td>
-                                    <h2>{item.type} ({item.count})</h2>
+                                    <h2>{item.type} ({item.ordinal})</h2>
                                     <h3>Payload</h3>
                                     <div>{payload}</div> 
                                 </td>
