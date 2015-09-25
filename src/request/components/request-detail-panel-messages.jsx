@@ -5,13 +5,15 @@ var React = require('react');
 var PanelGeneric = require('./request-detail-panel-generic');
 
 module.exports = React.createClass({
-    render: function () {
+    render: function () {    
+	   var payload = _.values(this.props.data.payload).sort(function(a, b) { return a.ordinal - b.ordinal; });
+	
         return (
             <div>
-                <div><h3>Message Count - {_.size(this.props.data.payload)}</h3></div>
+                <div><h3>Message Count - {payload.length}</h3></div>
                 <table> 
                     <tbody>
-                    {_.map(this.props.data.payload, function (item) { 
+                    {payload.map(function(item) { 
                         var payload = item.payload && !_.isEmpty(item.payload) ? <PanelGeneric payload={item.payload} /> : '--';
                         return (
                             <tr className="row-devider">
