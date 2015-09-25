@@ -348,7 +348,7 @@ var generateMvcRequest = (function() {
                 context: context,
                 id: chance.guid(),
                 payload: {},
-                count: this.counter++
+                ordinal: this.counter++
             };
         }, 
         createStart: function(source) {
