@@ -353,7 +353,7 @@ var generateMvcRequest = (function() {
         }, 
         createStart: function(source) {
             var message = this.createMessage('begin-request-message', source.context);
-            message.payload = mapProperties(source, {}, [ 'url' ]);
+            message.payload = mapProperties(source, {}, [ 'url', 'method' ]);
             
             return message;
         },
@@ -371,7 +371,7 @@ var generateMvcRequest = (function() {
         },
         createEnd: function(source) {
             var message = this.createMessage('end-request-message', source.context);
-            message.payload = mapProperties(source, {}, [ 'duration', 'statusCode', 'statusText', 'url', 'method', 'contentType' ]);
+            message.payload = mapProperties(source, {}, [ 'duration', 'statusCode', 'statusText', 'url', 'contentType' ]);
             
             // TODO: at some point we need to rename the fake property names 
             message.payload.startTime = source.dateTime;  
@@ -457,7 +457,7 @@ var generateMvcRequest = (function() {
             return message; 
         }, 
         createResult: function(action, result, context) {
-            var message = this.createMessage('request-framework-result', context);
+            var message = this.createMessage('action-result-found-message', context);
             var payload = message.payload;   
             payload.controller = action.controller;
             payload.action = action.action; 
