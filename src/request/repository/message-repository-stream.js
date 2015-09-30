@@ -8,11 +8,16 @@ var socket = (function() {
 
     var setup = function() {
         connection = new polyfill.EventSource('/Glimpse/MessageStream');
-        connection.onmessage = function(e) {
+        connection.addEventListener('message', function(e) {
             if (!FAKE_SERVER) {
                 glimpse.emit('data.message.summary.found.stream', JSON.parse(e.data));
             }
-        };
+        });
+        connection.addEventListener('ping', function(e) {
+            if (!DIAGNOSTICS) {
+                console.log('[repo] Server is still alive');
+            }
+        });
     }; 
     
     return {
