@@ -403,7 +403,7 @@ var generateMvcRequest = (function() {
             return message;
         },
         createRoute: function(action, route, context) {
-            var message = this.createMessage('action-route-found-message', context);
+            var message = this.createMessage('action-route-message', context);
             var payload = message.payload;  
             
             mapProperties(route, payload, [ 'name', 'pattern', 'data' ]); 
@@ -431,7 +431,7 @@ var generateMvcRequest = (function() {
             return message;
         },
         createBinding: function(action, binding, context) {
-            var message = this.createMessage('action-content-processed-message', context);
+            var message = this.createMessage('action-content-message', context);
             
             var payload = message.payload;  
             payload.binding = binding;
