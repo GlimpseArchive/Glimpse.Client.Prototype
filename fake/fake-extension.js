@@ -435,8 +435,7 @@ var generateMvcRequest = (function() {
             
             var payload = message.payload;  
             payload.binding = binding;
-            payload.controller = action.controller;
-            payload.action = action.action; 
+            payload.actionId = action.actionId;
             
             MessageGenerator.support.applyDuration(payload, chance.durationRange(0, 1), null, null); // TODO: need to fix offset timings
             
