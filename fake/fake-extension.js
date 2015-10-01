@@ -461,7 +461,7 @@ var generateMvcRequest = (function() {
             payload.actionName = action.action; 
             //payload.isPrimary = isPrimary;
             
-            MessageGenerator.support.applyDuration(payload, action.duration, null, null); // TODO: need to fix offset timings
+            MessageGenerator.support.applyDuration(payload, action.actionTime || action.duration, null, null); // TODO: need to fix offset timings
             
             return message; 
         }, 
