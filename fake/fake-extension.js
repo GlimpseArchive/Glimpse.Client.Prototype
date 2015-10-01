@@ -456,12 +456,15 @@ var generateMvcRequest = (function() {
             return message; 
         }, 
         createResult: function(action, result, context) {
-            var message = this.createMessage('action-result-found-message', context);
-            var payload = message.payload;   
-            payload.controller = action.controller;
-            payload.action = action.action; 
-            payload.provider = 'Razor'; 
-            payload.physicalFile = 'View/' + action.controller + '/' + action.action + '.cshtml';
+            var message = this.createMessage('action-view-message', context);
+            
+            var payload = message.payload;
+            // payload.provider = 'Razor'; 
+            payload.path = 'View/' + action.controller + '/' + action.action + '.cshtml';
+            payload.didFind = true;
+            payload.viewName = action.action;
+            payload.viewData = { tempData: {}, viewData: {} };
+            payload.actionId = action.actionId;
             
             //MessageGenerator.support.applyDuration(payload, result.duration, null, null); // TODO: need to fix offset timings
             
