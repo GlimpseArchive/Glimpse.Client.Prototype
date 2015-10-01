@@ -89,6 +89,7 @@ var seedMvcActions = (function() {
                         activities: [
                             { access: 'SQL', operation: 'Select', target: 'Carts', affected: 1, commmand: 'SELECT TOP (5) \n[Project1].[AlbumId] AS [AlbumId], \n[Project1].[GenreId] AS [GenreId], \n[Project1].[ArtistId] AS [ArtistId], \n[Project1].[Title] AS [Title], \n[Project1].[Price] AS [Price], \n[Project1].[AlbumArtUrl] AS [AlbumArtUrl]\nFROM ( SELECT \n    [Extent1].[AlbumId] AS [AlbumId], \n    [Extent1].[GenreId] AS [GenreId], \n    [Extent1].[ArtistId] AS [ArtistId], \n    [Extent1].[Title] AS [Title], \n    [Extent1].[Price] AS [Price], \n    [Extent1].[AlbumArtUrl] AS [AlbumArtUrl], \n    (SELECT \n        COUNT(1) AS [A1]\n        FROM [dbo].[OrderDetails] AS [Extent2]\n        WHERE [Extent1].[AlbumId] = [Extent2].[AlbumId]) AS [C1]\n    FROM [dbo].[Albums] AS [Extent1]\n)  AS [Project1]\nORDER BY [Project1].[C1] DESC'  }
                         ],
+                        result: { name: 'CartSummary' },
                         trace: [
                             { message: 'Cart has items in that the user has added.' }
                         ]
@@ -101,7 +102,8 @@ var seedMvcActions = (function() {
                         route: generate.common.route('store', 'genremenu', null),
                         activities: [
                             { access: 'SQL', operation: 'Select', target: 'Genres', affected: 10, command: 'SELECT \n[Extent1].[GenreId] AS [GenreId], \n[Extent1].[Name] AS [Name], \n[Extent1].[Description] AS [Description]\nFROM [dbo].[Genres] AS [Extent1]' }
-                        ]
+                        ],
+                        result: { name: 'GenreMenu' }
                     };
                 }
             },
@@ -124,6 +126,7 @@ var seedMvcActions = (function() {
                             generate.instance.childAction.shoppingCart(),
                             generate.instance.childAction.genreMenu()
                         ],
+                        result: { name: 'Browse' },
                         trace: [
                             { template: { mask: 'Currently genre {0} selected', values: { '0': genre } } }
                         ]
@@ -146,6 +149,7 @@ var seedMvcActions = (function() {
                             generate.instance.childAction.shoppingCart(),
                             generate.instance.childAction.genreMenu()
                         ],
+                        result: { name: 'Details' },
                         trace: [
                             { template: { mask: 'Currently item/detail {0} selected', values: { '0': id } } }
                         ]
@@ -164,6 +168,7 @@ var seedMvcActions = (function() {
                             generate.instance.childAction.shoppingCart(),
                             generate.instance.childAction.genreMenu()
                         ],
+                        result: { name: 'Index' },
                         trace: [
                             { message: 'Initial page loaded.' }
                         ] 
@@ -183,6 +188,7 @@ var seedMvcActions = (function() {
                             generate.instance.childAction.shoppingCart(),
                             generate.instance.childAction.genreMenu()
                         ],
+                        result: { name: 'Index' },
                         trace: [
                             { message: 'Cart applied tax rates correctly.' },
                             { template: { mask: 'Cart tax rates processed in {0}ms', values: { '0': chance.durationRange(0, 1) } } }
@@ -202,6 +208,7 @@ var seedMvcActions = (function() {
                             generate.instance.childAction.shoppingCart(),
                             generate.instance.childAction.genreMenu()
                         ],
+                        result: { name: 'Index' },
                         trace: [
                             { message: 'Processing menu options for selection.' }
                         ] 
@@ -217,6 +224,7 @@ var seedMvcActions = (function() {
                             generate.instance.childAction.shoppingCart(),
                             generate.instance.childAction.genreMenu()
                         ],
+                        result: { name: 'Login' },
                         trace: [
                             { template: { mask: 'User from {0} is attempting to login', values: { '0': chance.ip() } } }
                         ] 
@@ -464,11 +472,11 @@ var generateMvcRequest = (function() {
             // payload.provider = 'Razor'; 
             payload.path = 'View/' + action.controller + '/' + action.action + '.cshtml';
             payload.didFind = true;
-            payload.viewName = action.action;
+            payload.viewName = result.name;
             payload.viewData = { tempData: {}, viewData: {} };
             payload.actionId = action.actionId;
             
-            //MessageGenerator.support.applyDuration(payload, result.duration, null, null); // TODO: need to fix offset timings
+            MessageGenerator.support.applyDuration(payload, action.viewTime || result.duration, null, null); // TODO: need to fix offset timings
             
             return message; 
         },
