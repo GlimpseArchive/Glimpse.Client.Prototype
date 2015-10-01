@@ -29,7 +29,9 @@ module.exports = {
 		var options = {
 			'user-identification': processItem,
 			'end-request-message': processItem,
-			'begin-request-message': processItem
+			'begin-request-message': processItem,
+			'action-message': processItem,
+			'action-view-message': processItem,
 		};
 		
 		return module.exports.getTypeMessages(request, options); 

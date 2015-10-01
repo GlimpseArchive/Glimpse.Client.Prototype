@@ -20,6 +20,8 @@ module.exports = React.createClass({
         var user = payload.userIdentification || {};
         var beginRequest = payload.beginRequestMessage || {};
         var endRequest = payload.endRequestMessage || {};
+        var view = payload.viewMessage || { timing: {} };
+        var action = payload.actionMessage || { timing: {} };
         var abstract = {};
         
         return (
@@ -37,9 +39,9 @@ module.exports = React.createClass({
                         <td>{abstract.networkTime}ms</td>
                         <td>{abstract.serverTime}ms</td>
                         <td>{abstract.clientTime}ms</td>
-                        <td>{abstract.controller}.{abstract.action}(...)</td>
-                        <td>{abstract.actionTime}ms</td>
-                        <td>{abstract.viewTime}ms</td>
+                        <td>{action.controllerName}.{action.actionName}(...)</td>
+                        <td>{action.timing.elapsed}ms</td>
+                        <td>{view.timing.elapsed}ms</td>
                         <td>{abstract.queryTime}ms / {abstract.queryCount}</td>
                     </tr>
                 </table>
