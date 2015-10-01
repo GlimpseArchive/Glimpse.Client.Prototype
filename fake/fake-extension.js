@@ -388,8 +388,8 @@ var generateMvcRequest = (function() {
         },
         createQuery: function(action, query, context) {
             var message = this.createMessage('request-framework-query', context);
-            var payload = message.payload;  
             
+            var payload = message.payload;
             payload.controller = action.controller;
             payload.action = action.action
             
@@ -404,10 +404,9 @@ var generateMvcRequest = (function() {
         },
         createRoute: function(action, route, context) {
             var message = this.createMessage('action-route-message', context);
-            var payload = message.payload;  
             
+            var payload = message.payload;
             mapProperties(route, payload, [ 'name', 'pattern', 'data' ]); 
-            
             payload.actionId = action.actionId; 
             
             MessageGenerator.support.applyDuration(payload, chance.durationRange(0, 1), null, null); // TODO: need to fix offset timings
@@ -443,6 +442,7 @@ var generateMvcRequest = (function() {
         },
         createAction: function(action, isPrimary, context) {
             var message = this.createMessage('request-framework-action', context);
+            
             var payload = message.payload;   
             payload.targetClass = action.controller + 'Controller';
             payload.targetMethod = action.action;

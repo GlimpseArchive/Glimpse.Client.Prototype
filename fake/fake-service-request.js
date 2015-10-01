@@ -78,7 +78,8 @@ var requestProcessor = {
                 _.forEach(request.messages, function(message) {  
                     // TODO: Need different logic here to targe which requests we should be sending down
                     if (!_.isEmpty(message.indices) || !_.isEmpty(message.abstract) 
-                        || message.types[0] == 'user-identification' || message.types[0] == 'end-request-message' || message.types[0] == 'begin-request-message') { 
+                        || message.types[0] == 'user-identification' || message.types[0] == 'end-request-message' 
+                        || message.types[0] == 'begin-request-message') { 
                         messages.push(message);
                     }
                 });
