@@ -316,7 +316,8 @@ var generateMvcRequest = (function() {
             payload.offset = offset; 
         },
         applyDuration: function(payload, duration, time, offset) { 
-            payload.duration = duration;
+            payload.duration = duration;  // TODO: to be depricated
+            payload.timing = { elapsed: duration };
             
             MessageGenerator.support.applyTiming(payload, time, offset); 
         },
