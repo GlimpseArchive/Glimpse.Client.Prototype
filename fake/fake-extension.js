@@ -441,15 +441,16 @@ var generateMvcRequest = (function() {
             return message; 
         },
         createAction: function(action, isPrimary, context) {
-            var message = this.createMessage('request-framework-action', context);
+            var message = this.createMessage('action-message', context);
             
-            var payload = message.payload;   
+            var payload = message.payload; 
+            payload.displayName = 'Glimpse.AgentServer.Mvc.Sample.Controllers.' + action.controller + 'Controller.' + action.action;
             payload.targetClass = action.controller + 'Controller';
             payload.targetMethod = action.action;
             payload.physicalFile = 'Controller/' + action.controller + 'Controller.cs';
-            payload.controller = action.controller;
-            payload.action = action.action; 
-            payload.isPrimary = isPrimary;
+            payload.controllerName = action.controller;
+            payload.actionName = action.action; 
+            //payload.isPrimary = isPrimary;
             
             MessageGenerator.support.applyDuration(payload, action.duration, null, null); // TODO: need to fix offset timings
             
