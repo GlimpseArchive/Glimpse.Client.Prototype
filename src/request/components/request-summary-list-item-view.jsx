@@ -20,7 +20,7 @@ module.exports = React.createClass({
         var user = payload.userIdentification || {};
         var beginRequest = payload.beginRequestMessage || {};
         var endRequest = payload.endRequestMessage || {};
-        var view = payload.viewMessage || { timing: {} };
+        var view = payload.actionViewMessage || { timing: {} };
         var action = payload.actionMessage || { timing: {} };
         var abstract = {};
         
