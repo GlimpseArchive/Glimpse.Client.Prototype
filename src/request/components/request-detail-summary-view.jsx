@@ -1,6 +1,6 @@
 'use strict';
 
-var messageProcessor = require('../util/request-message-processor.js');
+var messageProcessor = require('../util/request-message-processor');
 
 var React = require('react');
 var Timeago = require('lib/components/timeago');
