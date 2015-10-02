@@ -41,6 +41,7 @@ module.exports = React.createClass({
 
     requestTabController.registerTab({
         key: 'tab.log',
+        title: 'Trace',
         component: module.exports
     });
 })()

@@ -47,6 +47,7 @@ module.exports = React.createClass({
 
     requestTabController.registerTab({
         key: 'tab.execution',
+        title: 'Execution',
         component: module.exports
     });
 })();

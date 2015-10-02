@@ -39,6 +39,7 @@ module.exports = React.createClass({
 
     requestTabController.registerTab({
         key: 'tab.messages',
+        title: 'Messages',
         component: module.exports
     });
 })()
