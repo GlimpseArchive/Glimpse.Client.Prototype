@@ -20,10 +20,26 @@ module.exports = {
     convertMessages: function(request, messages) {
         var didUpdate = false;
         
+        // setup the type index
+        if (!request.types) {
+            request.types = {};
+        }      
+        
         _.forEach(messages, function(message) {  
             if (!request.messages[message.id]) {
+                // copy across the messages into the message index 
                 request.messages[message.id] = message; 
+                
+                // copy across the messages into the type index
+                _.forEach(message.types, function(type) {
+                    if (!request.types[type]) {
+                        request.types[type] = [];
+                    }
+                    
+                    request.types[type].push(message.id);
+                });
 
+                // run through the registered providers
                 _.forEach(_strategies, function(action) { 
                     action(request, message) || didUpdate; 
                 }); 
@@ -40,8 +56,6 @@ module.exports = {
 (function() {
     var registerStrategy = module.exports.registerStrategy;
     
-    registerStrategy(require('./request-converter-strategy-index'));
-    registerStrategy(require('./request-converter-strategy-types'));
     // NOTE: Removing for the time being... doesn't looks like this will be needed
     // TODO: Check if this can be removed
     registerStrategy(require('./request-converter-strategy-tab___TEMP'));
