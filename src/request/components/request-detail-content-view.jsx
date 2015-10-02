@@ -17,19 +17,20 @@ module.exports = React.createClass({
         };
     },
     render: function () {
-        var data = this.props.details.tabs;
-        if (data) {
+        var request = this.props.request;
+        var tabs = this.props.tabs;
+        if (request && tabs) {
             var active = this.state.active;
             var navigation = [];
             var panel = null;
     
-            for (var key in data) {
-                var item = data[key];
+            for (var key in tabs) {
+                var tab = tabs[key];
                 var isActive = active == key || (!active && navigation.length == 0);
     
-                navigation.push(<NavigationItem key={key} name={key} data={item} isActive={isActive} />);
+                navigation.push(<NavigationItem key={key} tab={tab} isActive={isActive} />);
                 if (isActive) {
-                    panel = <PanelItem key={key} name={key} data={item} isActive={isActive} />;
+                    panel = <PanelItem key={key} request={request} tab={tab} isActive={isActive} />;
                 }
             }
     

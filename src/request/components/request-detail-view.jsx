@@ -26,7 +26,7 @@ module.exports = React.createClass({
                             <Loading /> :
                             <div>
                                 <Summary request={model.request} />
-                                <Content details={model.request} />
+                                <Content request={model.request} tabs={model.tabs} />
                             </div>
                         }
                     </div>

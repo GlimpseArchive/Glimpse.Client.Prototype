@@ -30,6 +30,7 @@ var subItem = function (data, title, level) {
 
 module.exports = React.createClass({
     render: function () {
+        /*
         var output = this.props.data.payload.map(function (item) {
             var result = subItem(item, 'Row', 0);
 
@@ -37,6 +38,9 @@ module.exports = React.createClass({
         });
 
         return <div>{output}</div>;
+        */
+        
+        return <div>Execution Tab</div>;
     }
 });
 

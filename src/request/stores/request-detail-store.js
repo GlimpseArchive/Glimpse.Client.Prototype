@@ -3,17 +3,26 @@
 var _ = require('lodash');
 var glimpse = require('glimpse');
 var requestRepository = require('../repository/request-repository');
+var requestTab = require('../request-tab');
 
 // TODO: Not sure I need to store the requests, already storing in
 //       repository
 var _requests = {};   // TODO: Remove this, don't need to store
 var _viewModel = {
     selectedId: null,
-    request: null
+    request: null,
+    tabs: null
 };
 
 function requestChanged(targetRequests) {
     glimpse.emit('shell.request.detail.changed', targetRequests);
+}
+
+function getTabs() {
+    // TODO: currently just returning this, but probably should be doing more..
+    //       like merging in the static set of tabs with the data we have from
+    //       the request.
+    return requestTab.registeredTabs();
 }
 
 // Clear Request
@@ -21,6 +30,7 @@ function requestChanged(targetRequests) {
     function clearRequest() {
         _viewModel.selectedId = null;
         _viewModel.request = null;
+        _viewModel.tabs = null;
 
         requestChanged(_viewModel);
     }
@@ -46,6 +56,7 @@ function requestChanged(targetRequests) {
 
         if (targetRequest) {
             _viewModel.request = targetRequest;
+            _viewModel.tabs = getTabs();
 
             requestChanged(_viewModel);
         }
@@ -62,6 +73,7 @@ function requestChanged(targetRequests) {
 
         _viewModel.selectedId = requestId;
         _viewModel.request = null;
+        _viewModel.tabs = null;
 
         requestChanged(_viewModel);
 

@@ -5,6 +5,8 @@ var PanelGeneric = require('./request-detail-panel-generic');
 
 module.exports = React.createClass({
     render: function () {
+        return <div>Trace Tab</div>;
+    /*
         return (
             <table>
                 <thead>
@@ -31,6 +33,7 @@ module.exports = React.createClass({
                 })}
             </table>
         );
+        */
     }
 });
 

@@ -4,7 +4,10 @@ var React = require('react');
 var glimpse = require('glimpse');
 
 function process(data) {
-    if (glimpse.util.isArray(data)) {
+    if (typeof data === 'string') {
+        return data;
+    }
+    else if (glimpse.util.isArray(data)) {
         return processArray(data);
     }
     else if (glimpse.util.isObject(data)) {
@@ -23,21 +26,11 @@ function process(data) {
 
 function processArray(data) {
     if (data.length > 0) {
-        var header = [];
-        for (var key in data[0]) {
-            header.push(<th key={key}>{key}</th>);
-        }
-
         var body = data.map(function (item) {
-            var row = [];
-            for (var key in item) {
-                row.push(<td key={key}>{process(item[key])}</td>);
-            }
-
-            return <tr>{row}</tr>;
+            return <tr><td>{process(item)}</td></tr>;
         });
 
-        return <table><thead>{header}</thead><tbody>{body}</tbody></table>;
+        return <table><thead><th>Items</th></thead><tbody>{body}</tbody></table>;
     }
 }
 
@@ -52,7 +45,7 @@ function processObject(item) {
 
 module.exports = React.createClass({
     render: function () {
-        var payload = this.props.payload || this.props.data.payload;
+        var payload = this.props.request || this.props.payload;
         var result = null;
 
         if (payload) {
