@@ -16,6 +16,6 @@ module.exports = React.createClass({
         
         var tabContent = requestTabController.resolveTab(name);
 
-        return <div className={containerClass}><tabContent.component key={name} name={name} request={request} /></div>;
+        return <div className={containerClass}><tabContent.component key={name} request={request} /></div>;
     }
 });
