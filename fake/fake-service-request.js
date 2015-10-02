@@ -22,13 +22,17 @@ var streamMock = (function() {
                 userCallback(result);
             }
         }
-    }
+    };
 })();
 
 polyfill.EventSource = function(url) {
     this.url = url; 
     
     streamMock.trigger(url, function() {});
+};
+polyfill.EventSource.prototype = {
+    addEventListener: function(topic, callback) {
+    }  
 };
 
     
