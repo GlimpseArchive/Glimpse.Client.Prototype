@@ -62,6 +62,9 @@ var mapProperties = function(source, target, properties) {
     
     return target;
 };
+var defaultOrEmpty = function(value) {
+    return value === undefined || value === null ? '' : value;
+}
 
 // TODO: Should be brought into a different file/module 
 var seedMvcActions = (function() {
@@ -112,7 +115,8 @@ var seedMvcActions = (function() {
                     var genre = chance.word();
                     
                     return {
-                        url: '/Store/Browse?Genre=' + genre,
+                        path: '/Store/Browse',
+                        queryString: '?Genre=' + genre,
                         controller: 'Store',
                         action: 'Browse',
                         route: generate.common.route('store', 'browse', null),
@@ -136,7 +140,7 @@ var seedMvcActions = (function() {
                     var id = chance.integerRange(1000, 2000);
             
                     return { 
-                        url: '/Store/Details/' + id, 
+                        path: '/Store/Details/' + id, 
                         controller: 'Store', 
                         action: 'Details',
                         route: generate.common.route('store', 'details', id),
@@ -157,7 +161,7 @@ var seedMvcActions = (function() {
                 },
                 home: function() {
                     return { 
-                        url: '/', 
+                        path: '/', 
                         controller: 'Home', 
                         action: 'Index',
                         route: generate.common.route('home', 'index', null),
@@ -176,7 +180,7 @@ var seedMvcActions = (function() {
                 },
                 cart: function() {
                     return { 
-                        url: '/ShoppingCart/', 
+                        path: '/ShoppingCart/', 
                         controller: 'ShoppingCart', 
                         action: 'Index',
                         route: generate.common.route('shoppingcart', 'index', null),
@@ -197,7 +201,7 @@ var seedMvcActions = (function() {
                 },
                 store: function() {
                     return { 
-                        url: '/Store/', 
+                        path: '/Store/', 
                         controller: 'Store', 
                         action: 'Index',
                         route: generate.common.route('store', 'index', null),
@@ -216,7 +220,7 @@ var seedMvcActions = (function() {
                 },
                 login: function() {
                     return { 
-                        url: '/Account/LogIn/', 
+                        path: '/Account/LogIn/', 
                         controller: 'Account', 
                         action: 'LogIn',
                         route: generate.common.route('account', 'login', null),
@@ -362,7 +366,9 @@ var generateMvcRequest = (function() {
         }, 
         createStart: function(source) {
             var message = this.createMessage('begin-request-message', source.context);
-            message.payload = mapProperties(source, {}, [ 'url', 'method' ]);
+            message.payload = mapProperties(source, {}, [ 'path', 'queryString', 'method' ]);
+            
+            message.payload.url = 'http://localhost:5000' + message.payload.path + defaultOrEmpty(message.payload.queryString);
             
             return message;
         },
@@ -380,10 +386,11 @@ var generateMvcRequest = (function() {
         },
         createEnd: function(source) {
             var message = this.createMessage('end-request-message', source.context);
-            message.payload = mapProperties(source, {}, [ 'duration', 'statusCode', 'statusText', 'url', 'contentType' ]);
+            message.payload = mapProperties(source, {}, [ 'duration', 'statusCode', 'statusText', 'path', 'queryString', 'contentType' ]);
             
             // TODO: at some point we need to rename the fake property names 
             message.payload.startTime = source.dateTime;  
+            message.payload.url = 'http://localhost:5000' + message.payload.path + defaultOrEmpty(message.payload.queryString);
              
             return message;
         },
@@ -555,8 +562,8 @@ var generateMvcRequest = (function() {
     var RequestGenerator = function() { 
     };
     RequestGenerator.prototype.processRequest = function(source) {
-        var request = mapProperties(source, {}, [ 'id', 'url', 'dateTime', 'method', 'contentType', 'duration', 'statusCode', 'statusText' ]);
-        //request.abstract = mapProperties(source, {}, [ 'networkTime', 'serverTime', 'clientTime', 'controller', 'action', 'actionTime', 'viewTime', 'queryTime', 'queryCount' ]);
+        var request = {};
+        request.id = source.id;
         request.messages = _.indexBy(source.messages, 'id');
         request.types = {};
         request.tabs = { 'tab.messages': { title: 'Messages', payload: source.messages } };
