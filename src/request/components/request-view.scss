@@ -57,3 +57,57 @@
     border-bottom: 1px solid black;
     padding-bottom: 20px;
 }
+
+.tab-execution-item {
+    width: 100%;
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: baseline;
+    
+    > div {
+        flex: 1 0 0;
+    }
+    
+    .tab-execution-important {
+        font-size: 120%;
+    }
+    .tab-execution-title {
+        font-weight: bold;
+        min-width: 100px;
+        flex-grow: 1;
+    }
+    .tab-execution-route-name {
+        flex-grow: 2;
+        min-width: 150px;
+    }
+    .tab-execution-route-path, .tab-execution-route-pattern {
+        flex-grow: 3;
+    }
+    .tab-execution-action-description {
+        flex-grow: 7;
+    }
+    .tab-execution-timing {
+        font-weight: bold;
+        min-width: 100px;
+        flex-grow: 1;
+    }
+}
+
+
+
+/*
+.tab-execution-title {
+    font-weight: bold;
+    width: 20%;
+    min-width: 150px;
+}
+.tab-execution-route-name {
+    width: 15%;
+}
+.tab-execution-route-path {
+    width: 30%;
+}
+.tab-execution-route-name, .tab-execution-route-path {
+    font-size: 120%;
+}
+*/

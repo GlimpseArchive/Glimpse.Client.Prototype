@@ -1,46 +1,63 @@
 'use strict';
 
+var messageProcessor = require('../util/request-message-processor');
+
 var React = require('react');
 
-var subItem = function (data, title, level) {
-    var results = [];
-    for (var key in data) {
-        var value = data[key] || '--';
-        if (key == 'type' && level == 0) {
-            title = value;
-        }
-        else if (typeof value === 'object') {
-            results.push(subItem(value, key, level + 1));
-        }
-        else {
-            results.push(<span><strong>{key}:</strong> {value} &nbsp; </span>);
-        }
+var getMessages = (function() {
+    var getItem = messageProcessor.getTypeMessageItem;
+    
+    var options = {
+        'end-request-message': getItem,
+        'begin-request-message': getItem,
+        'action-message': getItem,
+        'action-view-message': getItem,
+        'action-content-message': getItem,
+        'action-route-message': getItem
+    };
+		
+    return function(request) {
+		return messageProcessor.getTypeMessages(request, options); 
     }
-
-    return (
-        <table>
-            <tr>
-                <th>{title}</th>
-                <td> &nbsp;  &nbsp;  &nbsp; </td>
-                <td>{results}</td>
-            </tr>
-        </table>
-    );
-};
+})();
 
 module.exports = React.createClass({
     render: function () {
-        /*
-        var output = this.props.data.payload.map(function (item) {
-            var result = subItem(item, 'Row', 0);
-
-            return <div>{result}<br /><br /></div>;
-        });
-
-        return <div>{output}</div>;
-        */
+        var request = this.props.request;
+        var data = getMessages(request);
         
-        return <div>Execution Tab</div>;
+        var beginData = data.beginRequestMessage;
+        var routeData = data.actionRouteMessage;
+        var actionData = data.actionMessage;
+        
+        var route = <div>No route found yet.</div>;
+        if (routeData) {
+            var routePath = beginData ? (<div><span>{beginData.path}</span><span>{beginData.queryString}</span></div>) : '';
+        
+            route = (
+                    <section className="tab-execution-item tab-execution-route"> 
+                        <div className="tab-execution-title">Route</div>
+                        <div className="tab-execution-route-name tab-execution-important">{routeData.name}</div>
+                        <div className="tab-execution-route-path">{routePath}</div>
+                        <div className="tab-execution-route-pattern">{routeData.pattern}</div>
+                    </section>
+                ); 
+        }
+        
+        var action = <div>No action found yet.</div>;
+        if (actionData) {
+            action = (
+                    <section className="tab-execution-item tab-execution-action">
+                        <div className="tab-execution-title">Action</div>
+                        <div className="tab-execution-action-description tab-execution-important">
+                            {actionData.controllerName}.{actionData.actionName}()
+                        </div>
+                        <div className="tab-execution-timing">{actionData.timing.elapsed}ms</div>
+                    </section>
+                ); 
+        }
+        
+        return <div>{route}{action}</div>;
     }
 });
 
