@@ -479,8 +479,8 @@ var generateMvcRequest = (function() {
             
             var payload = message.payload;
             // payload.provider = 'Razor'; 
-            payload.path = 'View/' + action.controller + '/' + action.action + '.cshtml';
-            payload.didFind = true;
+            payload.viewPath = 'View/' + action.controller + '/' + action.action + '.cshtml';
+            payload.viewDidFind = true;
             payload.viewName = result.name;
             payload.viewData = { tempData: {}, viewData: {} };
             payload.actionId = action.actionId;
