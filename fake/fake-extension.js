@@ -323,15 +323,16 @@ var generateMvcRequest = (function() {
         };
     };
     MessageGenerator.support = {
-        applyTiming: function(payload, time, offset) {
-            payload.time = time;
-            payload.offset = offset; 
+        applyTiming: function(prefix, payload, time, offset) {
+            // TODO: Need to get working, its ok atm as we are currently only using duration
+            payload[prefix + 'StartTime'] = time; 
+            payload[prefix + 'EndTime'] = null; 
+            payload[prefix + 'Offset'] = offset; 
         },
-        applyDuration: function(payload, duration, time, offset) { 
-            payload.duration = duration;  // TODO: to be depricated
-            payload.timing = { elapsed: duration };
+        applyDuration: function(prefix, payload, duration, time, offset) { 
+            payload[prefix + 'Duration'] = duration; 
             
-            MessageGenerator.support.applyTiming(payload, time, offset); 
+            MessageGenerator.support.applyTiming(prefix, payload, time, offset); 
         },
         childTimings: function (events, availableTime) {
             // TODO: Need to calculate offsets
@@ -398,7 +399,7 @@ var generateMvcRequest = (function() {
             var message = this.createMessage('request-framework-log', context);
             mapProperties(log, message.payload, [ 'template', 'message' ]);
             
-            MessageGenerator.support.applyTiming(message.payload,  null, null); // TODO: need to fix offset timings
+            MessageGenerator.support.applyTiming('log', message.payload,  null, null); // TODO: need to fix offset timings
             
             return message;
         },
@@ -411,7 +412,7 @@ var generateMvcRequest = (function() {
             
             mapProperties(query, payload, [ 'access', 'operation', 'target', 'affected', 'command' ]); 
             
-            MessageGenerator.support.applyDuration(payload, query.duration, null, null); // TODO: need to fix offset timings
+            MessageGenerator.support.applyDuration('query', payload, query.duration, null, null); // TODO: need to fix offset timings
             
             this.stats.queryCount++;
             this.stats.queryDuration += query.duration;
@@ -427,7 +428,7 @@ var generateMvcRequest = (function() {
             payload.routeData = route.data; 
             payload.actionId = action.actionId; 
             
-            MessageGenerator.support.applyDuration(payload, chance.durationRange(0, 1), null, null); // TODO: need to fix offset timings
+            MessageGenerator.support.applyDuration('route', payload, chance.durationRange(0, 1), null, null); // TODO: need to fix offset timings
         
             return message;
         },
@@ -443,7 +444,7 @@ var generateMvcRequest = (function() {
             payload.controller = action.controller;
             payload.action = action.action; 
             
-            MessageGenerator.support.applyDuration(payload, chance.durationRange(0, 1), null, null); // TODO: need to fix offset timings
+            MessageGenerator.support.applyDuration('filter', payload, chance.durationRange(0, 1), null, null); // TODO: need to fix offset timings
             
             return message;
         },
@@ -454,7 +455,7 @@ var generateMvcRequest = (function() {
             payload.binding = binding;
             payload.actionId = action.actionId;
             
-            MessageGenerator.support.applyDuration(payload, chance.durationRange(0, 1), null, null); // TODO: need to fix offset timings
+            MessageGenerator.support.applyDuration('binding', payload, chance.durationRange(0, 1), null, null); // TODO: need to fix offset timings
             
             return message; 
         },
@@ -470,7 +471,7 @@ var generateMvcRequest = (function() {
             payload.actionName = action.action; 
             //payload.isPrimary = isPrimary;
             
-            MessageGenerator.support.applyDuration(payload, action.actionTime || action.duration, null, null); // TODO: need to fix offset timings
+            MessageGenerator.support.applyDuration('action', payload, action.actionTime || action.duration, null, null); // TODO: need to fix offset timings
             
             return message; 
         }, 
@@ -485,7 +486,7 @@ var generateMvcRequest = (function() {
             payload.viewData = { tempData: {}, viewData: {} };
             payload.actionId = action.actionId;
             
-            MessageGenerator.support.applyDuration(payload, action.viewTime || result.duration, null, null); // TODO: need to fix offset timings
+            MessageGenerator.support.applyDuration('view', payload, action.viewTime || result.duration, null, null); // TODO: need to fix offset timings
             
             return message; 
         },

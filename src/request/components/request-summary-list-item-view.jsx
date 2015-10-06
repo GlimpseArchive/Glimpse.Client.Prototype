@@ -17,11 +17,11 @@ module.exports = React.createClass({
         });
         
         var payload = messageProcessor.getSummaryMessages(request);
-        var user = payload.userIdentification || {};
+        var user = payload.userIdentification || {};  // TODO: shouldn't need to do this, think of better way
         var beginRequest = payload.beginRequestMessage || {};
         var endRequest = payload.endRequestMessage || {};
-        var view = payload.actionViewMessage || { timing: {} };
-        var action = payload.actionMessage || { timing: {} };
+        var view = payload.actionViewMessage || {};
+        var action = payload.actionMessage || {};
         var abstract = {};
         
         return (
@@ -39,9 +39,9 @@ module.exports = React.createClass({
                         <td>{abstract.networkTime}ms</td>
                         <td>{abstract.serverTime}ms</td>
                         <td>{abstract.clientTime}ms</td>
-                        <td>{action.controllerName}.{action.actionName}(...)</td>
-                        <td>{action.timing.elapsed}ms</td>
-                        <td>{view.timing.elapsed}ms</td>
+                        <td>{action.actionControllerName}.{action.actionName}(...)</td>
+                        <td>{action.actionDuration}ms</td>
+                        <td>{view.viewDuration}ms</td>
                         <td>{abstract.queryTime}ms / {abstract.queryCount}</td>
                     </tr>
                 </table>
