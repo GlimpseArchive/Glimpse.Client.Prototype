@@ -50,9 +50,9 @@ module.exports = React.createClass({
                     <section className="tab-execution-item tab-execution-action">
                         <div className="tab-execution-title">Action</div>
                         <div className="tab-execution-action-description tab-execution-important">
-                            {actionData.controllerName}.{actionData.actionName}()
+                            {actionData.actionControllerName}.{actionData.actionName}({content})
                         </div>
-                        <div className="tab-execution-timing">{actionData.timing.elapsed}ms</div>
+                        <div className="tab-execution-timing">{actionData.actionDuration}ms</div>
                     </section>
                 ); 
         }

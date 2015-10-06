@@ -462,11 +462,11 @@ var generateMvcRequest = (function() {
             var message = this.createMessage('action-message', context);
             
             var payload = message.payload; 
-            payload.displayName = 'Glimpse.AgentServer.Mvc.Sample.Controllers.' + action.controller + 'Controller.' + action.action;
-            payload.targetClass = action.controller + 'Controller';
-            payload.targetMethod = action.action;
-            payload.physicalFile = 'Controller/' + action.controller + 'Controller.cs';
-            payload.controllerName = action.controller;
+            payload.actionDisplayName = 'Glimpse.AgentServer.Mvc.Sample.Controllers.' + action.controller + 'Controller.' + action.action;
+            payload.actionTargetClass = action.controller + 'Controller';
+            payload.actionTargetMethod = action.action;
+            payload.actionPhysicalFile = 'Controller/' + action.controller + 'Controller.cs';
+            payload.actionControllerName = action.controller;
             payload.actionName = action.action; 
             //payload.isPrimary = isPrimary;
             
