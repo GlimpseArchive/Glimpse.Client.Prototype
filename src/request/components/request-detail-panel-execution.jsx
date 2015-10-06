@@ -37,9 +37,9 @@ module.exports = React.createClass({
             route = (
                     <section className="tab-execution-item tab-execution-route"> 
                         <div className="tab-execution-title">Route</div>
-                        <div className="tab-execution-route-name tab-execution-important">{routeData.name}</div>
+                        <div className="tab-execution-route-name tab-execution-important">{routeData.routeName}</div>
                         <div className="tab-execution-route-path">{routePath}</div>
-                        <div className="tab-execution-route-pattern">{routeData.pattern}</div>
+                        <div className="tab-execution-route-pattern">{routeData.routePattern}</div>
                     </section>
                 ); 
         }

@@ -422,7 +422,9 @@ var generateMvcRequest = (function() {
             var message = this.createMessage('action-route-message', context);
             
             var payload = message.payload;
-            mapProperties(route, payload, [ 'name', 'pattern', 'data' ]); 
+            payload.routeName = route.name;
+            payload.routePattern = route.pattern;
+            payload.routeData = route.data; 
             payload.actionId = action.actionId; 
             
             MessageGenerator.support.applyDuration(payload, chance.durationRange(0, 1), null, null); // TODO: need to fix offset timings
