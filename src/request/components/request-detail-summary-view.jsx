@@ -11,16 +11,16 @@ module.exports = React.createClass({
         
         var payload = messageProcessor.getSummaryMessages(request);
         var user = payload.userIdentification || {};
-        var beginRequest = payload.beginRequestMessage || {};
-        var endRequest = payload.endRequestMessage || {};
-        var view = payload.actionViewMessage || {};
-        var action = payload.actionMessage || {};
+        var beginRequest = payload.beginRequest || {};
+        var endRequest = payload.endRequest || {};
+        var view = payload.actionView || {};
+        var action = payload.action || {};
         var abstract = {};
 
         return (
             <table className="table table-bordered">
                 <tr>
-                    <td width="90">{request.duration}ms</td>
+                    <td width="90">{endRequest.duration}ms</td>
                     <td colSpan="6">
                         {beginRequest.url} &nbsp; {endRequest.method} &nbsp; {endRequest.statusCode} ({endRequest.statusText}) - {endRequest.contentType}
                     </td>

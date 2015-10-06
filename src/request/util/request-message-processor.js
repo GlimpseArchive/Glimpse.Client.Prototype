@@ -28,10 +28,10 @@ module.exports = {
 		
 		var options = {
 			'user-identification': processItem,
-			'end-request-message': processItem,
-			'begin-request-message': processItem,
-			'action-message': processItem,
-			'action-view-message': processItem,
+			'end-request': processItem,
+			'begin-request': processItem,
+			'action': processItem,
+			'action-view': processItem,
 		};
 		
 		return module.exports.getTypeMessages(request, options); 

@@ -8,12 +8,12 @@ var getMessages = (function() {
     var getItem = messageProcessor.getTypeMessageItem;
     
     var options = {
-        'end-request-message': getItem,
-        'begin-request-message': getItem,
-        'action-message': getItem,
-        'action-view-message': getItem,
-        'action-content-message': getItem,
-        'action-route-message': getItem
+        'end-request': getItem,
+        'begin-request': getItem,
+        'action': getItem,
+        'action-view': getItem,
+        'action-content': getItem,
+        'action-route': getItem
     };
 		
     return function(request) {
@@ -24,11 +24,13 @@ var getMessages = (function() {
 module.exports = React.createClass({
     render: function () {
         var request = this.props.request;
-        var data = getMessages(request);
         
-        var beginData = data.beginRequestMessage;
-        var routeData = data.actionRouteMessage;
-        var actionData = data.actionMessage;
+        var data = getMessages(request);
+        var beginData = data.beginRequest;
+        var routeData = data.actionRoute;
+        var actionData = data.action;
+        var contentData = data.actionContent;
+        var viewData = data.actionView;
         
         var route = <div>No route found yet.</div>;
         if (routeData) {

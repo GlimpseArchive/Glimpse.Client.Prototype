@@ -366,7 +366,7 @@ var generateMvcRequest = (function() {
             };
         }, 
         createStart: function(source) {
-            var message = this.createMessage('begin-request-message', source.context);
+            var message = this.createMessage('begin-request', source.context);
             message.payload = mapProperties(source, {}, [ 'path', 'queryString', 'method' ]);
             
             message.payload.url = 'http://localhost:5000' + message.payload.path + defaultOrEmpty(message.payload.queryString);
@@ -379,14 +379,14 @@ var generateMvcRequest = (function() {
             
             return message;
         },
-        createFramework: function(source) {
-            var message = this.createMessage('request-framework', source.context);
-            message.abstract = mapProperties(source, {}, [ 'networkTime', 'serverTime', 'clientTime', 'controller', 'action', 'actionTime', 'viewTime', 'queryTime', 'queryCount' ]);
-            
-            return message;
-        },
+        // createFramework: function(source) {
+        //     var message = this.createMessage('request-framework', source.context);
+        //     message.abstract = mapProperties(source, {}, [ 'networkTime', 'serverTime', 'clientTime', 'controller', 'action', 'actionTime', 'viewTime', 'queryTime', 'queryCount' ]);
+        //     
+        //     return message;
+        // },
         createEnd: function(source) {
-            var message = this.createMessage('end-request-message', source.context);
+            var message = this.createMessage('end-request', source.context);
             message.payload = mapProperties(source, {}, [ 'duration', 'statusCode', 'statusText', 'path', 'queryString', 'contentType' ]);
             
             // TODO: at some point we need to rename the fake property names 
@@ -420,7 +420,7 @@ var generateMvcRequest = (function() {
             return message;
         },
         createRoute: function(action, route, context) {
-            var message = this.createMessage('action-route-message', context);
+            var message = this.createMessage('action-route', context);
             
             var payload = message.payload;
             payload.routeName = route.name;
@@ -449,7 +449,7 @@ var generateMvcRequest = (function() {
             return message;
         },
         createBinding: function(action, binding, context) {
-            var message = this.createMessage('action-content-message', context);
+            var message = this.createMessage('action-content', context);
             
             var payload = message.payload;  
             payload.binding = binding;
@@ -460,7 +460,7 @@ var generateMvcRequest = (function() {
             return message; 
         },
         createAction: function(action, isPrimary, context) {
-            var message = this.createMessage('action-message', context);
+            var message = this.createMessage('action', context);
             
             var payload = message.payload; 
             payload.actionDisplayName = 'Glimpse.AgentServer.Mvc.Sample.Controllers.' + action.controller + 'Controller.' + action.action;
@@ -476,7 +476,7 @@ var generateMvcRequest = (function() {
             return message; 
         }, 
         createResult: function(action, result, context) {
-            var message = this.createMessage('action-view-message', context);
+            var message = this.createMessage('action-view', context);
             
             var payload = message.payload;
             // payload.provider = 'Razor'; 
@@ -550,7 +550,7 @@ var generateMvcRequest = (function() {
             
             this.processAction(source, source, source.context);
             
-            this.messages.push(this.createFramework(source));
+            //this.messages.push(this.createFramework(source));
             this.messages.push(this.createEnd(source)); 
             
             return this.messages;
