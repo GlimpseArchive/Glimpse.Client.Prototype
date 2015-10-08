@@ -22,7 +22,7 @@ module.exports = React.createClass({
                 <tr>
                     <td width="90">{endRequest.responseDuration}ms</td>
                     <td colSpan="6">
-                        {beginRequest.requestUrl} &nbsp; {beginRequest.requestMethod} &nbsp; {endRequest.responseStatusCode} ({endRequest.responseStatusTest}) - {endRequest.responseContentType}
+                        {beginRequest.requestUrl} &nbsp; {beginRequest.requestMethod} &nbsp; {endRequest.responseStatusCode} ({endRequest.responseStatusText}) - {endRequest.responseContentType}
                     </td>
                     <td><Timeago time={beginRequest.requestStartTime} /></td>
                 </tr>
