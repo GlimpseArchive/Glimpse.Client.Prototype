@@ -2,38 +2,49 @@
 
 var _ = require('lodash');
 var moment = require('moment');
+
 var glimpse = require('glimpse');
  
-var data = {
+var _data = {
     index: {},
     values: []
 };
 
 var processRequests = function(requestRepositoryPayload) {
+        // TODO: BIG BIG BIG PROBLEM HERE!!!!! This assumes that the first time we see a request
+        //       we will have the begin message... this isn't always the case. Hence when we 
+        //       don't have the begin request message on a new request we need to go through a
+        //       reconcation process
         _.forEach(requestRepositoryPayload.newRequests, function(request) {
-            // TODO: BIG BIG BIG PROBLEM HERE!!!!! datetime isn't always going to be here 
-            //       most of the time datetime will come later and hence we 
-            if (!data.index[request.id]) {
-                var sortedIndex = _.sortedIndex(data.values, request, function(value) {
-                    return moment(value.dateTime).valueOf() * -1;   // decending order 
-                }); 
+            if (!_data.index[request.id]) {
+                var sortedIndex = 0;
                 
-                data.values.splice(sortedIndex, 0, request); 
+                if (request._requestStartTime) {
+                    sortedIndex = _.sortedIndex(_data.values, request, function(value) {
+                        // TODO: This check wont really work because of the decending order logic
+                        return value._requestStartTime ? moment(value._requestStartTime).valueOf() * -1 : 0;   // decending order 
+                    }); 
+                }
+                else {
+                    // TODO: store in a list which marks it as being reconciled later
+                }
+                
+                _data.values.splice(sortedIndex, 0, request); 
             }
             else { 
                 // TODO: Perf wise this isn't great in terms of perf, fix later
-                var currentIndex = _.findIndex(data.values, 'id', request.id); 
-                data.values[currentIndex] = request;
+                var currentIndex = _.findIndex(_data.values, 'id', request.id); 
+                _data.values[currentIndex] = request;
             } 
             
-            data.index[request.id] = request; 
+            _data.index[request.id] = request; 
         });
         
         return {
                 newRequests: requestRepositoryPayload.newRequests,
                 updatedRequests: requestRepositoryPayload.updatedRequests,
                 affectedRequests: requestRepositoryPayload.affectedRequests,
-                allRequests: data.values,
+                allRequests: _data.values,
                 newMessages: requestRepositoryPayload.newMessages,
                 newMessageTypes: requestRepositoryPayload.newMessageTypes
             };
@@ -76,5 +87,5 @@ var processRequests = function(requestRepositoryPayload) {
 })();
 
 module.exports = {
-    data: data
+    data: _data
 };

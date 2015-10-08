@@ -81,14 +81,15 @@ function notifyUsersChanged() {
         }
 
         return function (userViewModel, rawRequest) {
-            var requestDateTime = moment(rawRequest.dateTime).utc();
+            // TODO: This logic is flawed... what if we don't have the start time yet
+            var startTime = moment(rawRequest._requestStartTime).utc();
             var windowDateTime = moment().utc().subtract(activityTimeout, 'millisecond');
-            var diffTime = requestDateTime.diff(windowDateTime);
+            var diffTime = startTime.diff(windowDateTime);
             
             if (diffTime > 0) {
                 var requestViewModel = {
                         id: rawRequest.id,
-                        url: rawRequest.url 
+                        url: rawRequest._requestUrl 
                     };
 
                 userViewModel.latestRequests.unshift(requestViewModel);
@@ -109,13 +110,14 @@ function notifyUsersChanged() {
         };
 
         return function (userViewModel, rawRequest) {
-            var requestDateTime = moment(rawRequest.dateTime).utc();
+            // TODO: This logic is flawed... what if we don't have the start time yet
+            var startTime = moment(rawRequest._requestStartTime).utc();
             var windowDateTime = moment().utc().subtract(onlineTimeout, 'millisecond');
-            var diffTime = requestDateTime.diff(windowDateTime);
+            var diffTime = startTime.diff(windowDateTime);
             
             // only update if newer
-            if (!userViewModel.lastActive || requestDateTime.isAfter(userViewModel.lastActive)) {
-                userViewModel.lastActive = requestDateTime; 
+            if (!userViewModel.lastActive || startTime.isAfter(userViewModel.lastActive)) {
+                userViewModel.lastActive = startTime; 
             }
             
             // detect if online or not 

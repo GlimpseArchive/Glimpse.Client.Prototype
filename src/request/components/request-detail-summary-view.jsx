@@ -20,11 +20,11 @@ module.exports = React.createClass({
         return (
             <table className="table table-bordered">
                 <tr>
-                    <td width="90">{endRequest.duration}ms</td>
+                    <td width="90">{endRequest.responseDuration}ms</td>
                     <td colSpan="6">
-                        {beginRequest.url} &nbsp; {endRequest.method} &nbsp; {endRequest.statusCode} ({endRequest.statusText}) - {endRequest.contentType}
+                        {beginRequest.requestUrl} &nbsp; {beginRequest.requestMethod} &nbsp; {endRequest.responseStatusCode} ({endRequest.responseStatusTest}) - {endRequest.responseContentType}
                     </td>
-                    <td><Timeago time={request.dateTime} /></td>
+                    <td><Timeago time={beginRequest.requestStartTime} /></td>
                 </tr>
                 <tr>
                     <td>{user.username}</td>

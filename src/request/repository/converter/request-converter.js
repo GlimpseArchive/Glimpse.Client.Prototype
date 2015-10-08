@@ -34,6 +34,12 @@ module.exports = {
                 _.forEach(message.types, function(type) {
                     if (!request.types[type]) {
                         request.types[type] = [];
+                        
+                        // hack because we commonly use datatime in sorting and its expensive to get
+                        if (!request._requestStartTime && (type == 'begin-request' || type == 'end-request')) {
+                            request._requestStartTime = message.payload.requestStartTime;
+                            request._requestUrl = message.payload.requestUrl;
+                        }
                     }
                     
                     request.types[type].push(message.id);

@@ -367,9 +367,13 @@ var generateMvcRequest = (function() {
         }, 
         createStart: function(source) {
             var message = this.createMessage('begin-request', source.context);
-            message.payload = mapProperties(source, {}, [ 'path', 'queryString', 'method' ]);
             
-            message.payload.url = 'http://localhost:5000' + message.payload.path + defaultOrEmpty(message.payload.queryString);
+            var payload = message.payload; 
+            payload.requestMethod = source.method;
+            payload.requestPath = source.path;
+            payload.requestQueryString = source.queryString;
+            payload.requestUrl = 'http://localhost:5000' + source.path + defaultOrEmpty(source.queryString);
+            payload.requestStartTime = source.dateTime;  
             
             return message;
         },
@@ -387,11 +391,17 @@ var generateMvcRequest = (function() {
         // },
         createEnd: function(source) {
             var message = this.createMessage('end-request', source.context);
-            message.payload = mapProperties(source, {}, [ 'duration', 'statusCode', 'statusText', 'path', 'queryString', 'contentType' ]);
             
-            // TODO: at some point we need to rename the fake property names 
-            message.payload.startTime = source.dateTime;  
-            message.payload.url = 'http://localhost:5000' + message.payload.path + defaultOrEmpty(message.payload.queryString);
+            var payload = message.payload;
+            payload.responseDuration = source.duration;
+            payload.responseStatusCode = source.statusCode;
+            payload.responseStatusTest = source.statusText;
+            payload.responseContentType = source.contentType;
+            payload.responseEndTime = null;  // TODO: need to set this
+            payload.requestStartTime = source.dateTime;
+            payload.requestPath = source.path;
+            payload.requestQueryString = source.queryString;
+            payload.requestUrl = 'http://localhost:5000' + source.path + defaultOrEmpty(source.queryString);
              
             return message;
         },
@@ -575,6 +585,12 @@ var generateMvcRequest = (function() {
             _.forEach(message.types, function(type) {
                 if (!request.types[type]) {
                     request.types[type] = [];
+                    
+                    // hack because we commonly use datatime in sorting and its expensive to get
+                    if (!request._requestStartTime && (type == 'begin-request' || type == 'end-request')) {
+                        request._requestStartTime = message.payload.requestStartTime;
+                        request._requestUrl = message.payload.requestUrl;
+                    }
                 }
                 
                 request.types[type].push(message.id);

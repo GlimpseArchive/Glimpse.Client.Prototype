@@ -2,8 +2,10 @@
 
 var _ = require('lodash');
 var moment = require('moment');
+
 var glimpse = require('glimpse');
 var requestRepository = require('../repository/request-repository');
+var messageProcessor = require('../util/request-message-processor');
 
 var _requests = [];
 var _requestIndex = {};
@@ -64,11 +66,23 @@ var filterRequests = (function () {
     function applyFilters(targetRequests, destinationRequests, filters) {
         var matchFound = false;
 
+        // TODO: BIG BIG BIG PROBLEM HERE!!!!! This assumes that the first time we see a request
+        //       we will have the begin message... this isn't always the case. Hence when we 
+        //       don't have the begin request message on a new request we need to go through a
+        //       reconcation process
         _.forEach(targetRequests, function(sourceRequest) {
             if (checkMatch(sourceRequest, filters)) {
-                var sortedIndex = _.sortedIndex(destinationRequests, sourceRequest, function(value) {
-                    return moment(value.dateTime).valueOf() * -1;   // decending order 
-                }); 
+                var sortedIndex = 0;
+                
+                if (sourceRequest._requestStartTime) {
+                    sortedIndex = _.sortedIndex(destinationRequests, sourceRequest, function(value) {
+                        // TODO: This check wont really work because of the decending order logic
+                        return value._requestStartTime ? moment(value._requestStartTime).valueOf() * -1 : 0;   // decending order 
+                    }); 
+                }
+                else {
+                    // TODO: store in a list which marks it as being reconciled later
+                }
                 
                 destinationRequests.splice(sortedIndex, 0, sourceRequest); 
                 
