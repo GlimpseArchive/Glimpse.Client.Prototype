@@ -2,7 +2,9 @@
 
 var messageProcessor = require('../util/request-message-processor');
 
+var _ = require('lodash');
 var React = require('react');
+var classNames = require('classnames');
 
 var getMessages = (function() {
     var getItem = messageProcessor.getTypeMessageItem;
@@ -36,6 +38,7 @@ module.exports = React.createClass({
         if (routeData) {
             var routePath = beginData ? (<div><span>{beginData.path}</span><span>{beginData.queryString}</span></div>) : '';
         
+            // process route
             route = (
                     <section className="tab-execution-item tab-execution-route"> 
                         <div className="tab-execution-title">Route</div>
@@ -70,7 +73,27 @@ module.exports = React.createClass({
                 ); 
         }
         
-        return <div>{route}{action}</div>;
+        var view = <div>No view found yet.</div>;
+        if (viewData) {
+
+            var viewTitleClass = classNames({
+                'tab-execution-important': true,
+                'tab-execution-view-found': viewData.viewDidFind,
+                'tab-execution-view-notfound': !viewData.viewDidFind
+            });
+        
+            view = (
+                <section className="tab-execution-item tab-execution-view">
+                    <div className="tab-execution-title">View</div>
+                    <div className="tab-execution-view-path">
+                        <span className={viewTitleClass}>{viewData.viewName}</span> - <span>{viewData.viewPath}</span>
+                    </div>
+                    <div className="tab-execution-timing">{viewData.viewDuration}ms</div>
+                </section>
+            )
+        }
+        
+        return <div>{route}{action}{view}</div>;
     }
 });
 

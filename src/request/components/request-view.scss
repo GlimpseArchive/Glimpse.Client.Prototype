@@ -91,6 +91,15 @@
         min-width: 100px;
         flex-grow: 1;
     }
+    .tab-execution-view-path {
+        flex-grow: 7;
+    }
+    .tab-execution-view-found {
+        color: green;
+    }
+    .tab-execution-view-notfound {
+        color: darkred;
+    }
 }
 
 
