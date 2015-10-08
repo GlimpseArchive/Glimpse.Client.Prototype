@@ -94,6 +94,22 @@
 }
 
 
+.paramater-list {
+    padding-left: 0;
+    display: inline;
+}
+
+.paramater-list > li {
+    display: inline;
+}
+
+.paramater-list > li:before {
+    content:',\0000a0'; /* Non-breaking space */
+}
+.paramater-list > li:first-child:before {
+    content: normal;
+}
+
 
 /*
 .tab-execution-title {

@@ -48,6 +48,17 @@ module.exports = React.createClass({
         
         var action = <div>No action found yet.</div>;
         if (actionData) {
+            // process content
+            var content;
+            if (contentData && contentData.binding) {
+                content = _.map(contentData.binding, function(item, i) {
+                    return <li key={i}>{item.type} {item.name} {item.value}</li>;
+                });
+                
+                content = <ul className="paramater-list">{content}</ul>
+            }
+            
+            // process action
             action = (
                     <section className="tab-execution-item tab-execution-action">
                         <div className="tab-execution-title">Action</div>
