@@ -8,14 +8,17 @@ var classNames = require('classnames');
 
 var getMessages = (function() {
     var getItem = messageProcessor.getTypeMessageItem;
+    var getList = messageProcessor.getTypeMessageList;
     
     var options = {
         'end-request': getItem,
         'begin-request': getItem,
-        'action': getItem,
-        'action-view': getItem,
         'action-content': getItem,
-        'action-route': getItem
+        'action-route': getItem,
+        'after-action-invoked': getItem,
+        'action-view-found': getItem,
+        'after-action-view-invoked': getItem,
+        'after-execute-command': getList
     };
 		
     return function(request) {
@@ -27,16 +30,18 @@ module.exports = React.createClass({
     render: function () {
         var request = this.props.request;
         
-        var data = getMessages(request);
-        var beginData = data.beginRequest;
-        var routeData = data.actionRoute;
-        var actionData = data.action;
-        var contentData = data.actionContent;
-        var viewData = data.actionView;
+        var payload = getMessages(request);
+        var beginRequestData = payload.beginRequest;
+        var routeData = payload.actionRoute;
+        var contentData = payload.actionContent;
+        var afterActionInvokedData = payload.afterActionInvoked;
+        var actionViewFoundData = payload.actionViewFound;
+        var afterActionViewInvokedData = payload.afterActionViewInvoked;
+        var afterExecuteCommandData = payload.afterExecuteCommand;
         
         var route = <div>No route found yet.</div>;
         if (routeData) {
-            var routePath = beginData ? (<div><span>{beginData.path}</span><span>{beginData.queryString}</span></div>) : '';
+            var routePath = beginRequestData ? (<div><span>{beginRequestData.path}</span><span>{beginRequestData.queryString}</span></div>) : '';
         
             // process route
             route = (
@@ -50,7 +55,7 @@ module.exports = React.createClass({
         }
         
         var action = <div>No action found yet.</div>;
-        if (actionData) {
+        if (afterActionInvokedData) {
             // process content
             var content;
             if (contentData && contentData.binding) {
@@ -66,29 +71,32 @@ module.exports = React.createClass({
                     <section className="tab-execution-item tab-execution-action">
                         <div className="tab-execution-title">Action</div>
                         <div className="tab-execution-action-description tab-execution-important">
-                            {actionData.actionControllerName}.{actionData.actionName}({content})
+                            {afterActionInvokedData.actionControllerName}.{afterActionInvokedData.actionName}({content})
                         </div>
-                        <div className="tab-execution-timing">{actionData.actionDuration}ms</div>
+                        <div className="tab-execution-timing">{afterActionInvokedData.actionInvokedDuration}ms</div>
                     </section>
                 ); 
         }
         
         var view = <div>No view found yet.</div>;
-        if (viewData) {
+        if (afterActionViewInvokedData) {
 
-            var viewTitleClass = classNames({
-                'tab-execution-important': true,
-                'tab-execution-view-found': viewData.viewDidFind,
-                'tab-execution-view-notfound': !viewData.viewDidFind
-            });
+            var viewTitle = null;
+            if (actionViewFoundData) { 
+                var viewTitleClass = classNames({
+                    'tab-execution-important': true,
+                    'tab-execution-view-found': actionViewFoundData.viewDidFind,
+                    'tab-execution-view-notfound': !actionViewFoundData.viewDidFind
+                });
+                
+                viewTitle = <div><span className={viewTitleClass}>{actionViewFoundData.viewName}</span> - <span>{actionViewFoundData.viewPath}</span></div>;
+            }
         
             view = (
                 <section className="tab-execution-item tab-execution-view">
                     <div className="tab-execution-title">View</div>
-                    <div className="tab-execution-view-path">
-                        <span className={viewTitleClass}>{viewData.viewName}</span> - <span>{viewData.viewPath}</span>
-                    </div>
-                    <div className="tab-execution-timing">{viewData.viewDuration}ms</div>
+                    <div className="tab-execution-view-path">{viewTitle}</div>
+                    <div className="tab-execution-timing">{afterActionViewInvokedData.viewDuration}ms</div>
                 </section>
             )
         }
