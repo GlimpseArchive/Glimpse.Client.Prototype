@@ -10,13 +10,14 @@ module.exports = React.createClass({
         var request = this.props.request;
         
         var payload = messageProcessor.getSummaryMessages(request);
-        var user = payload.userIdentification || {};
+        var userIdentification = payload.userIdentification || {};  // TODO: shouldn't need to do this, think of better way
         var beginRequest = payload.beginRequest || {};
         var endRequest = payload.endRequest || {};
-        var view = payload.actionView || {};
-        var action = payload.action || {};
+        var afterActionViewInvoked = payload.afterActionViewInvoked || {};
+        var afterActionInvoked = payload.afterActionInvoked || {};
+        var afterExecuteCommand = payload.afterExecuteCommand || [];
         var abstract = {};
-
+        
         return (
             <table className="table table-bordered">
                 <tr>
@@ -27,13 +28,13 @@ module.exports = React.createClass({
                     <td><Timeago time={beginRequest.requestStartTime} /></td>
                 </tr>
                 <tr>
-                    <td>{user.username}</td>
+                    <td>{userIdentification.username}</td>
                     <td>{abstract.networkTime}ms</td>
                     <td>{abstract.serverTime}ms</td>
                     <td>{abstract.clientTime}ms</td>
-                    <td>{action.actionControllerName}.{action.actionName}(...)</td>
-                    <td>{action.actionDuration}ms</td>
-                    <td>{view.viewDuration}ms</td>
+                    <td>{afterActionInvoked.actionControllerName}.{afterActionInvoked.actionName}(...)</td>
+                    <td>{afterActionInvoked.actionInvokedDuration}ms</td>
+                    <td>{afterActionViewInvoked.viewDuration}ms</td>
                     <td>{abstract.queryTime}ms / {abstract.queryCount}</td>
                 </tr>
             </table>

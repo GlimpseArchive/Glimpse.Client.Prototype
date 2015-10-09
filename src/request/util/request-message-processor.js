@@ -25,13 +25,15 @@ module.exports = {
 	},
 	getSummaryMessages: function(request) {
 		var processItem = module.exports.getTypeMessageItem;
+		var processList = module.exports.getTypeMessageList;
 		
 		var options = {
 			'user-identification': processItem,
 			'end-request': processItem,
 			'begin-request': processItem,
-			'action': processItem,
-			'action-view': processItem,
+			'after-action-invoked': processItem,
+			'after-action-view-invoked': processItem,
+			'after-execute-command': processList
 		};
 		
 		return module.exports.getTypeMessages(request, options); 

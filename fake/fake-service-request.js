@@ -83,8 +83,8 @@ var requestProcessor = {
                     // TODO: Need different logic here to targe which requests we should be sending down
                     if (!_.isEmpty(message.indices) || !_.isEmpty(message.abstract) 
                         || message.types[0] == 'user-identification' || message.types[0] == 'end-request' 
-                        || message.types[0] == 'begin-request' || message.types[0] == 'action'
-                        || message.types[0] == 'action-view') { 
+                        || message.types[0] == 'begin-request' || message.types[0] == 'after-action-invoked'
+                        || message.types[0] == 'after-action-view-invoked' || message.types[0] == 'after-execute-command') { 
                         messages.push(message);
                     }
                 });
