@@ -7,7 +7,7 @@ var socket = (function() {
     var connection;
 
     var setup = function() {
-        connection = new polyfill.EventSource('/Glimpse/MessageStream');
+        connection = new polyfill.EventSource('/glimpse/message-stream');
         connection.addEventListener('message', function(e) {
             if (!FAKE_SERVER) {
                 glimpse.emit('data.message.summary.found.stream', JSON.parse(e.data));

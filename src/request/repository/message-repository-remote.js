@@ -6,7 +6,7 @@ var glimpse = require('glimpse');
 module.exports = {
     triggerGetLastestSummaries: function() {
         // TODO: need to pull this out different source (i.e. Metadata)
-        var uri = '/Glimpse/MessageHistory';
+        var uri = '/glimpse/message-history';
         
         request
             .get(uri) 
@@ -25,7 +25,7 @@ module.exports = {
     },
     triggerGetDetailsFor: function(requestId) {
         // TODO: need to pull this out different source (i.e. Metadata)
-        var uri = '/Glimpse/MessageDetail/' + requestId;
+        var uri = '/glimpse/message-detail/' + requestId;
         
         request
             .get(uri) 
