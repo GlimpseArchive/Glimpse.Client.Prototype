@@ -136,3 +136,73 @@
     font-size: 120%;
 }
 */
+
+
+
+body, html {
+    margin: 0;
+    height: 100%;
+}
+
+.glimpse-main {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    font-family: "Helvetica Neue",Arial,sans-serif;
+}
+
+.glimpse-header {
+    background-color: #323d42;
+    color: #fff;
+    height: 40px;
+    font-weight: bold;
+}
+
+.application-holder {
+    background-color: #eee;
+    flex: 1 1 auto;
+    padding-top: 10px;
+    min-width: 920px;
+    min-width: 900px;
+    display: flex;
+    justify-content: center;
+}
+
+.application-item-holder {
+    display: flex;
+    justify-content: center;
+    flex: 1 1 auto;
+}
+
+.request-user-holder, .request-summary-holder, .request-filter-holder {
+    background-color: #fff;
+    margin: 0 15px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+    display: flex;
+    flex-direction: column;
+}
+
+.request-user-holder {
+    flex: 1000 1 150px;
+    min-width: 100px;
+    max-width: 200px;
+}
+
+.request-summary-holder {
+    flex: 5000 1 600px;
+    min-width: 400px;
+    max-width: 900px;
+}
+    
+.request-filter-holder {
+    flex: 2000 1 275px;
+    min-width: 250px;
+    max-width: 300px;
+}
+
+.request-holder-content {
+    flex: 1 1 auto;
+    height: 100px;
+    overflow-y: auto;
+    overflow-x: hidden;
+}

@@ -13,10 +13,15 @@ module.exports = React.createClass({
     },
     render: function () {
         return (
-            <div className="application-holder">
-                {this.props.applications.map(function (application) {
-                    return <div key={application.key}><application.component /></div>;
-                })}
+            <div className="glimpse-main">
+                <header className="glimpse-header">
+                    Glimpse
+                </header>
+                <div className="application-holder">
+                    {this.props.applications.map(function (application) {
+                        return <application.component key={application.key} />;
+                    })}
+                </div>
             </div>
         );
     },

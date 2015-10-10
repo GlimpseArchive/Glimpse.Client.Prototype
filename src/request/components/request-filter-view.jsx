@@ -16,7 +16,7 @@ module.exports = React.createClass({
     },
     render: function () {
         return (
-            <div className="request-session-holder">
+            <div>
                 <h2>Filter</h2>
                 <div>
                     <label htmlFor="request-fitler-url">Url</label><br />

@@ -9,20 +9,24 @@ var Detail = require('./request-detail-view');
 module.exports = React.createClass({
     render: function () {
         return (
-            <div className="container-fluid">
-                <div className="row request-holder-outer">
-                    <div className="col-md-2 request-user-holder-outer">
+            <div className="request-holder application-item-holder">
+                <div className="request-user-holder">
+                    <div className="request-holder-content">
                         <User />
                     </div>
-                    <div className="col-md-8 request-summary-holder-outer">
+                </div>
+                <div className="request-summary-holder">
+                    <div className="request-holder-content">
                         <Summary />
                     </div>
-                    <div className="col-md-2 request-filter-holder-outer">
+                </div>
+                <div className="request-filter-holder">
+                    <div className="request-holder-content">
                         <Filter />
                     </div>
-                    <Detail />
                 </div>
-            </div>
+                <Detail />
+            </div> 
         );
     }
 });
