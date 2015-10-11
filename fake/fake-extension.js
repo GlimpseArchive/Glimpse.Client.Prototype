@@ -396,7 +396,7 @@ var generateMvcRequest = (function() {
             payload.requestQueryString = source.queryString;
             payload.requestUrl = 'http://localhost:5000' + source.path + defaultOrEmpty(source.queryString);
              
-            MessageGenerator.support.afterTimings('request', payload, source.duration, source.dateTime);
+            MessageGenerator.support.afterTimings('response', payload, source.duration, source.dateTime);
             
             return message;
         },

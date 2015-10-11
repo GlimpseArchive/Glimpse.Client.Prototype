@@ -120,22 +120,16 @@
 }
 
 
-/*
-.tab-execution-title {
-    font-weight: bold;
-    width: 20%;
-    min-width: 150px;
-}
-.tab-execution-route-name {
-    width: 15%;
-}
-.tab-execution-route-path {
-    width: 30%;
-}
-.tab-execution-route-name, .tab-execution-route-path {
-    font-size: 120%;
-}
-*/
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -148,14 +142,36 @@ body, html {
     height: 100%;
     display: flex;
     flex-direction: column;
-    font-family: "Helvetica Neue",Arial,sans-serif;
+    font-family: Tahoma, "Helvetica Neue",Arial,sans-serif;
 }
 
 .glimpse-header {
     background-color: #323d42;
     color: #fff;
     height: 40px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+    padding: 2px 15px;
+    z-index: 1;
+}
+
+.glimpse-logo {
+    font-size: 125%;
+    flex: 8 1 1025px;
+}
+.glimpse-logo-g {
+    background-color: white;
+    font-size: 200%;
+    text-align: right;
     font-weight: bold;
+    font-family: serif;
+    color: #323d42;
+    display: inline-block;
+    border-radius: 35px;
+    height: 35px;
+    width: 35px;
+    line-height: 32px;
+    margin-right: 2px;
+    padding-right: 2px;
 }
 
 .application-holder {
@@ -163,7 +179,6 @@ body, html {
     flex: 1 1 auto;
     padding-top: 10px;
     min-width: 920px;
-    min-width: 900px;
     display: flex;
     justify-content: center;
 }
@@ -173,31 +188,35 @@ body, html {
     justify-content: center;
     flex: 1 1 auto;
 }
+.application-item-header {
+    font-family: Cambria, Cochin, Georgia, Times, Times New Roman, serif;
+    font-size: 165%;
+}
 
 .request-user-holder, .request-summary-holder, .request-filter-holder {
     background-color: #fff;
-    margin: 0 15px;
     box-shadow: 0 1px 3px rgba(0,0,0,0.3);
     display: flex;
     flex-direction: column;
+    margin: 0 15px;
 }
 
 .request-user-holder {
-    flex: 1000 1 150px;
-    min-width: 100px;
+    flex: 1 1 175px;
+    min-width: 150px;
     max-width: 200px;
 }
 
 .request-summary-holder {
-    flex: 5000 1 600px;
+    flex: 5 1 600px;
     min-width: 400px;
     max-width: 900px;
 }
     
 .request-filter-holder {
-    flex: 2000 1 275px;
-    min-width: 250px;
-    max-width: 300px;
+    flex: 2 1 225px;
+    min-width: 200px;
+    max-width: 250px;
 }
 
 .request-holder-content {
@@ -205,4 +224,5 @@ body, html {
     height: 100px;
     overflow-y: auto;
     overflow-x: hidden;
+    padding: 10px 15px;
 }

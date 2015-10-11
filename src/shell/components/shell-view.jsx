@@ -15,9 +15,9 @@ module.exports = React.createClass({
         return (
             <div className="glimpse-main">
                 <header className="glimpse-header">
-                    Glimpse
+                    <span className="glimpse-logo"><span className="glimpse-logo-g">g</span>limpse</span>
                 </header>
-                <div className="application-holder">
+                <div className="application-holder page-content-holder">
                     {this.props.applications.map(function (application) {
                         return <application.component key={application.key} />;
                     })}

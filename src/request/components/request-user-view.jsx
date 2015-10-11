@@ -25,7 +25,7 @@ module.exports = React.createClass({
     render: function () {
         return (
             <div>
-                <h2>Users</h2>
+                <div className="application-item-header">Users</div>
                 {this.state.selectedUserId ?
                     <input type="button" value="Clear Selection" onClick={this._onClearSelection} /> :
                     null
