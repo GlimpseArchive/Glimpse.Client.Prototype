@@ -9,16 +9,18 @@ module.exports = React.createClass({
     render: function () {
         var user = this.props.user;
         var containerClass = classNames({
-            'table table-bordered user-status': true,
-            'user-status-online': user.online,
+            'list-item user-status': true, 
             'user-shell-selected': user.selected
+        });
+        var imgClass = classNames({ 
+            'user-status-online': user.online,
         });
 
         return (
             <div className="request-user-item-holder" onClick={this._onClick}>
                 <table className={containerClass}>
                     <tr>
-                        <td width="50" rowSpan="2"><img src={user.details.image} width="40" /></td>
+                        <td width="55" rowSpan="2"><img className={imgClass} src={user.details.image} width="40" /></td>
                         <td>{user.details.username}</td>
                     </tr>
                     <tr>

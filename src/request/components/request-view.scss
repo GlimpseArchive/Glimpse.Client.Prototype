@@ -3,10 +3,10 @@
 .temp2 { background-color:blue }
 .temp3 { background-color:green }
 
-.user-status {
+.user-status img {
     border-left: 10px solid grey;
 }
-.user-status.user-status-online {
+.user-status img.user-status-online {
     border-left-color: green;
 }
 
@@ -131,6 +131,9 @@
 
 
 
+.list-item {
+    margin-top: 15px;
+}
 
 
 body, html {
@@ -152,26 +155,11 @@ body, html {
     box-shadow: 0 1px 3px rgba(0,0,0,0.2);
     padding: 2px 15px;
     z-index: 1;
+    text-align: right;
 }
 
-.glimpse-logo {
-    font-size: 125%;
-    flex: 8 1 1025px;
-}
-.glimpse-logo-g {
-    background-color: white;
-    font-size: 200%;
-    text-align: right;
-    font-weight: bold;
-    font-family: serif;
-    color: #323d42;
-    display: inline-block;
-    border-radius: 35px;
-    height: 35px;
-    width: 35px;
-    line-height: 32px;
-    margin-right: 2px;
-    padding-right: 2px;
+.glimpse-logo img {
+    height: 40px
 }
 
 .application-holder {

@@ -27,7 +27,7 @@ module.exports = React.createClass({
         
         return (
             <div className={containerClass} onClick={this.onSelect}>
-                <table className="table table-bordered">
+                <table className="list-item">
                     <tr>
                         <td width="90">{endRequest.responseDuration}ms</td>
                         <td colSpan="6">
