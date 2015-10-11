@@ -233,18 +233,18 @@ var details = (function () {
     });
     
     // remote triggers
-    requestMock.get('/glimpse/MessageHistory', function(req) {
+    requestMock.get('/glimpse/message-history', function(req) {
         summaries.remote();
         
         // TODO: need to return data
         //return data;
     }); 
-    requestMock.get('/glimpse/MessageDetail/:id', function(req) {
+    requestMock.get('/glimpse/message-detail/:id', function(req) {
         details.remote(req.params.id); 
     });
     
     // stream subscribers
-    streamMock.on('/Glimpse/MessageStream', function() {
+    streamMock.on('/glimpse/message-stream', function() {
         summaries.stream();
     });
 })();
