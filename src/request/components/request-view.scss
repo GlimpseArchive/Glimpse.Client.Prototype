@@ -3,12 +3,6 @@
 .temp2 { background-color:blue }
 .temp3 { background-color:green }
 
-.user-status img {
-    border-left: 10px solid grey;
-}
-.user-status img.user-status-online {
-    border-left-color: green;
-}
 
 .user-shell-selected, .request-summary-shell-selected {
     background-color: #f0f7fd;
@@ -131,6 +125,7 @@
 
 
 
+
 .list-item {
     margin-top: 15px;
 }
@@ -175,15 +170,18 @@ body, html {
     display: flex;
     justify-content: center;
     flex: 1 1 auto;
+    position: relative;
 }
 .application-item-header {
     font-family: Cambria, Cochin, Georgia, Times, Times New Roman, serif;
     font-size: 165%;
+    margin-bottom: 11px;
 }
 
-.request-user-holder, .request-summary-holder, .request-filter-holder {
+.request-user-holder, .request-summary-holder, .request-filter-holder, .request-detail-holder {
     background-color: #fff;
     box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+    border-radius: 3px 3px 0 0;
     display: flex;
     flex-direction: column;
     margin: 0 15px;
@@ -207,6 +205,16 @@ body, html {
     max-width: 250px;
 }
 
+.request-detail-holder {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    width: calc( 82% - 125px);
+    margin-right: 0;
+    border-radius: 3px 0 0 0;
+}
+
 .request-holder-content {
     flex: 1 1 auto;
     height: 100px;
@@ -215,8 +223,131 @@ body, html {
     padding: 10px 15px;
 }
 
-
 .request-summary-item-holder {
-    border-bottom: 1px solid grey;
+    border-bottom: 1px solid #E1E2E4;
     padding-bottom: 15px;
+}
+
+
+.user-status img {
+    border-left: 5px solid #eee;
+}
+.user-status img.user-status-online {
+    border-left-color: green;
+}
+
+
+//****** BUTTONS *********
+
+.button-holder {
+    text-align: right;
+    padding-top: 15px;
+}
+.button-holder .button {
+    display: inline-block;
+}
+.button {
+    margin-left: 5px;
+    font-weight: bold;
+    cursor: pointer;
+    font-family: Cambria, Cochin, Georgia, Times, Times New Roman, serif;
+}
+.button.button--default {
+    height: 24px;
+    padding: 5px 10px 0;
+    border-radius: 3px;
+    transition: box-shadow 200ms;
+}
+.button.button--primary {
+    color: #fff;
+    fill: #fff;
+    background: #1596D1;
+}
+.button.button--primary:focus, .button.button--primary:hover {
+    background: #19B2F7;
+    box-shadow: 0 0 0 3px #33C0FF;
+}
+.button.button--dull {
+    color: #fff;
+    fill: #fff;
+    background: #41768E;
+}
+.button.button--dull:focus, .button.button--dull:hover {
+    background: #A6CADB;
+    box-shadow: 0 0 0 3px #B0D6E8;
+}
+.button.button--link {
+    text-decoration: underline;
+    transition: color 200ms;
+}
+.button.button--link:focus, .button.button--link:hover {
+    color: #A6CADB;
+}
+.button.button--close {
+    text-decoration: none;
+    position: absolute;
+    top: 12px;
+    right: 20px;
+    font-family: sans-serif;
+    font-weight: normal;
+    font-size: 125%;
+    width: 25px;
+    height: 25px;
+    text-align: center;
+}
+
+//******* Forms *******
+.field-section {
+    margin-bottom: 15px;
+}
+
+.field-label {
+    font-variant: small-caps;
+}
+
+
+//******* TABS *******
+.nav-bar {
+    border-bottom: 1px solid #E1E2E4;
+    
+    &.nav-bar-center {
+        text-align: center;
+    }
+}
+.nav {
+  margin-bottom: 0;
+  padding-left: 0; 
+  list-style: none;
+
+    > li {
+        position: relative;
+        display: block;
+        
+        > a {
+            position: relative;
+            display: block;
+        }
+    }
+}
+.nav.nav-tabs {
+    > li {
+        display: inline-block;
+        padding: 0 10px;
+        
+        > a {
+            position: relative;
+            display: block;
+            text-decoration: none;
+            color: #aaa;
+            transition: box-shadow 200ms, color 200ms;
+            padding-bottom: 8px;
+            
+            &:hover,
+            &:focus,
+            &.selected {
+                box-shadow: inset 0 -3px #FF6D92;
+                color: #111;
+            }
+        }
+    }
 }

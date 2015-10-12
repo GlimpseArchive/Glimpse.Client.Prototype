@@ -36,9 +36,11 @@ module.exports = React.createClass({
     
             return (
                 <div>
-                    <ul className="nav nav-tabs">
-                        {navigation}
-                    </ul>
+                    <div className="nav-bar nav-bar-center">
+                        <ul className="nav nav-tabs">
+                            {navigation}
+                        </ul>
+                    </div>
                     <div className="tab-content">
                         {panel}
                     </div>

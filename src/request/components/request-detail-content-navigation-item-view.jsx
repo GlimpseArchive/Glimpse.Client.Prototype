@@ -8,10 +8,10 @@ module.exports = React.createClass({
     render: function () {
         var tab = this.props.tab;
         var containerClass = classNames({
-            'active': this.props.isActive
+            'selected': this.props.isActive
         });
 
-        return <li className={containerClass} onClick={this._onClick}><a href="#">{tab.title}</a></li>;
+        return <li onClick={this._onClick}><a className={containerClass} href="#">{tab.title}</a></li>;
     },
     _onClick: function (payload) {
         glimpse.emit('shell.request.detail.focus.changed', { tab: this.props.tab.key });

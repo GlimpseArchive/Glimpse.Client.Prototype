@@ -95,6 +95,9 @@ table th {
   padding: 0;
   vertical-align: top;
 }
+tbody > tr > th {
+  text-align: left;
+}
 /* Code blocks */
 code {
   vertical-align: bottom;
@@ -106,4 +109,8 @@ code {
 /* Hug the block above you */
 .hug {
   margin-top: 0;
+}
+
+body {
+  color: #111;
 }

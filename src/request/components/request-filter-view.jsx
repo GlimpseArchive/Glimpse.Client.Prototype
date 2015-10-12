@@ -18,24 +18,26 @@ module.exports = React.createClass({
         return (
             <div>
                 <div className="application-item-header">Filters</div>
-                <div>
-                    <label htmlFor="request-fitler-url">Url</label><br />
+                <div className="field-section">
+                    <label className="field-label" htmlFor="request-fitler-url">Url</label><br />
                     <input type="text" id="request-fitler-url" valueLink={this.linkState('url')} />
-                </div><br />
-                <div>
-                    <label htmlFor="request-fitler-method">Method</label><br />
+                </div>
+                <div className="field-section">
+                    <label className="field-label" htmlFor="request-fitler-method">Method</label><br />
                     <input type="text" id="request-fitler-method" valueLink={this.linkState('method')} />
-                </div><br />
-                <div>
-                    <label htmlFor="request-fitler-contentType">Content Type</label><br />
+                </div>
+                <div className="field-section">
+                    <label className="field-label" htmlFor="request-fitler-contentType">Content Type</label><br />
                     <input type="text" id="request-fitler-contentType" valueLink={this.linkState('contentType')} />
-                </div><br />
-                <div>
-                    <label htmlFor="request-fitler-statusCode">Status Code</label><br />
+                </div>
+                <div className="field-section">
+                    <label className="field-label" htmlFor="request-fitler-statusCode">Status Code</label><br />
                     <input type="text" id="request-fitler-statusCode" valueLink={this.linkState('statusCode')} />
-                </div><br />
-                <input type="button" value="Filter" onClick={this._onFilter} />
-                <input type="button" value="Clear" onClick={this._onClear} />
+                </div>
+                <div className="button-holder">
+                    <div className="button button--default button--primary" onClick={this._onFilter}>Filter</div>
+                    <div className="button button--link" onClick={this._onClear}>Clear</div>
+                </div>
             </div>
         );
     },

@@ -19,9 +19,10 @@ module.exports = React.createClass({
         var model = this.state;
         if (model && model.selectedId) {
             return (
-                <div className="col-md-10 col-md-offset-2 request-detail-holder-outer">
-                    <div className="request-detail-holder">
-                        <h2>Detail <input type="button" value="Close" onClick={this.onClose} /></h2>
+                <div className="request-detail-holder">
+                    <div className="request-holder-content">
+                        <div className="application-item-header">Detail</div>
+                        <div className="button button--link button--close" onClick={this.onClose}>x</div>
                         {!model.request ?
                             <Loading /> :
                             <div>
