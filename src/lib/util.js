@@ -57,5 +57,8 @@ module.exports = {
         }
 
         return result;
+    },
+    timeOrEmpty: function(value) {
+        return value !== null && value !== undefined ? value + 'ms' : '--';
     }
 };

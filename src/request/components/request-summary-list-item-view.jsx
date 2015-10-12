@@ -2,6 +2,7 @@
 
 var glimpse = require('glimpse');
 var messageProcessor = require('../util/request-message-processor');
+var timeOrEmpty = glimpse.util.timeOrEmpty;
 
 var React = require('react');
 var Timeago = require('lib/components/timeago');
@@ -29,7 +30,7 @@ module.exports = React.createClass({
             <div className={containerClass} onClick={this.onSelect}>
                 <table className="list-item">
                     <tr>
-                        <td width="90">{endRequest.responseDuration}ms</td>
+                        <td width="90">{timeOrEmpty(endRequest.responseDuration)}</td>
                         <td colSpan="6">
                             {beginRequest.requestUrl} &nbsp; {beginRequest.requestMethod} &nbsp; {endRequest.responseStatusCode} ({endRequest.responseStatusText}) - {endRequest.responseContentType}
                         </td>
@@ -37,12 +38,12 @@ module.exports = React.createClass({
                     </tr>
                     <tr>
                         <td>{userIdentification.username}</td>
-                        <td>{abstract.networkTime}ms</td>
-                        <td>{abstract.serverTime}ms</td>
-                        <td>{abstract.clientTime}ms</td>
+                        <td>{timeOrEmpty(abstract.networkTime)}</td>
+                        <td>{timeOrEmpty(abstract.serverTime)}</td>
+                        <td>{timeOrEmpty(abstract.clientTime)}</td>
                         <td>{afterActionInvoked.actionControllerName}.{afterActionInvoked.actionName}(...)</td>
-                        <td>{afterActionInvoked.actionInvokedDuration}ms</td>
-                        <td>{afterActionViewInvoked.viewDuration}ms</td>
+                        <td>{timeOrEmpty(afterActionInvoked.actionInvokedDuration)}</td>
+                        <td>{timeOrEmpty(afterActionViewInvoked.viewDuration)}</td>
                         <td>{abstract.queryTime}ms / {abstract.queryCount}</td>
                     </tr>
                 </table>

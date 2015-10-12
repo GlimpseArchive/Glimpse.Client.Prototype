@@ -1,25 +1,7 @@
-.temp1, .temp2, .temp3 { height:500px; }
-.temp1 { background-color:purple }
-.temp2 { background-color:blue }
-.temp3 { background-color:green }
-
 
 .user-shell-selected, .request-summary-shell-selected {
     background-color: #f0f7fd;
 }
-
-.request-holder-outer {
-    position: relative;
-}
-.request-detail-holder-outer {
-    background-color: #f0f7fd;
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    right: 0;
-    width: calc( 83.33333% - 105px );
-}
-
 
 .request-summary-item-holder-enter, .request-user-item-holder-enter {
     background-color: #F8F5EC;
