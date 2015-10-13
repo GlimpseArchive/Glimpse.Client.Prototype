@@ -14,7 +14,7 @@ module.exports = React.createClass({
         
         var containerClass = classNames({
             'request-summary-item-holder': true,
-            'request-summary-shell-selected': request._selected
+            'request-summary-item-selected': request._selected
         });
         
         var payload = messageProcessor.getSummaryMessages(request);

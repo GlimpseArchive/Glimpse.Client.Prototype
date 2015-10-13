@@ -1,5 +1,5 @@
 
-.user-shell-selected, .request-summary-shell-selected {
+.user-shell-selected, .request-summary-item-selected {
     background-color: #f0f7fd;
 }
 
@@ -233,8 +233,24 @@ body, html {
     }
     
     .request-summary-item-holder {
-        border-bottom: 1px solid #E1E2E4;
-        padding-bottom: 15px;
+        border-top: 1px solid #E1E2E4;
+        padding: 15px 10px;
+        
+        .list-item {
+            margin: 0;
+        }
+        
+        &:first-child {
+            border-top-color: transparent;
+        }
+    }
+    .request-summary-item-selected {
+        border-radius: 3px;
+        border-top-color: transparent;
+        
+        + .request-summary-item-holder {
+            border-top-color: transparent;
+        }
     }
 
     //***** USER SECTION *******
@@ -255,7 +271,7 @@ body, html {
     display: inline-block;
 }
 .button {
-    margin-left: 5px;
+    margin-left: 10px;
     font-weight: bold;
     cursor: pointer;
     font-family: Cambria, Cochin, Georgia, Times, Times New Roman, serif;
