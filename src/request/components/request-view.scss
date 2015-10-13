@@ -108,16 +108,16 @@
 
 
 
-.list-item {
-    margin-top: 15px;
-}
 
 
+//****** GENERAL *******
 body, html {
     margin: 0;
     height: 100%;
+    color: #111;
 }
 
+//****** SHELL *******
 .glimpse-main {
     height: 100%;
     display: flex;
@@ -139,6 +139,7 @@ body, html {
     height: 40px
 }
 
+//****** APPLICATION LAYOUTS *******
 .application-holder {
     background-color: #eee;
     flex: 1 1 auto;
@@ -160,67 +161,92 @@ body, html {
     margin-bottom: 11px;
 }
 
-.request-user-holder, .request-summary-holder, .request-filter-holder, .request-detail-holder {
-    background-color: #fff;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.3);
-    border-radius: 3px 3px 0 0;
-    display: flex;
-    flex-direction: column;
-    margin: 0 15px;
-}
-
-.request-user-holder {
-    flex: 1 1 175px;
-    min-width: 150px;
-    max-width: 200px;
-}
-
-.request-summary-holder {
-    flex: 5 1 600px;
-    min-width: 400px;
-    max-width: 900px;
-}
+    //***** SECTION LAYOUTS *******
+    .request-user-holder, .request-summary-holder, .request-filter-holder, .request-detail-holder {
+        background-color: #fff;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+        border-radius: 3px 3px 0 0;
+        display: flex;
+        flex-direction: column;
+        margin: 0 15px;
+    }
     
-.request-filter-holder {
-    flex: 2 1 225px;
-    min-width: 200px;
-    max-width: 250px;
-}
+    .request-user-holder {
+        flex: 1 1 175px;
+        min-width: 150px;
+        max-width: 200px;
+    }
+    
+    .request-summary-holder {
+        flex: 5 1 600px;
+        min-width: 400px;
+        max-width: 900px;
+    }
+        
+    .request-filter-holder {
+        flex: 2 1 225px;
+        min-width: 200px;
+        max-width: 250px;
+    }
+    
+    .request-detail-holder {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        right: 0;
+        width: 70vw;
+        min-width: 65vm;
+        margin-right: 0;
+        border-radius: 3px 0 0 0;
+        box-shadow: 0 2px 11px rgba(0, 0, 0, 0.4);
+        
+        > div {
+            min-width: 65vw;
+        }
+    }
+    
+    .request-detail-holder-enter {
+        max-width: 0;
+        min-width: 0;
+    }
+    .request-detail-holder-enter.request-detail-holder-enter-active {
+        max-width: 70vw;
+        min-width: 65vm;
+        transition: max-width 500ms ease-in;
+    }
+    .request-detail-holder-leave {
+        max-width: 70vw;
+        min-width: 65vm;
+    }
+    .request-detail-holder-leave.request-detail-holder-leave-active {
+        max-width: 0;
+        min-width: 0;
+        transition: max-width 300ms ease-in;
+    }
+    
+    .request-holder-content {
+        flex: 1 1 auto;
+        height: 100px;
+        overflow-y: auto;
+        overflow-x: hidden;
+        padding: 10px 15px;
+    }
+    
+    .request-summary-item-holder {
+        border-bottom: 1px solid #E1E2E4;
+        padding-bottom: 15px;
+    }
 
-.request-detail-holder {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    right: 0;
-    width: calc( 82% - 125px);
-    margin-right: 0;
-    border-radius: 3px 0 0 0;
-}
-
-.request-holder-content {
-    flex: 1 1 auto;
-    height: 100px;
-    overflow-y: auto;
-    overflow-x: hidden;
-    padding: 10px 15px;
-}
-
-.request-summary-item-holder {
-    border-bottom: 1px solid #E1E2E4;
-    padding-bottom: 15px;
-}
-
-
-.user-status img {
-    border-left: 5px solid #eee;
-}
-.user-status img.user-status-online {
-    border-left-color: green;
-}
+    //***** USER SECTION *******
+    .user-status img {
+        border-left: 5px solid #eee;
+    }
+    .user-status img.user-status-online {
+        border-left-color: green;
+    }
 
 
 //****** BUTTONS *********
-
 .button-holder {
     text-align: right;
     padding-top: 15px;
@@ -267,15 +293,13 @@ body, html {
 }
 .button.button--close {
     text-decoration: none;
-    position: absolute;
-    top: 12px;
-    right: 20px;
     font-family: sans-serif;
     font-weight: normal;
     font-size: 125%;
     width: 25px;
     height: 25px;
     text-align: center;
+    float: right;
 }
 
 //******* Forms *******
@@ -327,9 +351,14 @@ body, html {
             &:hover,
             &:focus,
             &.selected {
-                box-shadow: inset 0 -3px #FF6D92;
+                box-shadow: inset 0 -3px #FF484E;
                 color: #111;
             }
         }
     }
+}
+
+//******** LISTS *********
+.list-item {
+    margin-top: 15px;
 }
