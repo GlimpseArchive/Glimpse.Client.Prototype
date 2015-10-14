@@ -3,6 +3,19 @@
 var _ = require('lodash');
 
 module.exports = {
+	getMessageTypes: function(){
+		var processItem = module.exports.getTypeMessageItem;
+		var processList = module.exports.getTypeMessageList;
+		
+		return {
+			'user-identification': processItem,
+			'end-request': processItem,
+			'begin-request': processItem,
+			'after-action-invoked': processItem,
+			'after-action-view-invoked': processItem,
+			'after-execute-command': processList
+		};
+	},
 	getTypeMessages: function(request, typeOptions) {
 		var result = {};
 		_.forEach(typeOptions, function(callback, key) {
@@ -24,17 +37,7 @@ module.exports = {
 		}
 	},
 	getSummaryMessages: function(request) {
-		var processItem = module.exports.getTypeMessageItem;
-		var processList = module.exports.getTypeMessageList;
-		
-		var options = {
-			'user-identification': processItem,
-			'end-request': processItem,
-			'begin-request': processItem,
-			'after-action-invoked': processItem,
-			'after-action-view-invoked': processItem,
-			'after-execute-command': processList
-		};
+		var options = module.exports.getMessageTypes();
 		
 		return module.exports.getTypeMessages(request, options); 
 	}

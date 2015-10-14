@@ -233,7 +233,7 @@ var details = (function () {
     });
     
     // remote triggers
-    requestMock.get(window.location.origin + '/glimpse/message-history', function(req) {
+    requestMock.get(window.location.origin + '/glimpse/message-history/?types=:types', function(req) {
         summaries.remote();
         
         // TODO: need to return data

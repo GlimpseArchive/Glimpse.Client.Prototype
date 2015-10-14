@@ -3,6 +3,7 @@
 var request = require('superagent');
 var glimpse = require('glimpse');
 var metadataRepository = require('../../shell/repository/metadata-repository');
+var messageProcessor = require('../util/request-message-processor');
 
 var uriTemplates = require("uri-templates");
 
@@ -11,7 +12,8 @@ module.exports = {
         metadataRepository.registerListener(function(metadata){
             var uri = metadata.resources["message-history"]
                 .fill({
-                    hash: metadata.hash
+                    hash: metadata.hash,
+                    types: Object.keys(messageProcessor.getMessageTypes())
                 });
             
             request
