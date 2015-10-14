@@ -37,7 +37,7 @@ module.exports = React.createClass({
                 queryDuration += command.commandDuration;
             });
             
-            queryGroup = Math.round(queryDuration * 100) / 100 + 'ms / ' + queryCount;
+            queryGroup = Math.round(queryDuration) + 'ms / ' + queryCount;
         }        
         
         return (

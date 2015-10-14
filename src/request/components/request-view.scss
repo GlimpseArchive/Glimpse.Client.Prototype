@@ -144,7 +144,8 @@ body, html {
     background-color: #eee;
     flex: 1 1 auto;
     padding-top: 10px;
-    min-width: 920px;
+    //min-width: 920px; // TODO: once its made more responsive, we can fix tis up a bit more
+    min-width: 1040px;
     display: flex;
     justify-content: center;
 }
@@ -333,7 +334,7 @@ body, html {
         padding-left: 40px;
     }
     .request-summary-username {
-        flex: 2;
+        flex: 2 5;
         text-align: right;
     }
 
@@ -343,7 +344,7 @@ body, html {
         height: 2px;
         margin-right: 20px;
         margin-top: -3px;
-        opacity: 0.5;
+        opacity: 0.3;
         transition: opacity 200ms ease;
     }
         .request-summary-duration-bar-network {
