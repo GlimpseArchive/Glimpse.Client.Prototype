@@ -11,7 +11,7 @@ module.exports = React.createClass({
         return <span title={time.format('MMM Do YYYY, h:mm:ss a')}>{time.fromNow()}</span>;
     },
     componentDidMount: function () {
-        var interval = this.props.time || 60000;
+        var interval = this.props.duration || 60000;
 
         this.setInterval(this.forceUpdate.bind(this), interval);
     }
