@@ -233,18 +233,38 @@ var details = (function () {
     });
     
     // remote triggers
-    requestMock.get('/glimpse/message-history', function(req) {
+    requestMock.get(window.location.origin + '/glimpse/message-history', function(req) {
         summaries.remote();
         
         // TODO: need to return data
         //return data;
     }); 
-    requestMock.get('/glimpse/message-detail/:id', function(req) {
+    requestMock.get(window.location.origin + '/glimpse/request/:id', function(req) {
         details.remote(req.params.id); 
     });
     
+    requestMock.get(window.location.origin + '/glimpse/metadata', function(req){
+       return {
+           "ok" : true,
+           "body" : {
+                "resources": {
+                    "client": window.location.origin + "/glimpse/client/index.html?hash={hash}{&requestId}",
+                    "diagnostics": window.location.origin + "/glimpse/diagnostics/index.html?hash={hash}{&requestId}",
+                    "hud": window.location.origin + "/glimpse/hud/hud.js?hash={hash}",
+                    "agent": window.location.origin + "/glimpse/agent/agent.js?hash={hash}",
+                    "message-stream": window.location.origin + "/glimpse/message-stream/",
+                    "message-history": window.location.origin + "/glimpse/message-history/{?dmin,dmax,url,methods,smin,smax,tags,before,user,types}",
+                    "message-ingress": window.location.origin + "/glimpse/message-ingress/",
+                    "metadata": window.location.origin + "/glimpse/metadata/?hash={hash}",
+                    "script-options": window.location.origin + "/glimpse/script-options/{?hash}"
+                },
+                "hash": "705a00b"
+            }
+        }
+    });
+    
     // stream subscribers
-    streamMock.on('/glimpse/message-stream', function() {
+    streamMock.on(window.location.origin + '/glimpse/message-stream', function() {
         summaries.stream();
     });
 })();
