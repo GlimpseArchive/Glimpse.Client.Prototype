@@ -212,7 +212,7 @@ body, html {
     .request-detail-holder-enter.request-detail-holder-enter-active {
         max-width: 70vw;
         min-width: 65vm;
-        transition: max-width 500ms ease-in;
+        transition: max-width 200ms ease-in;
     }
     .request-detail-holder-leave {
         max-width: 70vw;
@@ -221,7 +221,7 @@ body, html {
     .request-detail-holder-leave.request-detail-holder-leave-active {
         max-width: 0;
         min-width: 0;
-        transition: max-width 300ms ease-in;
+        transition: max-width 100ms ease-in;
     }
     
     .request-holder-content {
@@ -260,6 +260,128 @@ body, html {
     .user-status img.user-status-online {
         border-left-color: green;
     }
+
+//******* DETAIL LAYOUT ********
+.request-summary-data-section-holder {
+    display: flex;
+    flex-direction: row;
+}
+.request-summary-data-holder {
+    display: flex;
+    flex-direction: row;
+}
+    .request-summary-leadGroup {
+        max-width: 130px;
+        min-width: 90px;
+        flex: 1 0 20%;
+    }
+    .request-summary-detailGroup {
+        flex: 4 10 80%;
+        
+        .request-summary-data-holder {
+            align-items: baseline;
+        }    
+    }
+    .request-summary-detailSubGroup {
+        padding-top: 8px;
+    }
+
+    .request-summary-responseDuration {
+        font-size: 200%;
+        font-family: Cambria, Cochin, Georgia, Times, Times New Roman, serif;
+    }
+    .request-summary-requestStartTime {
+        font-size: 75%;
+        color: #aaa;
+        text-align: right;
+        padding-right: 20px;
+    }
+    .request-summary-responseStatusCode, .request-summary-requestMethod {
+        font-size: 75%;
+        color: #aaa;
+    }
+    .request-summary-responseStatusCode {
+        padding-left: 20px;
+    }
+    .request-summary-responseStatusText {
+        font-family: monospace;
+        font-size: 150%;
+        padding-left: 5px;
+    }
+    .request-summary-requestMethod {
+        padding-right: 5px;
+        width: 37px;
+    }
+    .request-summary-responseContentType {
+        flex: 1;
+        text-align: right;
+    }
+    .request-summary-requestQueryString {
+        color: #aaa;
+        padding-right: 20px;
+    }
+    
+    .request-summary-networkTime, .request-summary-serverTime, .request-summary-clientTime, 
+    .request-summary-actionInvokedDuration, .request-summary-viewDuration {
+        flex: 1;
+    }
+    .request-summary-queryGroup {
+        flex: 2;
+    }
+    .request-summary-actionGroup {
+        flex: 3;
+        padding-left: 40px;
+    }
+    .request-summary-username {
+        flex: 2;
+        text-align: right;
+    }
+
+    //******* DETAIL DURATION ********  
+    .request-summary-duration-bar {
+        display: flex;
+        height: 2px;
+        margin-right: 20px;
+        margin-top: -3px;
+        opacity: 0.5;
+        transition: opacity 200ms ease;
+    }
+        .request-summary-duration-bar-network {
+            background-color: #258ECC;
+            width: 5%;
+        }
+        .request-summary-duration-bar-server {
+            background-color: #FF484E;
+            width: 60%;
+        }
+        .request-summary-duration-bar-client {
+            background-color: #FFFC61;
+            width:35%;
+        }
+    .request-summary-duration-items-outer {
+        position: relative;
+    }
+    .request-summary-duration-items {
+        position: absolute;
+        display: flex;
+        flex-direction: row;
+        font-size: 75%;
+        width: 100%;
+        overflow-y: hidden;
+        opacity: 0;
+    }
+    .request-summary-leadGroup:hover {
+        .request-summary-duration-bar, .request-summary-duration-items {
+            opacity: 1;
+        }
+        .request-summary-requestStartTime {
+            opacity: 0;
+        }
+    }
+
+
+
+
 
 
 //****** BUTTONS *********
