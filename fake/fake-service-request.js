@@ -252,13 +252,15 @@ var details = (function () {
                     "diagnostics": window.location.origin + "/glimpse/diagnostics/index.html?hash={hash}{&requestId}",
                     "hud": window.location.origin + "/glimpse/hud/hud.js?hash={hash}",
                     "agent": window.location.origin + "/glimpse/agent/agent.js?hash={hash}",
-                    "message-stream": window.location.origin + "/glimpse/message-stream/",
-                    "message-history": window.location.origin + "/glimpse/message-history/{?dmin,dmax,url,methods,smin,smax,tags,before,user,types}",
+                    "message-stream": window.location.origin + "/glimpse/message-stream/{?types}",
+                    "request": window.location.origin + "/glimpse/request/{requestId}",
+                    "message-history": window.location.origin + "/glimpse/message-history/?types={types}",
                     "message-ingress": window.location.origin + "/glimpse/message-ingress/",
                     "metadata": window.location.origin + "/glimpse/metadata/?hash={hash}",
+                    "request-history": window.location.origin + "/glimpse/request-history/{?dmin,dmax,url,methods,smin,smax,tags,before,userId,types}",
                     "script-options": window.location.origin + "/glimpse/script-options/{?hash}"
                 },
-                "hash": "705a00b"
+                "hash": "801b465f"
             }
         }
     });
