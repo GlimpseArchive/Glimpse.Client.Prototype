@@ -262,6 +262,7 @@ body, html {
         border-left-color: green;
     }
 
+/*
 //******* DETAIL LAYOUT ********
 .request-summary-data-section-holder {
     display: flex;
@@ -379,9 +380,45 @@ body, html {
             opacity: 0;
         }
     }
+*/
 
-
-
+.request-summary-data-row-main, .request-summary-data-row-top, .request-summary-data-row-bottom {
+    display: flex;
+    align-items: baseline;
+}
+.request-summary-data-row-main, .request-summary-data-row-bottom {
+    > div {
+        flex: 1;
+    }
+    .request-summary-data-col-2 {
+        flex: 2;
+    }
+    .request-summary-data-col-3 {
+        flex: 3;
+    }
+}
+.request-summary-data-row-top {
+    margin-bottom: 5px;
+}
+.request-summary-data-row-items > span {
+    padding-left: 15px;
+}
+.request-summary-data-row-items > span:first-child {
+    padding-left: 25px;
+}
+.request-summary-data-value-primary {
+    font-size: 120%;
+}
+.request-summary-data-value-soft, .request-summary-data-value-accent {
+    color: #737373;
+}
+.request-summary-data-value-sub, .request-summary-data-value-accent {
+    font-size: 80%;
+}
+.request-summary-data-title {
+    font-size: 70%;
+    color: #737373;
+}
 
 
 
