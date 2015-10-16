@@ -15,7 +15,8 @@ var settings = {
     index: __dirname + '/src/index.html',
     entry: __dirname + '/src/index.js',
     output: __dirname + '/dist',
-    server: __dirname + '/dist'
+    server: __dirname + '/dist',
+    assets: __dirname + '/assets/**/*'
 };
 
 var WATCH = !!argv.watch;
@@ -79,11 +80,16 @@ gulp.task('pages', function () {
         .pipe(gulp.dest(settings.output))
         .pipe(gif(WATCH, browserSync.reload({ stream: true })));
 });
+gulp.task('assets', function () {
+    return gulp.src(settings.assets)
+        .pipe(gulp.dest(settings.output + '/assets'))
+        .pipe(gif(WATCH, browserSync.reload({ stream: true })));
+});
 
 // NOTE: was running in parallel but don't like the output
 //gulp.task('build', ['pages', 'bundle']);
-gulp.task('build', function (cb) { 
-    runSequence('pages', 'bundle', cb);
+gulp.task('build', function (cb) {
+    runSequence('pages', 'assets', 'bundle', cb);
 });
 
 gulp.task('server', function (cb) {
