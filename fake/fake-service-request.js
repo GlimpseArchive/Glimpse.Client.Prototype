@@ -266,7 +266,7 @@ var details = (function () {
     });
     
     // stream subscribers
-    streamMock.on(window.location.origin + '/glimpse/message-stream', function() {
+    streamMock.on(window.location.origin + '/glimpse/message-stream/', function() {
         summaries.stream();
     });
 })();
