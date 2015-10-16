@@ -53,48 +53,8 @@ module.exports = React.createClass({
         var afterActionViewInvoked = payload.afterActionViewInvoked || {};
         var afterActionInvoked = payload.afterActionInvoked || {};
         var afterExecuteCommand = payload.afterExecuteCommand || [];
-        var abstract = { networkTime: 2, serverTime: 35, clientTime: 42 }; // TODO: temp until we get values 
-             
-        
-        /*
+        var abstract = { networkTime: 2, serverTime: 35, clientTime: 42 }; // TODO: temp until we get values
 
-                <div className="request-summary-data-holder">
-                    <div className="request-summary-leadGroup">
-                        <div>
-                            <div className="request-summary-responseDuration">{timeOrEmpty(endRequest.responseDuration)}</div>
-                            <div className="request-summary-duration-bar">
-                                <div className="request-summary-duration-bar-network"></div>
-                                <div className="request-summary-duration-bar-server"></div>
-                                <div className="request-summary-duration-bar-client"></div>
-                            </div>
-                        </div>
-                        <div className="request-summary-duration-items-outer">
-                            <div className="request-summary-duration-items">
-                                <div className="request-summary-networkTime">{timeOrEmpty(abstract.networkTime)}</div>
-                                <div className="request-summary-serverTime">{timeOrEmpty(abstract.serverTime)}</div>
-                                <div className="request-summary-clientTime">{timeOrEmpty(abstract.clientTime)}</div>
-                            </div>
-                        </div>
-                        <div className="request-summary-requestStartTime"><Timeago time={beginRequest.requestStartTime} /></div>
-                    </div>
-                    <div className="request-summary-detailGroup">
-                        <div className="request-summary-data-holder request-summary-detailMainGroup">
-                            <div className="request-summary-requestMethod">{beginRequest.requestMethod}</div>
-                            <div className="request-summary-requestUrl">{beginRequest.requestPath}<span className="request-summary-requestQueryString">{beginRequest.requestQueryString}</span></div>
-                            <div className="request-summary-responseStatusCode">{endRequest.responseStatusCode}<span className="request-summary-responseStatusText">{endRequest.responseStatusText}</span></div>
-                            <div className="request-summary-responseContentType">{endRequest.responseContentType}</div>
-                        </div>
-                        <div className="request-summary-data-holder request-summary-detailSubGroup">
-                            <div className="request-summary-actionGroup">{afterActionInvoked.actionControllerName}.{afterActionInvoked.actionName}(...)</div>
-                            <div className="request-summary-actionInvokedDuration">{timeOrEmpty(afterActionInvoked.actionInvokedDuration)}</div>
-                            <div className="request-summary-viewDuration">{timeOrEmpty(afterActionViewInvoked.viewDuration)}</div>
-                            <div className="request-summary-queryGroup">{queryGroup}</div>
-                            <div className="request-summary-username">{userIdentification.username}</div>
-                        </div>
-                    </div>
-                </div>
-        */
-        
         return (
             <div className={containerClass} onClick={this.onSelect}>
                 <div className="request-summary-data-holder">
@@ -106,16 +66,6 @@ module.exports = React.createClass({
                             <span>{endRequest.responseStatusText}</span>
                         </div>
                     </div>
-                    <div className="request-summary-data-row-main">
-                        {timeOrEmpty(endRequest.responseDuration, 'request-summary-data-value-primary')}
-                        {timeOrEmpty(abstract.networkTime)}
-                        {timeOrEmpty(abstract.serverTime)}
-                        {timeOrEmpty(abstract.clientTime)}
-                        {actionOrEmpty(afterActionInvoked.actionControllerName, afterActionInvoked.actionName)}
-                        {timeOrEmpty(afterActionInvoked.actionInvokedDuration)}
-                        {timeOrEmpty(afterActionViewInvoked.viewDuration)}
-                        {commandOrEmpty(afterExecuteCommand)}
-                    </div>
                     <div className="request-summary-data-row-bottom request-summary-data-title">
                         <div>Request</div>
                         <div>Network</div>
@@ -125,6 +75,16 @@ module.exports = React.createClass({
                         <div>Action</div>
                         <div>View</div>
                         <div>Query/Count</div>
+                    </div>
+                    <div className="request-summary-data-row-main">
+                        {timeOrEmpty(endRequest.responseDuration, 'request-summary-data-value-primary')}
+                        {timeOrEmpty(abstract.networkTime)}
+                        {timeOrEmpty(abstract.serverTime)}
+                        {timeOrEmpty(abstract.clientTime)}
+                        {actionOrEmpty(afterActionInvoked.actionControllerName, afterActionInvoked.actionName)}
+                        {timeOrEmpty(afterActionInvoked.actionInvokedDuration)}
+                        {timeOrEmpty(afterActionViewInvoked.viewDuration)}
+                        {commandOrEmpty(afterExecuteCommand)}
                     </div>
                 </div>
             </div>

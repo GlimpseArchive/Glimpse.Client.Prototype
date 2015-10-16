@@ -111,10 +111,20 @@
 
 
 //****** GENERAL *******
+@font-face {
+    font-family: 'Segoe Pro';
+    src: url('~/assets/SegoePro-Regular.ttf');
+}
+@font-face {
+    font-family: 'Segoe Pro Light';
+    src: url('~/assets/SegoePro-Lite.ttf');
+}
+
 body, html {
     margin: 0;
     height: 100%;
     color: #111;
+    font-family: 'Segoe Pro', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 //****** SHELL *******
@@ -122,7 +132,7 @@ body, html {
     height: 100%;
     display: flex;
     flex-direction: column;
-    font-family: Tahoma, "Helvetica Neue",Arial,sans-serif;
+    //font-family: Tahoma, "Helvetica Neue",Arial,sans-serif;
 }
 
 .glimpse-header {
@@ -138,6 +148,7 @@ body, html {
 .glimpse-logo img {
     height: 40px
 }
+
 
 //****** APPLICATION LAYOUTS *******
 .application-holder {
@@ -157,7 +168,6 @@ body, html {
     position: relative;
 }
 .application-item-header {
-    font-family: Cambria, Cochin, Georgia, Times, Times New Roman, serif;
     font-size: 165%;
     margin-bottom: 11px;
 }
@@ -262,126 +272,8 @@ body, html {
         border-left-color: green;
     }
 
-/*
+
 //******* DETAIL LAYOUT ********
-.request-summary-data-section-holder {
-    display: flex;
-    flex-direction: row;
-}
-.request-summary-data-holder {
-    display: flex;
-    flex-direction: row;
-}
-    .request-summary-leadGroup {
-        max-width: 130px;
-        min-width: 90px;
-        flex: 1 0 20%;
-    }
-    .request-summary-detailGroup {
-        flex: 4 10 80%;
-        
-        .request-summary-data-holder {
-            align-items: baseline;
-        }    
-    }
-    .request-summary-detailSubGroup {
-        padding-top: 8px;
-    }
-
-    .request-summary-responseDuration {
-        font-size: 200%;
-        font-family: Cambria, Cochin, Georgia, Times, Times New Roman, serif;
-    }
-    .request-summary-requestStartTime {
-        font-size: 75%;
-        color: #aaa;
-        text-align: right;
-        padding-right: 20px;
-    }
-    .request-summary-responseStatusCode, .request-summary-requestMethod {
-        font-size: 75%;
-        color: #aaa;
-    }
-    .request-summary-responseStatusCode {
-        padding-left: 20px;
-    }
-    .request-summary-responseStatusText {
-        font-family: monospace;
-        font-size: 150%;
-        padding-left: 5px;
-    }
-    .request-summary-requestMethod {
-        padding-right: 5px;
-        width: 37px;
-    }
-    .request-summary-responseContentType {
-        flex: 1;
-        text-align: right;
-    }
-    .request-summary-requestQueryString {
-        color: #aaa;
-        padding-right: 20px;
-    }
-    
-    .request-summary-networkTime, .request-summary-serverTime, .request-summary-clientTime, 
-    .request-summary-actionInvokedDuration, .request-summary-viewDuration {
-        flex: 1;
-    }
-    .request-summary-queryGroup {
-        flex: 2;
-    }
-    .request-summary-actionGroup {
-        flex: 3;
-        padding-left: 40px;
-    }
-    .request-summary-username {
-        flex: 2 5;
-        text-align: right;
-    }
-
-    //******* DETAIL DURATION ********  
-    .request-summary-duration-bar {
-        display: flex;
-        height: 2px;
-        margin-right: 20px;
-        margin-top: -3px;
-        opacity: 0.3;
-        transition: opacity 200ms ease;
-    }
-        .request-summary-duration-bar-network {
-            background-color: #258ECC;
-            width: 5%;
-        }
-        .request-summary-duration-bar-server {
-            background-color: #FF484E;
-            width: 60%;
-        }
-        .request-summary-duration-bar-client {
-            background-color: #FFFC61;
-            width:35%;
-        }
-    .request-summary-duration-items-outer {
-        position: relative;
-    }
-    .request-summary-duration-items {
-        position: absolute;
-        display: flex;
-        flex-direction: row;
-        font-size: 75%;
-        width: 100%;
-        overflow-y: hidden;
-        opacity: 0;
-    }
-    .request-summary-data-holder:hover {
-        .request-summary-duration-bar, .request-summary-duration-items {
-            opacity: 1;
-        }
-        .request-summary-requestStartTime {
-            opacity: 0;
-        }
-    }
-*/
-
 .request-summary-data-row-main, .request-summary-data-row-top, .request-summary-data-row-bottom {
     display: flex;
     align-items: baseline;
@@ -434,7 +326,6 @@ body, html {
     margin-left: 10px;
     font-weight: bold;
     cursor: pointer;
-    font-family: Cambria, Cochin, Georgia, Times, Times New Roman, serif;
 }
 .button.button--default {
     height: 24px;
