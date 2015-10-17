@@ -171,6 +171,10 @@ body, html {
     font-size: 165%;
     margin-bottom: 11px;
 }
+.application-sub-item-header {
+    font-size: 125%;
+    margin-bottom: 8px;
+}
 
     //***** SECTION LAYOUTS *******
     .request-user-holder, .request-summary-holder, .request-filter-holder, .request-detail-holder {
@@ -396,6 +400,7 @@ body, html {
 //******* TABS *******
 .nav-bar {
     border-bottom: 1px solid #E1E2E4;
+    margin-bottom: 20px;
     
     &.nav-bar-center {
         text-align: center;
