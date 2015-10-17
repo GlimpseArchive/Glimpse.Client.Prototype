@@ -183,9 +183,9 @@ body, html {
     }
     
     .request-user-holder {
-        flex: 1 1 175px;
-        min-width: 150px;
-        max-width: 200px;
+        flex: 2 1 200px;
+        min-width: 175px;
+        max-width: 225px;
     }
     
     .request-summary-holder {
@@ -195,9 +195,9 @@ body, html {
     }
         
     .request-filter-holder {
-        flex: 2 1 225px;
-        min-width: 200px;
-        max-width: 250px;
+        flex: 2 1 200px;
+        min-width: 175px;
+        max-width: 225px;
     }
     
     .request-detail-holder {
@@ -271,26 +271,45 @@ body, html {
     .user-status img.user-status-online {
         border-left-color: green;
     }
+    .user-status-time {
+        font-size: 80%;
+        color: #737373;
+        text-align: right;
+        padding-right: 10px;
+    }
+    .user-status-request-holder > div {
+        overflow-x: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
 
 
 //******* DETAIL LAYOUT ********
-.request-summary-data-row-main, .request-summary-data-row-top, .request-summary-data-row-bottom {
+.request-summary-data-row-details, .request-summary-data-row-request, .request-summary-data-row-title {
     display: flex;
     align-items: baseline;
 }
-.request-summary-data-row-main, .request-summary-data-row-bottom {
+.request-summary-data-row-details, .request-summary-data-row-request, .request-summary-data-row-title {
     > div {
         flex: 1;
     }
-    .request-summary-data-col-2 {
-        flex: 2;
-    }
-    .request-summary-data-col-3 {
-        flex: 3;
-    }
+    .request-summary-data-col-2 { flex: 2; }
+    .request-summary-data-col-3 { flex: 3; }
+    .request-summary-data-col-4 { flex: 4; }
+    .request-summary-data-col-8 { flex: 8; }
 }
-.request-summary-data-row-top {
+.request-summary-data-row-metadata {
+    font-size: 90%;
+    color: #737373;
+    justify-content: flex-end;
+}
+.request-summary-data-row-request {
     margin-bottom: 5px;
+    
+    > div {
+        display: flex;
+        align-items: baseline;
+    }
 }
 .request-summary-data-row-items > span {
     padding-left: 15px;
@@ -324,7 +343,6 @@ body, html {
 }
 .button {
     margin-left: 10px;
-    font-weight: bold;
     cursor: pointer;
 }
 .button.button--default {
@@ -372,10 +390,6 @@ body, html {
 //******* Forms *******
 .field-section {
     margin-bottom: 15px;
-}
-
-.field-label {
-    font-variant: small-caps;
 }
 
 

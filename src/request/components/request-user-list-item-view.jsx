@@ -24,16 +24,14 @@ module.exports = React.createClass({
                         <td>{user.details.username}</td>
                     </tr>
                     <tr>
-                        <td><Timeago time={user.lastActive} /></td>
-                    </tr>
-                    <tr>
-                        <td colSpan="2">
-                            {user.latestRequests.map(function (request) {
-                                return <div key={request.id}>{request.url}</div>;
-                            })}
-                        </td>
+                        <td className="user-status-time"><Timeago time={user.lastActive} /></td>
                     </tr>
                 </table>
+                <div className="user-status-request-holder">
+                    {user.latestRequests.map(function (request) {
+                        return <div key={request.id}>{request.url}</div>;
+                    })}
+                </div>
             </div>
         );
     },

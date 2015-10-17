@@ -7,19 +7,19 @@ var timeOrEmpty = glimpse.util.timeOrEmpty;
 var React = require('react');
 var Timeago = require('lib/components/timeago');
 
-var timeOrEmpty = function(value, className) {
+var timeOrEmpty = function(value) {
     if (value !== null && value !== undefined) {
-        return <div className={className}>{value}<span className="request-summary-data-value-accent">ms</span></div>;
+        return <span>{value}<span className="request-summary-data-value-accent">ms</span></span>;
     }
     
-    return <div className={className}><span className="request-summary-data-value-soft">--</span></div>;
+    return <span className="request-summary-data-value-soft">--</span>;
 }
 var actionOrEmpty = function(controller, action) {
     if (controller && action) {
-        return <div className="request-summary-data-value-primary request-summary-data-col-3">{controller}<span className="request-summary-data-value-accent">.</span>{action}<span className="request-summary-data-value-accent">(...)</span></div>
+        return <span>{controller}<span className="request-summary-data-value-accent">.</span>{action}<span className="request-summary-data-value-accent">(...)</span></span>
     }
     
-    return <div className="request-summary-data-value-primary request-summary-data-col-3 request-summary-data-value-soft">--</div>;
+    return <span className="request-summary-data-value-soft">--</span>;
 }
 var commandOrEmpty = function(commands) {
     if (commands.length > 0) {
@@ -30,10 +30,10 @@ var commandOrEmpty = function(commands) {
             queryDuration += command.commandDuration;
         });
         
-        return <div>{Math.round(queryDuration)}<span className="request-summary-data-value-accent">ms / </span>{queryCount}</div>;
+        return <span>{Math.round(queryDuration)}<span className="request-summary-data-value-accent">ms / </span>{queryCount}</span>;
     }
         
-    return <div className="request-summary-data-value-soft">--</div>;
+    return <span className="request-summary-data-value-soft">--</span>;
 }
 
 module.exports = React.createClass({
@@ -51,8 +51,8 @@ module.exports = React.createClass({
         
         return (
             <div className="request-summary-data-holder">
-                <div className="request-summary-data-holder">
-                    <div className="request-summary-data-row-top request-summary-data-value-sub">
+                <div className="request-summary-data-row-request request-summary-data-value-sub">
+                    <div className="request-summary-data-col-8">
                         <div className="request-summary-data-value-primary">{beginRequest.requestPath}{beginRequest.requestQueryString}</div>
                         <div className="request-summary-data-row-items request-summary-data-value-soft">
                             <span>{beginRequest.requestMethod}</span>
@@ -60,26 +60,29 @@ module.exports = React.createClass({
                             <span>{endRequest.responseStatusText}</span>
                         </div>
                     </div>
-                    <div className="request-summary-data-row-main">
-                        {timeOrEmpty(endRequest.responseDuration, 'request-summary-data-value-primary')}
-                        {timeOrEmpty(abstract.networkTime)}
-                        {timeOrEmpty(abstract.serverTime)}
-                        {timeOrEmpty(abstract.clientTime)}
-                        {actionOrEmpty(afterActionInvoked.actionControllerName, afterActionInvoked.actionName)}
-                        {timeOrEmpty(afterActionInvoked.actionInvokedDuration)}
-                        {timeOrEmpty(afterActionViewInvoked.viewDuration)}
-                        {commandOrEmpty(afterExecuteCommand)}
+                    <div className="request-summary-data-row-metadata request-summary-data-col-2">
+                        {userIdentification.username} &nbsp; - &nbsp; <Timeago time={beginRequest.requestStartTime} />
                     </div>
-                    <div className="request-summary-data-row-bottom request-summary-data-title">
-                        <div>Request</div>
-                        <div>Network</div>
-                        <div>Server</div>
-                        <div>Client</div>
-                        <div className="request-summary-data-col-3">Controller/Action</div>
-                        <div>Action</div>
-                        <div>View</div>
-                        <div>Query/Count</div>
-                    </div>
+                </div>
+                <div className="request-summary-data-row-title request-summary-data-title">
+                    <div>Request</div>
+                    <div>Network</div>
+                    <div>Server</div>
+                    <div className="request-summary-data-col-2">Client</div>
+                    <div>Action</div>
+                    <div>View</div>
+                    <div className="request-summary-data-col-4">Controller/Action</div>
+                    <div>Query/Count</div>
+                </div>
+                <div className="request-summary-data-row-details">
+                    <div className="request-summary-data-value-primary">{timeOrEmpty(endRequest.responseDuration)}</div>
+                    <div>{timeOrEmpty(abstract.networkTime)}</div>
+                    <div>{timeOrEmpty(abstract.serverTime)}</div>
+                    <div className="request-summary-data-col-2">{timeOrEmpty(abstract.clientTime)}</div>
+                    <div>{timeOrEmpty(afterActionInvoked.actionInvokedDuration)}</div>
+                    <div>{timeOrEmpty(afterActionViewInvoked.viewDuration)}</div>
+                    <div className="request-summary-data-value-primary request-summary-data-col-4">{actionOrEmpty(afterActionInvoked.actionControllerName, afterActionInvoked.actionName)}</div>
+                    <div>{commandOrEmpty(afterExecuteCommand)}</div>
                 </div>
             </div>
         );
