@@ -50,7 +50,7 @@ chance.mixin({
     },
     'httpContentType': function() {
         // TODO: Switch over to weighted random with bias towards html
-        return 'text/html';
+        return { type: 'text/html', category: { 'document': true } };
     }
 });
 
@@ -292,6 +292,7 @@ var generateMvcRequest = (function() {
         var serverLowerTime = chance.integerRange(5, 10);
         var serverUpperTime = chance.integerRange(60, 100);
         var httpStatus = chance.httpStatus();
+        var contentType = chance.httpContentType();
         
         source.id = chance.guid();
         source.dateTime = dateTime || moment().utc().toISOString();
@@ -304,7 +305,8 @@ var generateMvcRequest = (function() {
         source.queryCount = chance.integerRange(1, 4); // TODO: derive from queries
         source.user = chance.mvcUser();
         source.method = chance.httpMethod();
-        source.contentType = chance.httpContentType();
+        source.contentType = contentType.type;
+        source.contentCategory = contentType.category;
         source.duration = source.clientTime + source.serverTime + source.networkTime;
         source.statusCode = httpStatus.code;   
         source.statusText = httpStatus.text;
@@ -646,10 +648,19 @@ var generateMvcRequest = (function() {
                 if (!request.types[type]) {
                     request.types[type] = [];
                     
-                    // hack because we commonly use datatime in sorting and its expensive to get
-                    if (!request._requestStartTime && (type == 'begin-request' || type == 'end-request')) {
-                        request._requestStartTime = message.payload.requestStartTime;
-                        request._requestUrl = message.payload.requestUrl;
+                    var payload = message.payload;
+                    if (type == 'begin-request') {
+                        request._requestStartTime = payload.requestStartTime;
+                        request._requestMethod = payload.requestMethod;
+                        request._requestUrl = payload.requestPath + payload.requestQueryString;
+                    }
+                    if (type == 'end-request') {
+                        request._responseStatusCode = payload.responseStatusCode; 
+                        request._responseStatusText = source.statusText;
+                        request._responseContentCategory = source.contentCategory;  
+                        
+                        payload.responseStatusText = request._responseStatusText;  
+                        payload.responseContentCategory = request._responseContentCategory;
                     }
                 }
                 

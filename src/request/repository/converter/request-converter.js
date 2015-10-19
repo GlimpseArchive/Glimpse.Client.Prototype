@@ -125,7 +125,7 @@ var getStatusCodeText = (function() {
     return function(statusCode) {
         return listing[statusCode];
     };
-});
+})();
 var setupIndex = function(request, type, payload) {
     if (type == 'begin-request') {
         request._requestStartTime = payload.requestStartTime;
@@ -135,7 +135,10 @@ var setupIndex = function(request, type, payload) {
     if (type == 'end-request') {
         request._responseStatusCode = payload.responseStatusCode; 
         request._responseStatusText = getStatusCodeText(payload.responseStatusCode);
-        request._responseContentType = getContentTypeCategory(payload.responseContentType);        
+        request._responseContentCategory = getContentTypeCategory(payload.responseContentType);  
+        
+        payload.responseStatusText = request._responseStatusText;  
+        payload.responseContentCategory = request._responseContentCategory;
     }
 }
 

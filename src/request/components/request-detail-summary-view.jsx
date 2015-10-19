@@ -13,14 +13,14 @@ var timeOrEmpty = function(value) {
     }
     
     return <span className="request-summary-data-value-soft">--</span>;
-}
+};
 var actionOrEmpty = function(controller, action) {
     if (controller && action) {
         return <span>{controller}<span className="request-summary-data-value-accent">.</span>{action}<span className="request-summary-data-value-accent">(...)</span></span>
     }
     
     return <span className="request-summary-data-value-soft">--</span>;
-}
+};
 var commandOrEmpty = function(commands) {
     if (commands.length > 0) {
         var queryCount = 0;
@@ -34,7 +34,10 @@ var commandOrEmpty = function(commands) {
     }
         
     return <span className="request-summary-data-value-soft">--</span>;
-}
+};
+var contextTypeOrEmpty = function(contentCategory) {
+    return contentCategory ? _.keys(contentCategory).join(', ') : '';
+};
 
 module.exports = React.createClass({
     render: function () {
@@ -56,8 +59,8 @@ module.exports = React.createClass({
                         <div className="request-summary-data-value-primary">{beginRequest.requestPath}{beginRequest.requestQueryString}</div>
                         <div className="request-summary-data-row-items request-summary-data-value-soft">
                             <span>{beginRequest.requestMethod}</span>
-                            <span>{endRequest.responseStatusCode}</span>
-                            <span>{endRequest.responseStatusText}</span>
+                            <span title={endRequest.responseStatusText}>{endRequest.responseStatusCode}</span>
+                            <span title={endRequest.responseContentType}>{contextTypeOrEmpty(endRequest.responseContentCategory)}</span>
                         </div>
                     </div>
                     <div className="request-summary-data-row-metadata request-summary-data-col-2">
