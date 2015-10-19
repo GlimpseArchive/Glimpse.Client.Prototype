@@ -73,9 +73,9 @@ module.exports = React.createClass({
                     </div>
                     <div className="request-summary-data-row-title request-summary-data-title">
                         <div>Request</div>
-                        <div>Network</div>
                         <div>Server</div>
-                        <div className="request-summary-data-col-2">Client</div>
+                        <div>Client</div>
+                        <div className="request-summary-data-col-2">Network</div>
                         <div>Action</div>
                         <div>View</div>
                         <div className="request-summary-data-col-4">Controller/Action</div>
@@ -83,9 +83,9 @@ module.exports = React.createClass({
                     </div>
                     <div className="request-summary-data-row-details">
                         <div className="request-summary-data-value-primary">{timeOrEmpty(endRequest.responseDuration)}</div>
-                        <div>{timeOrEmpty(abstract.networkTime)}</div>
                         <div>{timeOrEmpty(abstract.serverTime)}</div>
-                        <div className="request-summary-data-col-2">{timeOrEmpty(abstract.clientTime)}</div>
+                        <div>{timeOrEmpty(abstract.clientTime)}</div>
+                        <div className="request-summary-data-col-2">{timeOrEmpty(abstract.networkTime)}</div>
                         <div>{timeOrEmpty(afterActionInvoked.actionInvokedDuration)}</div>
                         <div>{timeOrEmpty(afterActionViewInvoked.viewDuration)}</div>
                         <div className="request-summary-data-value-primary request-summary-data-col-4">{actionOrEmpty(afterActionInvoked.actionControllerName, afterActionInvoked.actionName)}</div>
