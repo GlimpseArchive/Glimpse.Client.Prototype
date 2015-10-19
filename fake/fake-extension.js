@@ -10,7 +10,7 @@ var allUsers = [];
 var currentUsers = [];
 var methods = [ 'GET', 'GET', 'GET', 'GET', 'POST', 'POST', 'POST', 'PUT', 'PUSH', 'DELETE' ];
 var statuses = [ 200, 200, 200, 200, 200, 200, 404, 404, 403, 403, 500, 304 ];
-var statusText = { 200: 'OK', 404: 'NOT FOUND', 500: 'SERVER ERROR', 304: 'OK', 403: 'ERROR' };
+var statusText = { 200: 'OK', 404: 'Not Found', 500: 'Server Error', 304: 'OK', 403: 'Error' };
 
 chance.mixin({
     'integerRange': function(min, max) {
