@@ -1,3 +1,6 @@
 /dist
 /build
 /node_modules
+/_temp/hud/dist
+/_temp/hud/build
+/_temp/hud/node_modules

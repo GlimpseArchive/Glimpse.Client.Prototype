@@ -45,12 +45,8 @@ module.exports = {
         extensions: ['', '.js', '.jsx', '.json'],
         modulesDirectories: ['node_modules'],
         alias: {
-            'glimpse': path.resolve(__dirname, './src/glimpse.js'),
-            'shell': path.resolve(__dirname, './src/shell'),
-            'request': path.resolve(__dirname, './src/request'),
             'fake': path.resolve(__dirname, './fake/fake.js'),
             'diagnostics': path.resolve(__dirname, './diagnostics/diagnostics.js'),
-            'react': require.resolve('react/addons'),
             'lib': path.resolve(__dirname, './src/lib/'),
             'assets': path.resolve(__dirname, './assets/'),
             'event-source': require.resolve('event-source-polyfill')
@@ -58,9 +54,7 @@ module.exports = {
      },
     module: {
         loaders: [
-            { test: /react/, loader: 'expose?React' },
             { test: /\.scss$/, loader: 'style!css!autoprefixer?browsers=last 2 version!sass?includePaths[]=' + (path.resolve(__dirname, './node_modules/bootstrap-sass/assets/stylesheets/')) },
-            { test: /\.jsx$/, loader: 'jsx-loader?insertPragma=React.DOM' },
             { test: /event-source/, loader: 'imports?this=>window!exports?EventSource=EventSource'}
         ]
     },
@@ -69,7 +63,6 @@ module.exports = {
             DIAGNOSTICS: false,
             FAKE_SERVER: false
         }),
-        new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
         progressPlugin
     ],
     log: {

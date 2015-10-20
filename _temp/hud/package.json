@@ -1,0 +1,50 @@
+{
+  "name": "glimpse.client.hud",
+  "version": "2.0.0-dev",
+  "description": "The Javascript client that acts as an in browser viewer for the various Glimpse server backends",
+  "main": "dist/glimpse.hud.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Glimpse/Glimpse.Client.git"
+  },
+  "keywords": [
+    "performance",
+    "debugging",
+    "diagnostics"
+  ],
+  "author": "Anthony van der Hoorn",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Glimpse/Glimpse.Client/issues"
+  },
+  "homepage": "https://github.com/Glimpse/Glimpse.Client#readme",
+  "devDependencies": {
+    "autoprefixer-loader": "3.1.0",
+    "browser-sync": "2.9.11",
+    "css-loader": "0.20.2",
+    "exports-loader": "0.6.2",
+    "expose-loader": "0.7.0",
+    "gulp": "3.9.0",
+    "gulp-if": "2.0.0",
+    "gulp-minify-html": "1.0.4",
+    "gulp-util": "3.0.6",
+    "imports-loader": "0.6.5",
+    "jscs": "2.3.4",
+    "jshint": "2.8.0",
+    "jshint-loader": "0.8.3",
+    "lodash": "3.10.1",
+    "minimist": "1.2.0",
+    "node-sass": "3.3.3",
+    "run-sequence": "1.1.4",
+    "source-map-loader": "0.1.5",
+    "style-loader": "0.13.0",
+    "webpack": "1.12.2"
+  },
+  "dependencies": {
+    "event-source-polyfill": "0.0.6",
+    "jquery": "2.1.4"
+  }
+}
