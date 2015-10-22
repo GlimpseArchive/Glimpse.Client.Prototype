@@ -20,6 +20,7 @@ var setup = state.current();
 repository.getData(function(details) { 
 	// generate the html needed for the sections
 	var html = sections.render(details, setup);
+	html = '<div class="glimpse"><div class="glimpse-icon"></div><div class="glimpse-hud">' + html + '</div></div>';
 	
 	// insert the html into the dom
 	var holder = $(html).appendTo('body')
