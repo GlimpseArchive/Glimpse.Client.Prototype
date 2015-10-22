@@ -1,3 +1,3 @@
 'use strict';
 
-require('./fake-service-request');
+require('./fake-request-service');
