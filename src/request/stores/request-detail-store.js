@@ -28,9 +28,13 @@ function getTabs() {
 // Clear Request
 (function () {
     function clearRequest() {
+        var oldId = _viewModel.selectedId;
+        
         _viewModel.selectedId = null;
         _viewModel.request = null;
         _viewModel.tabs = null;
+
+        glimpse.emit('data.request.detail.closed', { oldId: oldId });
 
         requestChanged(_viewModel);
     }
