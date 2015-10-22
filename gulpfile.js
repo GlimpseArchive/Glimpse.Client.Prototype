@@ -91,6 +91,16 @@ gulp.task('assets', function () {
 gulp.task('build', function (cb) {
     runSequence('pages', 'assets', 'bundle', cb);
 });
+gulp.task('build-dev', function (cb) {
+    RELEASE = false;
+    
+    runSequence('build', cb);
+});
+gulp.task('build-prod', function (cb) {
+    RELEASE = true;
+    
+    runSequence('build', cb);
+});
 
 gulp.task('server', function (cb) {
     browserSync({
@@ -105,14 +115,12 @@ gulp.task('server', function (cb) {
 gulp.task('dev', function (cb) {
     WATCH = true;
 
-    runSequence('build', 'server', cb);
+    runSequence('build-dev', 'server', cb);
 });
-
 gulp.task('prod', function (cb) {
-    RELEASE = true;
     WATCH = true;
 
-    runSequence('build', 'server', cb);
+    runSequence('build-prod', 'server', cb);
 });
 
 gulp.task('default', ['dev']);
