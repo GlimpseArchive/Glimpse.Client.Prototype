@@ -235,9 +235,6 @@ var details = (function () {
     // remote triggers
     requestMock.get(window.location.origin + '/glimpse/message-history/?types=:types', function(req) {
         summaries.remote();
-        
-        // TODO: need to return data
-        //return data;
     }); 
     requestMock.get(window.location.origin + '/glimpse/request/:id', function(req) {
         details.remote(req.params.id); 
@@ -252,12 +249,14 @@ var details = (function () {
                     "diagnostics": window.location.origin + "/glimpse/diagnostics/index.html?hash={hash}{&requestId}",
                     "hud": window.location.origin + "/glimpse/hud/hud.js?hash={hash}",
                     "agent": window.location.origin + "/glimpse/agent/agent.js?hash={hash}",
-                    "message-stream": window.location.origin + "/glimpse/message-stream/{?types}",
+                    "message-stream": window.location.origin + "/glimpse/message-stream/{?types,contextId}",
                     "request": window.location.origin + "/glimpse/request/{requestId}",
+                    // TODO: replace the above when server comes online with the change
+                    //"context": window.location.origin + "/glimpse/context/?contextId={contextId}{&types}",
                     "message-history": window.location.origin + "/glimpse/message-history/?types={types}",
+                    "request-history": window.location.origin + "/glimpse/request-history/{?dmin,dmax,url,methods,smin,smax,tags,before,userId,types}",
                     "message-ingress": window.location.origin + "/glimpse/message-ingress/",
                     "metadata": window.location.origin + "/glimpse/metadata/?hash={hash}",
-                    "request-history": window.location.origin + "/glimpse/request-history/{?dmin,dmax,url,methods,smin,smax,tags,before,userId,types}",
                     "script-options": window.location.origin + "/glimpse/script-options/{?hash}"
                 },
                 "hash": "801b465f"

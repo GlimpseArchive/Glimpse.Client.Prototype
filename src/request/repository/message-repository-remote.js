@@ -1,16 +1,16 @@
 'use strict';
 
+var uriTemplates = require('uri-templates');
 var request = require('superagent');
 var glimpse = require('glimpse');
+
 var metadataRepository = require('../../shell/repository/metadata-repository');
 var messageProcessor = require('../util/request-message-processor');
-
-var uriTemplates = require("uri-templates");
 
 module.exports = {
     triggerGetLastestSummaries: function() {
         metadataRepository.registerListener(function(metadata){
-            var uri = metadata.resources["message-history"]
+            var uri = metadata.resources['message-history']
                 .fill({
                     hash: metadata.hash,
                     types: Object.keys(messageProcessor.getMessageTypes())
@@ -32,28 +32,31 @@ module.exports = {
                 }); 
         });
     },
-    triggerGetDetailsFor: function(requestId) {
+    triggerGetDetailsFor: function(contextId) {
         metadataRepository.registerListener(function(metadata){
-        var uri = metadata.resources["request"]
-            .fill({
-                hash: metadata.hash,
-                requestId: requestId
-            });
-
-        request
-            .get(uri) 
-            .set('Accept', 'application/json')
-            .end(function(err, res){ 
-                // this is done because we want to delay the response
-                if (!FAKE_SERVER) {
-                    if (res.ok) {
-                        glimpse.emit('data.message.summary.found.remote', res.body);
+            // TODO: replace the above when server comes online with the change
+            //var uri = metadata.resources['context']
+            var uri = metadata.resources['request']
+                .fill({
+                    hash: metadata.hash,
+                    //contextId: requestId
+                    requestId: contextId
+                });
+    
+            request
+                .get(uri) 
+                .set('Accept', 'application/json')
+                .end(function(err, res){ 
+                    // this is done because we want to delay the response
+                    if (!FAKE_SERVER) {
+                        if (res.ok) {
+                            glimpse.emit('data.message.summary.found.remote', res.body);
+                        }
+                        else {
+                            console.log('ERROR: Error reaching server for summary request')
+                        }  
                     }
-                    else {
-                        console.log('ERROR: Error reaching server for summary request')
-                    }  
-                }
-            }); 
+                }); 
         });
     }
 };
