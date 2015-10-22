@@ -1,8 +1,10 @@
 'use strict';
 
 var $ = require('$jquery');
+var chance = require('../../../fake/fake-extension'); 
 
 var payload = {  
+   "_TEMP": chance.mvcRequest(new Date()),
    "sql":{  
       "data":{  
          "queryCount":3,

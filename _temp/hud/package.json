@@ -24,6 +24,7 @@
   "devDependencies": {
     "autoprefixer-loader": "3.1.0",
     "browser-sync": "2.9.11",
+    "chance": "^0.8.0",
     "css-loader": "0.20.2",
     "exports-loader": "0.6.2",
     "expose-loader": "0.7.0",
@@ -36,8 +37,9 @@
     "jscs": "2.3.4",
     "jshint": "2.8.0",
     "jshint-loader": "0.8.3",
-    "lodash": "3.10.1",
+    "lodash": "^3.10.1",
     "minimist": "1.2.0",
+    "moment": "^2.10.6",
     "node-sass": "3.3.3",
     "run-sequence": "1.1.4",
     "source-map-loader": "0.1.5",
@@ -46,7 +48,6 @@
     "webpack": "1.12.2"
   },
   "dependencies": {
-    "event-source-polyfill": "0.0.6",
     "jquery": "2.1.4"
   }
 }
