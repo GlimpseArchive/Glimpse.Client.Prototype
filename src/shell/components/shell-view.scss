@@ -110,3 +110,6 @@ code {
 .hug {
   margin-top: 0;
 }
+#application-holder {
+  height: 100%; // HACK: Hack fix for now. #application-holder should be layed out with flexbox to avoid clipping at bottom of browser
+}
