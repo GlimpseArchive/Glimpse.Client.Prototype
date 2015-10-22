@@ -34,13 +34,10 @@ module.exports = {
     },
     triggerGetDetailsFor: function(contextId) {
         metadataRepository.registerListener(function(metadata){
-            // TODO: replace the above when server comes online with the change
-            //var uri = metadata.resources['context']
-            var uri = metadata.resources['request']
+            var uri = metadata.resources['context']
                 .fill({
                     hash: metadata.hash,
-                    //contextId: requestId
-                    requestId: contextId
+                    contextId: contextId
                 });
     
             request

@@ -250,9 +250,7 @@ var details = (function () {
                     "hud": window.location.origin + "/glimpse/hud/hud.js?hash={hash}",
                     "agent": window.location.origin + "/glimpse/agent/agent.js?hash={hash}",
                     "message-stream": window.location.origin + "/glimpse/message-stream/{?types,contextId}",
-                    "request": window.location.origin + "/glimpse/request/{requestId}",
-                    // TODO: replace the above when server comes online with the change
-                    //"context": window.location.origin + "/glimpse/context/?contextId={contextId}{&types}",
+                    "context": window.location.origin + "/glimpse/context/?contextId={contextId}{&types}",
                     "message-history": window.location.origin + "/glimpse/message-history/?types={types}",
                     "request-history": window.location.origin + "/glimpse/request-history/{?dmin,dmax,url,methods,smin,smax,tags,before,userId,types}",
                     "message-ingress": window.location.origin + "/glimpse/message-ingress/",
