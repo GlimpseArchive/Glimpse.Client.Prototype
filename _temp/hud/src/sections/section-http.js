@@ -1,3 +1,8 @@
+'use strict';
+
+var rendering = require('./util/rendering');
+var process = require('./util/process');
+
 var timingsRaw = (window.performance || window.mozPerformance || window.msPerformance || window.webkitPerformance || {}).timing;
 
 var structure = {
@@ -78,3 +83,10 @@ var render = function(details, opened) {
 module.exports = {
 	render: render
 };
+
+// TODO: Need to come up with a better self registration process
+(function () {
+    var section = require('sections/section');
+
+    section.register(module.exports);
+})();

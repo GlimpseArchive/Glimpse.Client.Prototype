@@ -1,3 +1,10 @@
+'use strict';
+
+var $ = require('$jquery');
+
+var rendering = require('./util/rendering');
+var process = require('./util/process');
+
 var structure = {
     title: 'Host',
     id: 'host', 
@@ -71,16 +78,13 @@ var structure = {
     }
 };
 
-var processEvents = function (details, payload) {
+var processEvents = function(details) {
     var eventStack = [], 
         lastEvent = { startPoint : 0, duration : 0, childlessDuration : 0, endPoint : 0 },
         lastControllerEvent = { },
         rootDuration = details.request ? details.request.data.server.duration : 1,
         rootChildlessDuration = rootDuration;
 
-    //Hack needed for the time being
-    processEventsWebforms(details, payload);
-    
     for (var i = 0; i < details.timings.data.length; i += 1) {
         var event = details.timings.data[i],
             topEvent = eventStack.length > 0 ? eventStack[eventStack.length - 1] : null, 
@@ -151,26 +155,13 @@ var processEvents = function (details, payload) {
             nesting: 0
         }); 
 };
-var processEventsWebforms = function (details, payload) {
-    if (payload.data.glimpse_webforms_execution) {
-        var executionData = payload.data.glimpse_webforms_execution.data,
-            timelineData = details.timings.data;
-        
-        for (var i = 0; i < executionData.length; i++) {
-            var executionItem = executionData[i];
-            timelineData.push({ title: executionItem.event, startTime: 'NOT SURE', duration: executionItem.duration, startPoint: executionItem.fromFirst, category: 'Webforms' });
-        }
-        
-        timelineData.sort(function (a, b) { return parseFloat(a.startPoint) - parseFloat(b.startPoint); });
-    } 
-};
 
-var render = function(details, opened, payload) {
+var render = function(details, opened) {
     var html = '';
     //Only checking MVC/Webforms as we can't show just SQL very well
     if ((details.mvc && details.mvc.data) || (details.webforms && details.webforms.data)) {
         process.init(structure); 
-        processEvents(details, payload);
+        processEvents(details);
         html = rendering.section(structure, details, opened); 
     }
 
@@ -184,3 +175,10 @@ module.exports = {
     render: render,
     postRender: postRender
 };
+
+// TODO: Need to come up with a better self registration process
+(function () {
+    var section = require('sections/section');
+
+    section.register(module.exports);
+})();

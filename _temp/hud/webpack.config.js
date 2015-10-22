@@ -45,11 +45,13 @@ module.exports = {
         extensions: ['', '.js', '.jsx', '.json'],
         modulesDirectories: ['node_modules'],
         alias: {
-            'fake': path.resolve(__dirname, './fake/fake.js'),
-            'diagnostics': path.resolve(__dirname, './diagnostics/diagnostics.js'),
+            'sections': path.resolve(__dirname, './src/sections'),
             'lib': path.resolve(__dirname, './src/lib/'),
             'assets': path.resolve(__dirname, './assets/'),
-            'event-source': require.resolve('event-source-polyfill')
+            'event-source': require.resolve('event-source-polyfill'),
+            'fake': path.resolve(__dirname, './fake/fake.js'),
+            'diagnostics': path.resolve(__dirname, './diagnostics/diagnostics.js'),
+            '$jquery': path.resolve(__dirname, './src/lib/modules/jquery-hud.js')
          }
      },
     module: {
@@ -60,9 +62,10 @@ module.exports = {
     },
     plugins: [
         new webpack.DefinePlugin({
-            DIAGNOSTICS: false,
-            FAKE_SERVER: false
+            DIAGNOSTICS: true,
+            FAKE_SERVER: true
         }),
+        
         progressPlugin
     ],
     log: {

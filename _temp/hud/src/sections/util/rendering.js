@@ -1,3 +1,7 @@
+'use strict';
+
+var $ = require('$jquery');
+
 var sizes = [ 'extra-large', 'large', 'normal', 'small', 'extra-small' ];
 var position = [ 'top', 'bottom', 'left', 'right' ];
 var align = [ 'left', 'right' ];
