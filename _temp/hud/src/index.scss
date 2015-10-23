@@ -1,5 +1,14 @@
+@font-face {
+    font-family: 'Segoe Pro';
+    src: url('~/assets/SegoePro-Regular.ttf');
+}
+@font-face {
+    font-family: 'Segoe Pro Light';
+    src: url('~/assets/SegoePro-Light.ttf');
+}
+
 .glimpse, .glimpse *, .glimpse a, .glimpse td, .glimpse th, .glimpse table {
-    font-family: "Segoe UI Light", "Segoe UI Web Regular", "Segoe UI", "Helvetica Neue", Helvetica, Arial;
+    font-family: 'Segoe Pro', Tahoma, Geneva, Verdana, sans-serif;
     background-color: transparent;
     border: 0px;
     text-align: left;
@@ -152,6 +161,11 @@
     .glimpse .glimpse-hud-value { margin-top: -4px; }
     .glimpse .glimpse-hud-detail-normal .glimpse-hud-header { margin-bottom: 2px; }
 } 
+@media all and (-webkit-min-device-pixel-ratio:0) and (min-resolution: .001dpcm) {
+    .glimpse .glimpse-hud-header { 
+        font-family: 'Segoe Pro Light', 'Segoe Pro', Tahoma, Geneva, Verdana, sans-serif;
+    }
+}
 .glimpse .glimpse-hud-header { 
     opacity: 0.6;
     font-size: 0.7em;
