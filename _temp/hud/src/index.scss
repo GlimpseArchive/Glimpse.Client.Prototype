@@ -104,7 +104,7 @@
 }
 .glimpse .glimpse-hud-detail {
     display: inline-block;
-    padding: 0 10px;
+    padding: 1px 10px 0;
 }
 .glimpse .glimpse-hud-section-inner .glimpse-hud-detail:first-child { 
     padding-left: 15px;
@@ -170,12 +170,16 @@
     opacity: 0.6;
     font-size: 0.7em;
     line-height: 100%;
+    white-space: nowrap;
 }
 .glimpse .glimpse-hud-detail-extra-large .glimpse-hud-header {
     font-size: 0.5em;
 }
 .glimpse .glimpse-hud-detail-large .glimpse-hud-header {
     font-size: 0.6em;
+}
+.glimpse .glimpse-hud-detail-normal.glimpse-hud-detail-position-top .glimpse-hud-header {
+    padding-bottom: 2px;
 }
 .glimpse .glimpse-hud-prefix, .glimpse .glimpse-hud-postfix, .glimpse .glimpse-hud-spacer, .glimpse .glimpse-hud-plain { 
     opacity: 0.4;
