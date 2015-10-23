@@ -134,6 +134,7 @@ var process = (function() {
 
 var getData = function(callback) {
 	// TODO: need to use message history template here instead of it being hard coded
+	// TODO: currently not targetting current request!!!!
 	$.getJSON('/glimpse/message-history/?types=environment,user-identification,end-request,begin-request,after-action-invoked,after-action-view-invoked,after-execute-command', null, function(data) {
 		var model = process(data);
 		callback(model);
