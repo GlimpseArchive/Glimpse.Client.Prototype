@@ -47,10 +47,10 @@ module.exports = {
                     // this is done because we want to delay the response
                     if (!FAKE_SERVER) {
                         if (res.ok) {
-                            glimpse.emit('data.message.summary.found.remote', res.body);
+                            glimpse.emit('data.message.detail.found.remote', res.body);
                         }
                         else {
-                            console.log('ERROR: Error reaching server for summary request')
+                            console.log('ERROR: Error reaching server for detail request')
                         }  
                     }
                 }); 
