@@ -374,6 +374,17 @@ var generateMvcRequest = (function() {
             
             return message;
         },
+        createEnvironment: function(source) {
+            var message = this.createMessage('environment', source.context);
+            
+            var payload = message.payload; 
+            payload.serverName = 'DESKTOP-EH3D8UD';
+            payload.serverTime = '2015-10-23T09:43:40.172';
+            payload.serverTimezoneOffset = '-07:00';
+            payload.serverDaylightSavingTime = true;
+
+            return message;
+        },
         createBeginRequest: function(source) {
             var message = this.createMessage('begin-request', source.context);
             
@@ -620,6 +631,7 @@ var generateMvcRequest = (function() {
         processRequest: function(source) {
             this.messages.push(this.createBeginRequest(source));
             this.messages.push(this.createUserIdentification(source));
+            this.messages.push(this.createEnvironment(source));
             
             this.processAction(source, source, source.context);
             
