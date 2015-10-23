@@ -2,7 +2,7 @@
   "name": "glimpse.client.hud",
   "version": "2.0.0-dev",
   "description": "The Javascript client that acts as an in browser viewer for the various Glimpse server backends",
-  "main": "dist/glimpse.hud.js",
+  "main": "dist/hud.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
