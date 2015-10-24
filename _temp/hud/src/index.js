@@ -9,6 +9,7 @@ if (FAKE_SERVER) {
 require('./index.scss');
 
 var $ = require('$jquery');
+var util = require('lib/util');
 var state = require('./state');
 var repository = require('./repository');
 var sections = require('./sections/section');
@@ -30,4 +31,9 @@ repository.getData(function(details) {
 	
 	// setup events that we need to listen to
 	sections.postRender(holder);
+	
+	// TODO: need to find a better place for this
+	$('.glimpse-icon').click(function() {
+		window.open(util.resolveClientUrl(), 'GlimpseClient');
+	});
 });
