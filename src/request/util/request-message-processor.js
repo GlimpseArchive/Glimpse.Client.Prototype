@@ -13,7 +13,8 @@ module.exports = {
 			'begin-request': processItem,
 			'after-action-invoked': processItem,
 			'after-action-view-invoked': processItem,
-			'after-execute-command': processList
+			'after-execute-command': processList,
+			'browser-navigation-timing': processItem
 		};
 	},
 	getTypeMessages: function(request, typeOptions) {

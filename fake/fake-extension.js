@@ -545,6 +545,52 @@ var generateMvcRequest = (function() {
             
             return message;
         },
+        createBrowserNavigationTiming: function(source) {
+            var message = this.createMessage('browser-navigation-timing', source.context);
+            
+            var payload = message.payload;
+            payload.navigationStart = 1445665751561;
+            payload.unloadEventStart = 1445665762764;
+            payload.unloadEventEnd = 1445665762764;
+            payload.redirectStart = 0;
+            payload.redirectEnd = 0;
+            payload.fetchStart = 1445665751561;
+            payload.domainLookupStart = 1445665751568;
+            payload.domainLookupEnd = 1445665751568;
+            payload.connectStart = 1445665751568;
+            payload.connectEnd = 1445665751570;
+            payload.secureConnectionStart = 0;
+            payload.requestStart = 1445665751570;
+            payload.responseStart = 1445665762753;
+            payload.responseEnd = 1445665762852;
+            payload.domLoading = 1445665762786;
+            payload.domInteractive = 1445665763972;
+            payload.domContentLoadedEventStart = 1445665763972;
+            payload.domContentLoadedEventEnd = 1445665763983;
+            payload.domComplete = 1445665764285;
+            payload.loadEventStart = 1445665764285;
+            payload.loadEventEnd = 1445665764306;
+            payload.firstPaintTime = 12427.310791015625;
+            payload.firstPaint = 1445665763989.0898;
+            payload.loadTime = 12745;
+            payload.domReadyTime = 313;
+            payload.readyStart = 0;
+            payload.redirectTime = 0;
+            payload.appcacheTime = 7;
+            payload.unloadEventTime = 0;
+            payload.lookupDomainTime = 0;
+            payload.connectTime = 2;
+            payload.requestTime = 11282;
+            payload.initDomTreeTime = 1120;
+            payload.loadEventTime = 21;
+            payload.networkRequestTime = 9;
+            payload.networkResponseTime = 99;
+            payload.networkTime = chance.integerRange(1, 5);
+            payload.serverTime = source.duration;
+            payload.browserTime = chance.integerRange(20, 120);
+            
+            return message;
+        },
         // createLog: function(log, context) { 
         //     var message = this.createMessage('request-framework-log', context);
         //     mapProperties(log, message.payload, [ 'template', 'message' ]);
@@ -636,6 +682,7 @@ var generateMvcRequest = (function() {
             this.processAction(source, source, source.context);
             
             this.messages.push(this.createEndRequest(source)); 
+            this.messages.push(this.createBrowserNavigationTiming(source))
             
             return this.messages;
         },

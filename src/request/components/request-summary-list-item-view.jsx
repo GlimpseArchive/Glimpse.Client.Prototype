@@ -39,6 +39,17 @@ var commandOrEmpty = function(commands) {
 var contextTypeOrEmpty = function(contentCategory) {
     return contentCategory ? _.keys(contentCategory).join(', ') : '';
 };
+var requestTime = function(endRequest, browserNavigationTiming) {
+    var total = ''
+    if (browserNavigationTiming) {
+        total = browserNavigationTiming.serverTime + browserNavigationTiming.browserTime + browserNavigationTiming.networkTime;
+    }
+    else if (endRequest) {
+        total = endRequest.responseDuration;
+    }
+    
+    return timeOrEmpty(total);
+};
 
 module.exports = React.createClass({
     render: function () {
@@ -56,7 +67,7 @@ module.exports = React.createClass({
         var afterActionViewInvoked = payload.afterActionViewInvoked || {};
         var afterActionInvoked = payload.afterActionInvoked || {};
         var afterExecuteCommand = payload.afterExecuteCommand || [];
-        var abstract = { networkTime: 2, serverTime: 35, clientTime: 42 }; // TODO: temp until we get values
+        var browserNavigationTiming = payload.browserNavigationTiming || {};
 
         return (
             <div className={containerClass} onClick={this.onSelect}>
@@ -85,10 +96,10 @@ module.exports = React.createClass({
                         <div>Query/Count</div>
                     </div>
                     <div className="request-summary-data-row-details">
-                        <div className="request-summary-data-value-primary">{timeOrEmpty(endRequest.responseDuration)}</div>
-                        <div>{timeOrEmpty(abstract.serverTime)}</div>
-                        <div>{timeOrEmpty(abstract.clientTime)}</div>
-                        <div className="request-summary-data-col-2">{timeOrEmpty(abstract.networkTime)}</div>
+                        <div className="request-summary-data-value-primary">{requestTime(endRequest, browserNavigationTiming)}</div>
+                        <div>{timeOrEmpty(browserNavigationTiming.serverTime)}</div>
+                        <div>{timeOrEmpty(browserNavigationTiming.browserTime)}</div>
+                        <div className="request-summary-data-col-2">{timeOrEmpty(browserNavigationTiming.networkTime)}</div>
                         <div>{timeOrEmpty(afterActionInvoked.actionInvokedDuration)}</div>
                         <div>{timeOrEmpty(afterActionViewInvoked.viewDuration)}</div>
                         <div className="request-summary-data-value-primary request-summary-data-col-4">{actionOrEmpty(afterActionInvoked.actionControllerName, afterActionInvoked.actionName)}</div>
