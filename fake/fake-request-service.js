@@ -17,9 +17,12 @@ var streamMock = (function() {
             mocks[url] = mockCallback;
         },
         trigger: function(url, userCallback) {
-            if (mocks[url]) {
-                var result = mocks[url](); 
-                userCallback(result);
+            for (var key in mocks) {
+                if (url.indexOf(key) > -1) {
+                    var result = mocks[key];
+                    userCallback(result());
+                    break;
+                }
             }
         }
     };
@@ -235,12 +238,12 @@ var details = (function () {
         summaries.local();
     });
     
-    // remote triggers
+    // remote triggers 
     requestMock.get(window.location.origin + '/glimpse/message-history/?types=:types', function(req) {
         summaries.remote();
     }); 
-    requestMock.get(window.location.origin + '/glimpse/request/:id', function(req) {
-        details.remote(req.params.id); 
+    requestMock.get(window.location.origin + '/glimpse/context/:contextId', function(req) {
+        details.remote(req.params.contextId.replace('?contextId=', '')); 
     });
     
     requestMock.get(window.location.origin + '/glimpse/metadata', function(req){
