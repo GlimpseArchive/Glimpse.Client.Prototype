@@ -108,7 +108,37 @@ var process = (function() {
 				return result;
 			},
 			timings: function(payload) {
-				return [];
+				var afterActionInvoked = payload.afterActionInvoked || {};
+				var afterActionViewInvoked = payload.afterActionViewInvoked || {};
+				var afterExecuteCommand = payload.afterExecuteCommand || [];
+				
+				var result = [];
+				result.push({
+					title: 'Controller: ' + afterActionInvoked.actionControllerName + '.' + afterActionInvoked.actionName,
+					startTime: 'NOT SET',
+					duration: afterActionInvoked.actionInvokedDuration,
+					startPoint: afterActionInvoked.actionInvokedOffset,
+					category: 'Controller'
+				});
+				result.push({
+					title: 'Render: ' + afterActionInvoked.actionControllerName + '.' + afterActionInvoked.actionName,
+					startTime: 'NOT SET',
+					duration: afterActionViewInvoked.viewDuration,
+					startPoint: afterActionViewInvoked.viewOffset,
+					category: 'View'
+				});
+				for (var i = 0; i < afterExecuteCommand.length; i++) {
+					var command = afterExecuteCommand[i];
+					result.push({
+						title: 'Command: ' + command.commandMethod,
+						startTime: command.commandEndTime,
+						duration: command.commandDuration,
+						startPoint: command.commandOffset,
+						category: 'Command'
+					});
+				}			
+				
+				return result;
 			}
 		};
 		
