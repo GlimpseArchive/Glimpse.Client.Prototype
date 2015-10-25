@@ -32,7 +32,9 @@ polyfill.EventSource = function(url) {
 };
 polyfill.EventSource.prototype = {
     addEventListener: function(topic, callback) {
-    }  
+    },
+    close: function() {
+    }
 };
 
     
