@@ -25,6 +25,7 @@
     min-width: 1370px;
     height: 34px;
     transform: translatez(0);
+    z-index: 100000;
 }
 .glimpse td, .glimpse span, .glimpse div, .glimpse th {
     color: #fff;
