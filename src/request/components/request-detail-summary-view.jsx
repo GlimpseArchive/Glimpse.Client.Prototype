@@ -9,7 +9,7 @@ var Timeago = require('lib/components/timeago');
 
 var timeOrEmpty = function(value) {
     if (value !== null && value !== undefined) {
-        return <span>{value}<span className="request-summary-data-value-accent">ms</span></span>;
+        return <span>{Math.round(value)}<span className="request-summary-data-value-accent">ms</span></span>;
     }
     
     return <span className="request-summary-data-value-soft">--</span>;
