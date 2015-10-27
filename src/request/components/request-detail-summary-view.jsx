@@ -40,10 +40,10 @@ var contextTypeOrEmpty = function(contentCategory) {
 };
 var requestTime = function(endRequest, browserNavigationTiming) {
     var total = ''
-    if (browserNavigationTiming) {
+    if (browserNavigationTiming && browserNavigationTiming.serverTime) {
         total = browserNavigationTiming.serverTime + browserNavigationTiming.browserTime + browserNavigationTiming.networkTime;
     }
-    else if (endRequest) {
+    else if (endRequest && endRequest.responseDuration) {
         total = endRequest.responseDuration;
     }
     
