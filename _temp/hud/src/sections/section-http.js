@@ -53,7 +53,7 @@ var processTimings = function(details) {
 		networkPost = calculateTimings('responseStart', 'responseEnd'),
 		network = networkPre + networkPost,
 		server = calculateTimings('requestStart', 'responseStart'),
-		browser = calculateTimings('responseEnd', 'loadEventEnd'),
+		browser = calculateTimings('responseEnd', 'domComplete'),
 		total = network + server + browser;
 
 	result.networkSending = { categoryColor: '#FDBF45', duration: networkPre, percentage: (networkPre / total) * 100 };
