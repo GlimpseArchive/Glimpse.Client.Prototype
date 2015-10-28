@@ -164,7 +164,7 @@ var process = (function() {
 })();
 
 var getData = function(callback) {
-	$.getJSON(util.resolveContextUrl(), null, function(data) {
+	$.getJSON(util.resolveContextUrl(util.currentRequestId()), null, function(data) {
 		var model = process(data);
 		callback(model);
 	});

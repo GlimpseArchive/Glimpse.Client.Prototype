@@ -34,6 +34,6 @@ repository.getData(function(details) {
 	
 	// TODO: need to find a better place for this
 	$('.glimpse-icon').click(function() {
-		window.open(util.resolveClientUrl(), 'GlimpseClient');
+		window.open(util.resolveClientUrl(util.currentRequestId(), true), 'GlimpseClient');
 	});
 });

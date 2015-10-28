@@ -3,9 +3,6 @@
 var $ = require('$jquery');
 
 var camelCaseRegEx = /^([A-Z])|[\s-_](\w)/g;
-var currentRequestId = function() {
-    return document.getElementById('__glimpse_hud').getAttribute('data-request-id');
-};
 var usedMessageTypes = function() {
     return 'environment,user-identification,end-request,begin-request,after-action-invoked,after-action-view-invoked,after-execute-command';
 }
@@ -25,11 +22,15 @@ module.exports = {
             return p1.toLowerCase();        
         });
     },
-    resolveClientUrl: function(requestId) {
-        return '/glimpse/client/index.html?hash=bf90859f&requestId=' + (requestId || currentRequestId());
+    currentRequestId: function() {
+        return document.getElementById('__glimpse_hud').getAttribute('data-request-id');
     },
-    resolveContextUrl: function() {
-        return '/glimpse/context/?contextId=' + currentRequestId() + '&types=' + usedMessageTypes();
+    resolveClientUrl: function(requestId, follow) {
+        var folllowParam = follow ? '&follow=true' : '';
+        return '/glimpse/client/index.html?hash=bf90859f&requestId=' + requestId + folllowParam;
+    },
+    resolveContextUrl: function(requestId) {
+        return '/glimpse/context/?contextId=' + requestId + '&types=' + usedMessageTypes();
     },
     isLocalUri: function(uri) {
         return uri && (!(uri.indexOf('http://') == 0 || uri.indexOf('https://') == 0 || uri.indexOf('//') == 0) || 
