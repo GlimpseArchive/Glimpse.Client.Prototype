@@ -150,7 +150,10 @@ var filterRequests = (function () {
 // Clear Request
 (function () {
     function clearRequest() {
-        _requestIndex[_requestSelectedId]._selected = false;
+        var request = _requestIndex[_requestSelectedId];
+        if (request) {
+            request._selected = false;
+        }
         _requestSelectedId = null;
 
         filterRequests(_requests, [], false);
