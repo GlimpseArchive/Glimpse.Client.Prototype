@@ -45,6 +45,7 @@ var processRequests = function(requestRepositoryPayload) {
                 updatedRequests: requestRepositoryPayload.updatedRequests,
                 affectedRequests: requestRepositoryPayload.affectedRequests,
                 allRequests: _data.values,
+                allRequestsIndex: _data.index,
                 newMessages: requestRepositoryPayload.newMessages,
                 newMessageTypes: requestRepositoryPayload.newMessageTypes
             };
