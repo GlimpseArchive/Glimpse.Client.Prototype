@@ -9,6 +9,7 @@ var messageProcessor = require('./util/request-message-processor');
 	var deepLinkRequestId;
 	var deepLinkUserId;
 	var detailSubscription;
+	var summarySubscription;
 	
 	var checkUrl = function() {
 		var requestId = util.getQueryStringParam('requestId');
@@ -31,7 +32,7 @@ var messageProcessor = require('./util/request-message-processor');
 			if (userMessage) {
 				deepLinkUserId = userMessage.userId;
 				
-				glimpse.on('data.request.summary.found', foundRequestSummary);
+				summarySubscription = glimpse.on('data.request.summary.found', foundRequestSummary);
 			}
 		}
 	};
@@ -49,5 +50,15 @@ var messageProcessor = require('./util/request-message-processor');
 		});
 	};
 	
+	var clearRequest = function() {
+		if (deepLinkRequestId) {
+			glimpse.off(summarySubscription);
+			
+			deepLinkRequestId = null;
+			deepLinkUserId = null;
+		}
+	};
+	
 	glimpse.on('shell.request.ready', checkUrl);
+	glimpse.on('shell.request.detail.closed', clearRequest);
 })();
