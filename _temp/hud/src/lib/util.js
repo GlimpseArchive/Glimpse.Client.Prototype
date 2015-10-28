@@ -25,10 +25,17 @@ module.exports = {
             return p1.toLowerCase();        
         });
     },
-    resolveClientUrl: function() {
-        return '/glimpse/client/index.html?hash=bf90859f&requestId=' + currentRequestId();
+    resolveClientUrl: function(requestId) {
+        return '/glimpse/client/index.html?hash=bf90859f&requestId=' + (requestId || currentRequestId());
     },
     resolveContextUrl: function() {
         return '/glimpse/context/?contextId=' + currentRequestId() + '&types=' + usedMessageTypes();
+    },
+    isLocalUri: function(uri) {
+        return uri && (!(uri.indexOf('http://') == 0 || uri.indexOf('https://') == 0 || uri.indexOf('//') == 0) || 
+                (uri.substring(uri.indexOf('//') + 2, uri.length) + '/').indexOf(window.location.host + '/') == 0);
+    },
+    htmlEncode: function (value) {
+        return !(value == null) ? value.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/'/g, '&#39;').replace(/</g, '&lt;').replace(/>/g, '&gt;') : '';
     }
 };

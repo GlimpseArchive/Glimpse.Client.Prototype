@@ -4,6 +4,7 @@ var $ = require('$jquery');
 
 var rendering = require('./util/rendering');
 var process = require('./util/process');
+var util = require('lib/util');
 
 var count = 0;
 var summaryStack = [];
@@ -38,8 +39,11 @@ var structure = {
 };
 
 var processContentType = function(type) {
-	return type ? type.substring(0, type.indexOf(';')) : '';
+	return type ? type.substring(0, type.indexOf(';')) : '--';
 };
+var processSize = function(size) {
+	return size ? (Math.round((size / 1024) * 10) / 10) : '--';
+}
 var update = function(method, uri, duration, size, status, statusText, time, contentType, requestId) {
 	//Add it when needed
 	if (count == 0) {
@@ -47,10 +51,8 @@ var update = function(method, uri, duration, size, status, statusText, time, con
 		section.find('.glimpse-hud-section-inner').append('<div class="glimpse-hud-detail glimpse-hud-detail-small glimpse-hud-listing glimpse-data-ajax-summary"></div>');
 		section.append(rendering.popup(structure, { }));
 		
-		section.find('.glimpse-data-ajax-detail tbody .glimpse-ajax-link').live('click', function () {
-			pubsub.publish('trigger.shell.open', {});
-			pubsub.publish('trigger.tab.select.ajax', { key: 'ajax' });
-			pubsub.publish('trigger.data.context.switch', { requestId: $(this).attr('data-requestId'), type: 'ajax' });
+		section.find('.glimpse-data-ajax-detail').on('click', '.glimpse-ajax-link', function () {
+			window.open(util.resolveClientUrl($(this).attr('data-requestId')), 'GlimpseClient');
 		});
 	}
 
@@ -72,7 +74,7 @@ var update = function(method, uri, duration, size, status, statusText, time, con
 	}
 	
 	recordItem('<div class="glimpse-hud-listing-row glimpse-hud-value' + rowClass + '"><div class="glimpse-hud-data glimpse-hud-quite glimpse-data-ajax-method">' + method + '</div><div class="glimpse-hud-data glimpse-hud-listing-overflow glimpse-data-ajax-uri" title="' + uri + '">' + uri + '</div><div class="glimpse-data-ajax-duration"><span class="glimpse-hud-data">' + duration + '</span><span class="glimpse-hud-postfix">ms</span></div></div>', '.glimpse-hud-section-ajax .glimpse-data-ajax-summary', summaryStack, 2);
-	recordItem('<tbody class="' + rowClass + '"><tr><td class="glimpse-hud-listing-overflow" title="' + uri + '" colspan="2">' + clickableUri + '</td><td class="glimpse-hud-listing-value glimpse-data-duration">' + duration + '</td><td class="glimpse-hud-listing-value glimpse-data-size">' + (Math.round((size / 1024) * 10) / 10) + '</td></tr><tr><td class="glimpse-hud-quite glimpse-data-content-method">' + method + '</td><td class="glimpse-hud-quite glimpse-hud-listing-overflow">' + status + ' - ' + statusText + '</td><td class="glimpse-hud-quite glimpse-data-content-type glimpse-hud-listing-overflow" title="' + contentType + '">' + processContentType(contentType) + '</td><td class="glimpse-hud-quite glimpse-data-content-time">' + time.toTimeString().replace(/.*(\d{2}:\d{2}:\d{2}).*/, "$1") + '</td></tr></tbody>', '.glimpse-hud-section-ajax .glimpse-data-ajax-detail', detailStack, 6);
+	recordItem('<tbody class="' + rowClass + '"><tr><td class="glimpse-hud-listing-overflow" title="' + uri + '" colspan="2">' + clickableUri + '</td><td class="glimpse-hud-listing-value glimpse-data-duration">' + duration + '</td><td class="glimpse-hud-listing-value glimpse-data-size">' + processSize(size) + '</td></tr><tr><td class="glimpse-hud-quite glimpse-data-content-method">' + method + '</td><td class="glimpse-hud-quite glimpse-hud-listing-overflow">' + status + ' - ' + statusText + '</td><td class="glimpse-hud-quite glimpse-data-content-type glimpse-hud-listing-overflow" title="' + contentType + '">' + processContentType(contentType) + '</td><td class="glimpse-hud-quite glimpse-data-content-time">' + time.toTimeString().replace(/.*(\d{2}:\d{2}:\d{2}).*/, "$1") + '</td></tr></tbody>', '.glimpse-hud-section-ajax .glimpse-data-ajax-detail', detailStack, 6);
 };
 var recordItem = function(html, selector, stack, length) {
 	//Set row
@@ -95,17 +97,28 @@ var render = function(details, opened) {
 var postRender = function() {
 	var open = XMLHttpRequest.prototype.open; 
 	XMLHttpRequest.prototype.open = function(method, uri) {
-		if (util.isLocalUri(uri) && uri.indexOf('Glimpse.axd') == -1) {
+		if (util.isLocalUri(uri) && uri.indexOf('/glimpse/') == -1) { 
+			this._uri = uri;
+			
 			var startTime = new Date().getTime(); 
-			this.addEventListener("readystatechange", function() {
-					if (this.readyState == 4 && this.getResponseHeader("Glimpse-RequestID"))  { 
-						update(method, uri, new Date().getTime() - startTime, this.getResponseHeader("Content-Length"), this.status, this.statusText, new Date(), this.getResponseHeader("Content-Type"), this.getResponseHeader("Glimpse-RequestID"));
+			this.addEventListener('readystatechange', function() {
+					if (this.readyState == 4 && this.getResponseHeader('__glimpse-id'))  { 
+						update(method, uri, new Date().getTime() - startTime, this.getResponseHeader('Content-Length'), this.status, this.statusText, new Date(), this.getResponseHeader('Content-Type'), this.getResponseHeader('__glimpse-id'));
 					}
 				}, false); 
 		}
 
 		open.apply(this, arguments);
-	};                             
+	};    
+	
+	var send = XMLHttpRequest.prototype.send; 
+	XMLHttpRequest.prototype.send = function() {
+		if (this._uri){
+			this.setRequestHeader('__glimpse-isAjax', true);
+		}
+		
+		send.apply(this, arguments);
+	};                      
 };
 
 module.exports = {
