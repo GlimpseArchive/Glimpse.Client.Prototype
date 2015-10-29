@@ -6,6 +6,7 @@ var camelCaseRegEx = /^([A-Z])|[\s-_](\w)/g;
 var usedMessageTypes = function() {
     return 'environment,user-identification,end-request,begin-request,after-action-invoked,after-action-view-invoked,after-execute-command';
 }
+var hudScriptElement = document.getElementById('__glimpse_hud');
     
 module.exports = {
     localStorage: function (key, value) {
@@ -23,14 +24,22 @@ module.exports = {
         });
     },
     currentRequestId: function() {
-        return document.getElementById('__glimpse_hud').getAttribute('data-request-id');
+        return hudScriptElement.getAttribute('data-request-id');
     },
     resolveClientUrl: function(requestId, follow) {
-        var folllowParam = follow ? '&follow=true' : '';
-        return '/glimpse/client/index.html?hash=bf90859f&requestId=' + requestId + folllowParam;
+        var clientTemplate = hudScriptElement.getAttribute('data-client-template');
+                
+        var params = '&requestId=' + requestId;
+        params += follow ? '&follow=true' : '';
+        
+        return clientTemplate.replace('{&requestId,follow}', params); // TODO: This should probably be resolved with a URI Template library
     },
     resolveContextUrl: function(requestId) {
-        return '/glimpse/context/?contextId=' + requestId + '&types=' + usedMessageTypes();
+        var contextTemplate = hudScriptElement.getAttribute('data-context-template');
+        
+        var params = requestId + '&types=' + usedMessageTypes()
+        
+        return contextTemplate.replace('{contextId}{&types}', params); // TODO: This should probably be resolved with a URI Template library
     },
     isLocalUri: function(uri) {
         return uri && (!(uri.indexOf('http://') == 0 || uri.indexOf('https://') == 0 || uri.indexOf('//') == 0) || 
