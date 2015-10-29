@@ -2,6 +2,7 @@
 
 var request = require('superagent');
 var glimpse = require('glimpse');
+var util = require('../../lib/util');
 
 var uriTemplate = require("uri-templates");
 
@@ -25,16 +26,16 @@ function templatize(metadata){
 
 module.exports = {
 	triggerGetMetadata: function(){
-        // TODO: Make this better w/ a custom dialog, caching & perhaps a list of recently used servers?
-        //var baseUri = prompt('What\'s the address to your Glimpse server?', window.location.origin + '/glimpse/');
-        var baseUri = window.location.origin + '/glimpse/';
         
-        // This check is here because the baseUri may be input by hand
-        if (baseUri.lastIndexOf('/') !== baseUri.length-1) // ensure trailing /
-            baseUri += '/';
+        var metadataUri = util.getQueryStringParam('metadataUri');
         
+        if (!metadataUri) {
+            // TODO: Make this better w/ a custom dialog, caching & perhaps a list of recently used servers?
+            metadataUri = prompt('What\'s the address to your Glimpse server metadata?', window.location.origin + '/glimpse/metadata');
+        }
+      
         request
-            .get(baseUri + 'metadata')
+            .get(metadataUri)
             .accept('application/vnd.glimpse.metadata+json,application/json')
             .end(function(err, res){ 
                 if (err){

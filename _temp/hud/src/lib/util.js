@@ -30,16 +30,18 @@ module.exports = {
         var clientTemplate = hudScriptElement.getAttribute('data-client-template');
                 
         var params = '&requestId=' + requestId;
+        params += '&metadataUri=' + encodeURIComponent(hudScriptElement.getAttribute('data-metadata-template')); // This happens to be fully resolved already
         params += follow ? '&follow=true' : '';
         
-        return clientTemplate.replace('{&requestId,follow}', params); // TODO: This should probably be resolved with a URI Template library
+        return clientTemplate.replace('{&requestId,follow,metadataUri}', params); // TODO: This should probably be resolved with a URI Template library
     },
     resolveContextUrl: function(requestId) {
         var contextTemplate = hudScriptElement.getAttribute('data-context-template');
         
         var params = requestId + '&types=' + usedMessageTypes()
         
-        return contextTemplate.replace('{contextId}{&types}', params); // TODO: This should probably be resolved with a URI Template library
+        var uri = contextTemplate.replace('{contextId}{&types}', params); // TODO: This should probably be resolved with a URI Template library
+        return encodeURI(uri);
     },
     isLocalUri: function(uri) {
         return uri && (!(uri.indexOf('http://') == 0 || uri.indexOf('https://') == 0 || uri.indexOf('//') == 0) || 
