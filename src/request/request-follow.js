@@ -30,7 +30,7 @@ var messageProcessor = require('./util/request-message-processor');
 		if (request) {
 			glimpse.off(detailSubscription);
 			
-			var userMessage = messageProcessor.getTypeMessageItem(request, 'user-identification');
+			var userMessage = messageProcessor.getTypePayloadItem(request, 'user-identification');
 			if (userMessage) {
 				deepLinkUserId = userMessage.userId;
 				
@@ -41,10 +41,10 @@ var messageProcessor = require('./util/request-message-processor');
 	
 	var foundRequestSummary = function(foundRequest) {
 		_.each(foundRequest.affectedRequests, function(request) {
-			var userMessage = messageProcessor.getTypeMessageItem(request, 'user-identification');
+			var userMessage = messageProcessor.getTypePayloadItem(request, 'user-identification');
 			if (userMessage && userMessage.userId == deepLinkUserId) {
 				// TODO: need to some sort of check to see that this request happened after the last one
-				var endMessage = messageProcessor.getTypeMessageItem(request, 'end-request');
+				var endMessage = messageProcessor.getTypePayloadItem(request, 'end-request');
 				if (endMessage && endMessage.responseContentType && endMessage.responseContentType.indexOf('text/html') > -1) {
 					glimpse.emit('shell.request.summary.selected', { requestId: request.id });
 				}

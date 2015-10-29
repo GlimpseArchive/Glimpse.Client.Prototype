@@ -3,9 +3,9 @@
 var _ = require('lodash');
 
 module.exports = {
-	getMessageTypes: function(){
-		var processItem = module.exports.getTypeMessageItem;
-		var processList = module.exports.getTypeMessageList;
+	getSummaryMessagesStructure: function(){
+		var processItem = module.exports.getTypePayloadItem;
+		var processList = module.exports.getTypePayloadList;
 		
 		return {
 			'user-identification': processItem,
@@ -17,7 +17,12 @@ module.exports = {
 			'browser-navigation-timing': processItem
 		};
 	},
-	getTypeMessages: function(request, typeOptions) {
+	getSummaryMessages: function(request) {
+		var options = module.exports.getSummaryMessagesStructure();
+		
+		return module.exports.getTypePayloads(request, options); 
+	},
+	getTypePayloads: function(request, typeOptions) {
 		var result = {};
 		_.forEach(typeOptions, function(callback, key) {
 			result[_.camelCase(key)] = callback(request, key)
@@ -25,21 +30,16 @@ module.exports = {
 		
 		return result;
 	},
-	getTypeMessageItem: function(request, type) {
+	getTypePayloadItem: function(request, type) {
 		var messageIds = request.types[type]; 
 		if (messageIds)	{
 			return request.messages[messageIds[0]].payload;
 		}
 	},
-	getTypeMessageList: function(request, type) {
+	getTypePayloadList: function(request, type) {
 		var messageIds = request.types[type]; 
 		if (messageIds)	{
 			return _.map(messageIds, function(id) { return request.messages[id].payload; });
 		}
-	},
-	getSummaryMessages: function(request) {
-		var options = module.exports.getMessageTypes();
-		
-		return module.exports.getTypeMessages(request, options); 
 	}
 };

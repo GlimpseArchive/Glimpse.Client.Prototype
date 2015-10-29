@@ -7,8 +7,8 @@ var React = require('react');
 var classNames = require('classnames');
 
 var getMessages = (function() {
-    var getItem = messageProcessor.getTypeMessageItem;
-    var getList = messageProcessor.getTypeMessageList;
+    var getItem = messageProcessor.getTypePayloadItem;
+    var getList = messageProcessor.getTypePayloadList;
     
     var options = {
         'end-request': getItem,
@@ -17,12 +17,11 @@ var getMessages = (function() {
         'action-route': getItem,
         'after-action-invoked': getItem,
         'action-view-found': getItem,
-        'after-action-view-invoked': getItem,
-        'after-execute-command': getList
+        'after-action-view-invoked': getItem
     };
 		
     return function(request) {
-		return messageProcessor.getTypeMessages(request, options); 
+		return messageProcessor.getTypePayloads(request, options); 
     }
 })();
 
@@ -37,7 +36,6 @@ module.exports = React.createClass({
         var afterActionInvokedData = payload.afterActionInvoked;
         var actionViewFoundData = payload.actionViewFound;
         var afterActionViewInvokedData = payload.afterActionViewInvoked;
-        var afterExecuteCommandData = payload.afterExecuteCommand;
         
         var route = <div>No route found yet.</div>;
         if (routeData) {
@@ -80,7 +78,6 @@ module.exports = React.createClass({
         
         var view = <div>No view found yet.</div>;
         if (afterActionViewInvokedData) {
-
             var viewTitle = null;
             if (actionViewFoundData) { 
                 var viewTitleClass = classNames({
@@ -92,6 +89,7 @@ module.exports = React.createClass({
                 viewTitle = <div><span className={viewTitleClass}>{actionViewFoundData.viewName}</span> - <span>{actionViewFoundData.viewPath}</span></div>;
             }
         
+            // process action
             view = (
                 <section className="tab-execution-item tab-execution-view">
                     <div className="tab-execution-title">View</div>

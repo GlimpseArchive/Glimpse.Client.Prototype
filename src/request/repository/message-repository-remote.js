@@ -13,7 +13,7 @@ module.exports = {
             var uri = metadata.resources['message-history']
                 .fill({
                     hash: metadata.hash,
-                    types: Object.keys(messageProcessor.getMessageTypes())
+                    types: Object.keys(messageProcessor.getSummaryMessagesStructure())
                 });
             
             request

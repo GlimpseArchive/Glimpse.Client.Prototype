@@ -21,10 +21,10 @@ var process = (function() {
 		return index;
 	};
 	var getPayload = function(index) {
-		var processItem = messageProcessor.getTypeMessageItem;
-		var processList = messageProcessor.getTypeMessageList;
+		var processItem = messageProcessor.getTypePayloadItem;
+		var processList = messageProcessor.getTypePayloadList;
 		
-		return messageProcessor.getTypeMessages(index, {
+		return messageProcessor.getTypePayloads(index, {
 			'begin-request': processItem,
 			'environment': processItem,
 			'user-identification': processItem,

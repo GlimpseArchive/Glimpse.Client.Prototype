@@ -26,7 +26,7 @@ var summarySocket = (function() {
     return {
         check: function(metadata) {
             if (!connection) {
-                connection = createSocket(metadata, { types: Object.keys(messageProcessor.getMessageTypes()) });
+                connection = createSocket(metadata, { types: Object.keys(messageProcessor.getSummaryMessagesStructure()) });
             }
         }
     };
