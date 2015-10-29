@@ -21,7 +21,7 @@ var getMessages = (function() {
     };
 		
     return function(request) {
-		return messageProcessor.getTypePayloads(request, options); 
+		return messageProcessor.getTypeStucture(request, options); 
     }
 })();
 

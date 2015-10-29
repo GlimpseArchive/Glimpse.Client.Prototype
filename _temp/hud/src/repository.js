@@ -24,7 +24,7 @@ var process = (function() {
 		var processItem = messageProcessor.getTypePayloadItem;
 		var processList = messageProcessor.getTypePayloadList;
 		
-		return messageProcessor.getTypePayloads(index, {
+		return messageProcessor.getTypeStucture(index, {
 			'begin-request': processItem,
 			'environment': processItem,
 			'user-identification': processItem,

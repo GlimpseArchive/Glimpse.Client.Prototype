@@ -3,7 +3,7 @@
 var util = require('lib/util.js');
 
 module.exports = {
-	getTypePayloads: function(index, typeOptions) {
+	getTypeStucture: function(index, typeOptions) {
 		var result = {};
 		for (var key in typeOptions) {
 			var callback = typeOptions[key];

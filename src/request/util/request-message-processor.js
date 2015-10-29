@@ -20,9 +20,9 @@ module.exports = {
 	getSummaryMessages: function(request) {
 		var options = module.exports.getSummaryMessagesStructure();
 		
-		return module.exports.getTypePayloads(request, options); 
+		return module.exports.getTypeStucture(request, options); 
 	},
-	getTypePayloads: function(request, typeOptions) {
+	getTypeStucture: function(request, typeOptions) {
 		var result = {};
 		_.forEach(typeOptions, function(callback, key) {
 			result[_.camelCase(key)] = callback(request, key)
