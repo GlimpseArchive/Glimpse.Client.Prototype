@@ -8,9 +8,10 @@ var _strategies = [];
 var getContentTypeCategory = (function() {
     var listing = {
         'text/html':                   {'document': true},
-        'text/xml':                    {'document': true},
         'text/plain':                  {'document': true},
         'application/xhtml+xml':       {'document': true},
+        'text/xml':                    {'data': true},
+        'application/json':            {'data': true},
         'text/css':                    {'stylesheet': true},
         'text/xsl':                    {'stylesheet': true},
         'image/jpg':                   {'image': true},
@@ -42,7 +43,6 @@ var getContentTypeCategory = (function() {
         'application/javascript':      {'script': true},
         'application/ecmascript':      {'script': true},
         'application/x-javascript':    {'script': true},
-        'application/json':            {'script': true},
         'text/javascript1.1':          {'script': true},
         'text/javascript1.2':          {'script': true},
         'text/javascript1.3':          {'script': true},
@@ -52,7 +52,16 @@ var getContentTypeCategory = (function() {
     };
     
     return function(contentType) {
-        return listing[contentType];
+        var target = '';
+        for (var i = 0; i < contentType.length; i++) {
+            var char = contentType[i];
+            if (char == ';') {
+                break;
+            }
+            target += char
+        }
+        
+        return listing[target];
     };
 })();
 
