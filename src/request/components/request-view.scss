@@ -76,6 +76,26 @@
     .tab-execution-view-notfound {
         color: darkred;
     }
+    .tab-execution-command-items {
+        flex-grow: 8;
+        padding-right: 5%;
+    }
+    .tab-execution-command-item {
+        display: flex;
+    }
+    .tab-execution-command-type, .tab-execution-command-duration {
+        flex: 1;
+    }
+    .tab-execution-command-method {
+        flex: 2;
+    }
+    .tab-execution-command-text {
+        flex: 5;
+        overflow-x: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        padding-right: 20px;
+    }
 }
 
 
