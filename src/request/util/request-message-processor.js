@@ -41,5 +41,17 @@ module.exports = {
 		if (messageIds)	{
 			return _.map(messageIds, function(id) { return request.messages[id].payload; });
 		}
+	},
+	getTypeMessageItem: function(request, type) {
+		var messageIds = request.types[type]; 
+		if (messageIds)	{
+			return request.messages[messageIds[0]];
+		}
+	},
+	getTypeMessageList: function(request, type) {
+		var messageIds = request.types[type]; 
+		if (messageIds)	{
+			return _.map(messageIds, function(id) { return request.messages[id]; });
+		}
 	}
 };
