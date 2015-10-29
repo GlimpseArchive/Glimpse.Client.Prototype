@@ -16,7 +16,9 @@ var messageProcessor = require('./util/request-message-processor');
 		if (requestId) {
 			deepLinkRequestId = requestId;
 			
-			detailSubscription = glimpse.on('data.request.detail.found', foundRequestDetail);
+			if (util.getQueryStringParam('follow')) {
+				detailSubscription = glimpse.on('data.request.detail.found', foundRequestDetail);
+			}
 			
 			glimpse.emit('shell.request.summary.selected', { requestId: requestId })
 		}
