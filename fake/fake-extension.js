@@ -541,7 +541,7 @@ var generateMvcRequest = (function() {
             //payload.commandException = null;
             
             // TODO: Bring in timing data when we have it
-            MessageGenerator.support.afterTimings('command', payload, query.duration, null);
+            MessageGenerator.support.afterTimings('command', payload, (parseInt(query.duration * 100)) / 100, null);
             
             return message;
         },
