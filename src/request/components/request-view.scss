@@ -34,6 +34,24 @@
     padding-bottom: 20px;
 }
 
+
+
+.tab-execution-title { 
+    color: #737373;
+}
+.tab-execution-header {
+    width: 100%;
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: baseline;
+    
+    > div {
+        flex: 1 0 0;
+    }
+    .tab-execution-title {
+        font-size: 70%;
+    }
+}
 .tab-execution-item {
     width: 100%;
     display: flex;
@@ -43,16 +61,18 @@
     
     > div {
         flex: 1 0 0;
-    }
-    .tab-execution-title {
-        color: gray;
-        margin-right: 10px;
-        min-width: 100px;
-        flex-grow: 1;
-    }
+    } 
     .tab-execution-important {
         font-size: 120%;
     }
+    .tab-execution-timing {
+        font-weight: bold; 
+    }
+    
+    
+    
+    
+    /*
     .tab-execution-route-name {
         flex-grow: 2;
         min-width: 150px;
@@ -60,17 +80,15 @@
     .tab-execution-route-path, .tab-execution-route-pattern {
         flex-grow: 3;
     }
+    */
+    
     .tab-execution-action-description {
         flex-grow: 7;
-    }
-    .tab-execution-timing {
-        font-weight: bold;
-        min-width: 100px;
-        flex-grow: 1;
     }
     .tab-execution-view-path {
         flex-grow: 7;
     }
+    
     .tab-execution-command-items {
         flex-grow: 8;
     }
@@ -80,12 +98,6 @@
     }
     .tab-execution-command-item-detail {
         display: flex;
-    }
-    .tab-execution-command-duration {
-        flex: 1;
-    }
-    .tab-execution-command-title {
-        flex: 8; 
     }
     .tab-execution-command-isAsync {
         font-style: italic;
@@ -153,6 +165,17 @@ body, html {
     height: 100%;
     color: #111;
     font-family: 'Segoe Pro', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.flex {
+    .col-2 { flex: 2; }
+    .col-3 { flex: 3; }
+    .col-4 { flex: 4; }
+    .col-5 { flex: 5; }
+    .col-6 { flex: 6; }
+    .col-7 { flex: 7; }
+    .col-8 { flex: 8; }
+    .col-9 { flex: 9; }
 }
 
 //****** SHELL *******

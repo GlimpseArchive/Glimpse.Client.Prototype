@@ -65,12 +65,20 @@ module.exports = React.createClass({
         
             // process route
             route = (
-                    <section className="tab-execution-item tab-execution-route"> 
-                        <div className="tab-execution-title">Route</div>
-                        <div className="tab-execution-route-path">{routePath}</div>
-                        <div className="tab-execution-route-pattern">{routePayload.routePattern}</div>
-                        <div className="tab-execution-route-name tab-execution-important"><span className="tab-execution-title">Name</span>{routePayload.routeName}</div>
-                    </section>
+                    <div className="flex">
+                        <div className="tab-execution-header">
+                            <div></div>
+                            <div className="tab-execution-title col-2">Name</div>
+                            <div className="tab-execution-title col-3">Path</div>
+                            <div className="tab-execution-title col-4">Pattern</div>
+                        </div>
+                        <section className="tab-execution-item tab-execution-route"> 
+                            <div className="tab-execution-title">Route</div>
+                            <div className="col-2">{routePayload.routeName}</div>
+                            <div className="col-3">{routePath}</div>
+                            <div className="col-4">{routePayload.routePattern}</div>
+                        </section>
+                    </div>
                 ); 
         }
         
@@ -88,13 +96,19 @@ module.exports = React.createClass({
             
             // process action
             action = (
-                    <section className="tab-execution-item tab-execution-action">
-                        <div className="tab-execution-title">Action</div>
-                        <div className="tab-execution-action-description tab-execution-important">
-                            {afterActionInvokedPayload.actionControllerName}.{afterActionInvokedPayload.actionName}({content})
+                    <div className="flex">
+                        <div className="tab-execution-header">
+                            <div></div>
+                            <div className="tab-execution-title col-9">Controller/Action</div>
                         </div>
-                        <div className="tab-execution-timing">{afterActionInvokedPayload.actionInvokedDuration}ms</div>
-                    </section>
+                        <section className="tab-execution-item tab-execution-action">
+                            <div className="tab-execution-title">Action</div>
+                            <div className="tab-execution-important col-8">
+                                {afterActionInvokedPayload.actionControllerName}.{afterActionInvokedPayload.actionName}({content})
+                            </div>
+                            <div className="tab-execution-timing">{afterActionInvokedPayload.actionInvokedDuration}ms</div>
+                        </section>
+                    </div>
                 ); 
         }
         
@@ -120,8 +134,8 @@ module.exports = React.createClass({
                     var commandItem = (
                         <div key={beforeCommand.id} className="tab-execution-command-item">
                             <div className="tab-execution-command-item-detail">
-                                <div className="tab-execution-command-title">SQL: <span className="tab-execution-command-isAsync" title="Is Async">{(beforeCommand.payload.commandIsAsync ? 'async' : '')}</span> {beforeCommand.payload.commandMethod}</div>
-                                <div className="tab-execution-timing tab-execution-command-duration">{duration}ms</div>
+                                <div className="col-8"><span className="tab-execution-important">SQL:</span> {beforeCommand.payload.commandMethod} <span className="tab-execution-command-isAsync" title="Is Async">{(beforeCommand.payload.commandIsAsync ? 'async' : '')}</span></div>
+                                <div className="tab-execution-timing col-2">{duration}ms</div>
                             </div>
                             <div className="tab-execution-command-text">
                                 <Highlight className="sql">
@@ -136,10 +150,16 @@ module.exports = React.createClass({
             
             // process action
             commands = (
-                    <section className="tab-execution-item tab-execution-command">
-                        <div className="tab-execution-title">Data</div>
-                        <div className="tab-execution-command-items">{commandItems}</div>
-                    </section>
+                    <div className="flex">
+                        <div className="tab-execution-header">
+                            <div></div>
+                            <div className="tab-execution-title col-9">Type/Method</div>
+                        </div>
+                        <section className="tab-execution-item tab-execution-command">
+                            <div className="tab-execution-title">Data</div>
+                            <div className="tab-execution-command-items col-9">{commandItems}</div>
+                        </section>
+                    </div>
                 ); 
         }
         
@@ -152,12 +172,18 @@ module.exports = React.createClass({
         
             // process action
             view = (
-                <section className="tab-execution-item tab-execution-view">
-                    <div className="tab-execution-title">View</div>
-                    <div className="tab-execution-view-path">{viewTitle}</div>
-                    <div className="tab-execution-timing">{afterActionViewInvokedPayload.viewDuration}ms</div>
-                </section>
-            )
+                    <div className="flex">
+                        <div className="tab-execution-header">
+                            <div></div>
+                            <div className="tab-execution-title col-9">Name/Path</div>
+                        </div>
+                        <section className="tab-execution-item tab-execution-view">
+                            <div className="tab-execution-title">View</div>
+                            <div className="tab-execution-important col-8">{viewTitle}</div>
+                            <div className="tab-execution-timing">{afterActionViewInvokedPayload.viewDuration}ms</div>
+                        </section>
+                    </div>
+                );
         }
         
         return (
