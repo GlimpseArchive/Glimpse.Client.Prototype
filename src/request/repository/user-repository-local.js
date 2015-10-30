@@ -22,6 +22,6 @@ module.exports = {
         // TODO: Need to complete
         //       Pull from local storage and republish
 
-        glimpse.emit('data.user.detail.found.local', []);
+        glimpse.emit('data.user.detail.found.local', {});
     }
 };
