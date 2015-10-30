@@ -30,8 +30,13 @@ module.exports = {
         var metadataUri = util.getQueryStringParam('metadataUri');
         
         if (!metadataUri) {
-            // TODO: Make this better w/ a custom dialog, caching & perhaps a list of recently used servers?
-            metadataUri = prompt('What\'s the address to your Glimpse server metadata?', window.location.origin + '/glimpse/metadata');
+            if (!FAKE_SERVER) {
+                // TODO: Make this better w/ a custom dialog, caching & perhaps a list of recently used servers?
+                metadataUri = prompt('What\'s the address to your Glimpse server metadata?', window.location.origin + '/glimpse/metadata');
+            }
+            else {
+                metadataUri = window.location.origin + '/glimpse/metadata';
+            }
         }
       
         request
