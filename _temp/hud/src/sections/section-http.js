@@ -3,8 +3,6 @@
 var rendering = require('./util/rendering');
 var process = require('./util/process');
 
-var timingsRaw = (window.performance || window.mozPerformance || window.msPerformance || window.webkitPerformance || {}).timing;
-
 var structure = {
 	title: 'HTTP',
 	id: 'http', 
@@ -47,13 +45,13 @@ var structure = {
 	}
 };
 	
-var processTimings = function(details) {
+var processTimings = function(details, timingsRaw) {
 	var result = { },
-		networkPre = calculateTimings('navigationStart', 'requestStart'),
-		networkPost = calculateTimings('responseStart', 'responseEnd'),
+		networkPre = calculateTimings(timingsRaw, 'navigationStart', 'requestStart'),
+		networkPost = calculateTimings(timingsRaw, 'responseStart', 'responseEnd'),
 		network = networkPre + networkPost,
-		server = calculateTimings('requestStart', 'responseStart'),
-		browser = calculateTimings('responseEnd', 'domComplete'),
+		server = calculateTimings(timingsRaw, 'requestStart', 'responseStart'),
+		browser = calculateTimings(timingsRaw, 'responseEnd', 'domComplete'),
 		total = network + server + browser;
 
 	result.networkSending = { categoryColor: '#FDBF45', duration: networkPre, percentage: (networkPre / total) * 100 };
@@ -65,15 +63,17 @@ var processTimings = function(details) {
 	
 	details.request = { data: result, name: 'Request' };
 };
-var calculateTimings = function(startIndex, finishIndex) { 
+var calculateTimings = function(timingsRaw, startIndex, finishIndex) { 
 	return timingsRaw[finishIndex] - timingsRaw[startIndex];
 };
 	
 var render = function(details, opened) {
 	var html = '';
+	
+	var timingsRaw = (window.performance || window.mozPerformance || window.msPerformance || window.webkitPerformance || {}).timing;
 	if (timingsRaw) {
 		process.init(structure);
-		processTimings(details); 
+		processTimings(details, timingsRaw); 
 		html = rendering.section(structure, details, opened); 
 	}
 
