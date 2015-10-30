@@ -4,6 +4,7 @@ var messageProcessor = require('../util/request-message-processor');
 
 var _ = require('lodash');
 var React = require('react');
+var Highlight = require('react-highlight');
 var classNames = require('classnames');
 
 var getPayloads = (function() {
@@ -60,15 +61,15 @@ module.exports = React.createClass({
         
         var route = <div>No route found yet.</div>;
         if (routePayload) {
-            var routePath = beginRequestPayload ? (<div><span>{beginRequestPayload.path}</span><span>{beginRequestPayload.queryString}</span></div>) : '';
+            var routePath = beginRequestPayload ? (<div><span>{beginRequestPayload.requestPath}</span><span>{beginRequestPayload.requestQueryString}</span></div>) : '';
         
             // process route
             route = (
                     <section className="tab-execution-item tab-execution-route"> 
                         <div className="tab-execution-title">Route</div>
-                        <div className="tab-execution-route-name tab-execution-important">{routePayload.routeName}</div>
                         <div className="tab-execution-route-path">{routePath}</div>
                         <div className="tab-execution-route-pattern">{routePayload.routePattern}</div>
+                        <div className="tab-execution-route-name tab-execution-important"><span className="tab-execution-title">Name</span>{routePayload.routeName}</div>
                     </section>
                 ); 
         }
@@ -118,10 +119,15 @@ module.exports = React.createClass({
                     
                     var commandItem = (
                         <div key={beforeCommand.id} className="tab-execution-command-item">
-                            <div className="tab-execution-command-type">SQL</div>
-                            <div className="tab-execution-command-method">{beforeCommand.payload.commandMethod}</div>
-                            <div className="tab-execution-command-text">{beforeCommand.payload.commandText}</div>
-                            <div className="tab-execution-timing tab-execution-command-duration">{duration}ms</div>
+                            <div className="tab-execution-command-item-detail">
+                                <div className="tab-execution-command-title">SQL: <span className="tab-execution-command-isAsync" title="Is Async">{(beforeCommand.payload.commandIsAsync ? 'async' : '')}</span> {beforeCommand.payload.commandMethod}</div>
+                                <div className="tab-execution-timing tab-execution-command-duration">{duration}ms</div>
+                            </div>
+                            <div className="tab-execution-command-text">
+                                <Highlight className="sql">
+                                    {beforeCommand.payload.commandText}
+                                </Highlight>
+                            </div>
                         </div>
                     );
                     commandItems.push(commandItem);
@@ -141,13 +147,7 @@ module.exports = React.createClass({
         if (afterActionViewInvokedPayload) {
             var viewTitle = null;
             if (actionViewFoundPayload) { 
-                var viewTitleClass = classNames({
-                    'tab-execution-important': true,
-                    'tab-execution-view-found': actionViewFoundPayload.viewDidFind,
-                    'tab-execution-view-notfound': !actionViewFoundPayload.viewDidFind
-                });
-                
-                viewTitle = <div><span className={viewTitleClass}>{actionViewFoundPayload.viewName}</span> - <span>{actionViewFoundPayload.viewPath}</span></div>;
+                viewTitle = <div><span className="tab-execution-important">{actionViewFoundPayload.viewName}</span> - <span>{actionViewFoundPayload.viewPath}</span></div>;
             }
         
             // process action

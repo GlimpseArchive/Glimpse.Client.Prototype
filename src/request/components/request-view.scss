@@ -39,11 +39,16 @@
     display: flex;
     flex-wrap: nowrap;
     align-items: baseline;
+    margin-bottom: 15px;
     
     > div {
         flex: 1 0 0;
     }
-    
+    .tab-execution-title {
+        font-size: 75%;
+        color: gray;
+        margin-right: 10px;
+    }
     .tab-execution-important {
         font-size: 120%;
     }
@@ -70,31 +75,38 @@
     .tab-execution-view-path {
         flex-grow: 7;
     }
-    .tab-execution-view-found {
-        color: green;
-    }
-    .tab-execution-view-notfound {
-        color: darkred;
-    }
     .tab-execution-command-items {
         flex-grow: 8;
-        padding-right: 5%;
     }
     .tab-execution-command-item {
+        padding-bottom: 15px;
+        padding-right: 5%;
+    }
+    .tab-execution-command-item-detail {
         display: flex;
     }
-    .tab-execution-command-type, .tab-execution-command-duration {
+    .tab-execution-command-duration {
         flex: 1;
     }
-    .tab-execution-command-method {
-        flex: 2;
+    .tab-execution-command-title {
+        flex: 8; 
+    }
+    .tab-execution-command-isAsync {
+        font-style: italic;
     }
     .tab-execution-command-text {
-        flex: 5;
-        overflow-x: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-        padding-right: 20px;
+        margin-right: 10%;
+        font-family: monospace;
+        font-size: 125%;
+        padding-top: 5px;
+        
+        > pre {
+            margin: 0;
+            
+            > code {
+                padding: 0;
+            }
+        } 
     }
 }
 
