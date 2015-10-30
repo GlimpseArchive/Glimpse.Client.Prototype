@@ -45,17 +45,13 @@
         flex: 1 0 0;
     }
     .tab-execution-title {
-        font-size: 75%;
         color: gray;
         margin-right: 10px;
+        min-width: 100px;
+        flex-grow: 1;
     }
     .tab-execution-important {
         font-size: 120%;
-    }
-    .tab-execution-title {
-        font-weight: bold;
-        min-width: 100px;
-        flex-grow: 1;
     }
     .tab-execution-route-name {
         flex-grow: 2;
