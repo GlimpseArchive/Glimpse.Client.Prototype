@@ -52,16 +52,18 @@ var getContentTypeCategory = (function() {
     };
     
     return function(contentType) {
-        var target = '';
-        for (var i = 0; i < contentType.length; i++) {
-            var char = contentType[i];
-            if (char == ';') {
-                break;
+        if (contentType) {
+            var target = '';
+            for (var i = 0; i < contentType.length; i++) {
+                var char = contentType[i];
+                if (char == ';') {
+                    break;
+                }
+                target += char
             }
-            target += char
+            
+            return listing[target];
         }
-        
-        return listing[target];
     };
 })();
 
