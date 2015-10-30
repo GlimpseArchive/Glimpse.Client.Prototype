@@ -41,6 +41,50 @@ var getMessages = (function() {
     }
 })();
 
+var CommandItem = React.createClass({
+    getInitialState: function() {
+        return { show: false };
+    },
+    onClick: function() {
+        this.setState({ show: !this.state.show });
+    },
+    render: function() {
+        var beforeCommand = this.props.beforeCommand;
+        var afterCommand = this.props.afterCommand;
+        var startIndex = this.props.startIndex;
+        var endIndex = this.props.endIndex;
+        var containerClass = classNames({
+                'tab-execution-command-text': true,
+                'tab-execution-hidden': !this.state.show,
+            });
+            
+        var commandItem = null;
+        if (beforeCommand.ordinal > startIndex && afterCommand.ordinal < endIndex) {
+            var duration = '--'
+            if (afterCommand.ordinal == beforeCommand.ordinal + 1) {
+                duration = afterCommand.payload.commandDuration;
+            }
+            
+            commandItem = (
+                <div className="tab-execution-command-item">
+                    <div className="tab-execution-command-item-detail">
+                        <div className="col-8"><span className="tab-execution-important">SQL:</span> {beforeCommand.payload.commandMethod} <span className="tab-execution-command-isAsync" title="Is Async">{(beforeCommand.payload.commandIsAsync ? 'async' : '')}</span></div>
+                        <div className="tab-execution-timing col-2">{duration}ms</div>
+                    </div>
+                    <div className={containerClass} onClick={this.onClick}>
+                        <Highlight className="sql">
+                            {beforeCommand.payload.commandText}
+                        </Highlight>
+                        <div className="tab-execution-hidden-gradient"></div>
+                    </div>
+                </div>
+            );
+        }
+    
+        return commandItem;
+    }
+});
+
 module.exports = React.createClass({
     render: function () {
         var request = this.props.request;
@@ -114,36 +158,13 @@ module.exports = React.createClass({
         
         var commands = '';
         if (beforeExecuteCommandMessages && afterExecuteCommandMessages && beforeActionInvokedMessage && afterActionInvokedMessage) {
-            var startIndex = beforeActionInvokedMessage.ordinal;
-            var endIndex = afterActionInvokedMessage.ordinal;
-            
             beforeExecuteCommandMessages = beforeExecuteCommandMessages.sort(function(a, b) { return a.ordinal - b.ordinal; });
             afterExecuteCommandMessages = afterExecuteCommandMessages.sort(function(a, b) { return a.ordinal - b.ordinal; });
             
             var commandItems = [];
             for (var i = 0; i < beforeExecuteCommandMessages.length; i++) {
-                var beforeCommand = beforeExecuteCommandMessages[i];
-                var afterCommand = afterExecuteCommandMessages[i];
-                
-                if (beforeCommand.ordinal > startIndex && afterCommand.ordinal < endIndex) {
-                    var duration = '--'
-                    if (afterCommand.ordinal == beforeCommand.ordinal + 1) {
-                        duration = afterCommand.payload.commandDuration;
-                    }
-                    
-                    var commandItem = (
-                        <div key={beforeCommand.id} className="tab-execution-command-item">
-                            <div className="tab-execution-command-item-detail">
-                                <div className="col-8"><span className="tab-execution-important">SQL:</span> {beforeCommand.payload.commandMethod} <span className="tab-execution-command-isAsync" title="Is Async">{(beforeCommand.payload.commandIsAsync ? 'async' : '')}</span></div>
-                                <div className="tab-execution-timing col-2">{duration}ms</div>
-                            </div>
-                            <div className="tab-execution-command-text">
-                                <Highlight className="sql">
-                                    {beforeCommand.payload.commandText}
-                                </Highlight>
-                            </div>
-                        </div>
-                    );
+                var commandItem = <CommandItem key={beforeExecuteCommandMessages[i].id} beforeCommand={beforeExecuteCommandMessages[i]} afterCommand={afterExecuteCommandMessages[i]} startIndex={beforeActionInvokedMessage.ordinal} endIndex={afterActionInvokedMessage.ordinal} />
+                if (commandItem) {
                     commandItems.push(commandItem);
                 }
             }
