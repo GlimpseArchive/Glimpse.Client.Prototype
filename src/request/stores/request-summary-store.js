@@ -215,7 +215,7 @@ var filterRequests = (function () {
             _requestIndex[request.id] = request;
         }
 
-        filterRequests(_requests, payload.newRequests, false);
+        filterRequests(_requests, payload.affectedRequests, false);
     }
 
     // External data coming in
