@@ -10,7 +10,7 @@ var messageProcessor = require('../util/request-message-processor');
 var _requests = [];
 var _requestIndex = {};
 var _filteredRequests = [];
-var _filters = {};
+var _filters = { contentCategory: true };  // TODO: remove hack to temp filter what requests we deal with
 var _requestSelectedId = null;
 
 function notifyRequestsChanged(targetRequests) {
@@ -29,7 +29,11 @@ var filterRequests = (function () {
         url: { type: 'exact' }, // TODO: Switch over to `regex` at some point
         method: { type: 'array' },
         contentType: { type: 'array' },
-        statusCode: { type: 'array' }
+        statusCode: { type: 'array' },
+        contentCategory: {   // TODO: remove hack to temp filter what requests we deal with
+            type: 'exact',
+            get: function (request) { return request._responseContentCategory.document || request._responseContentCategory.data; }
+        }
     };
     var filterSchemaActions = {
         exact: function (recordValue, filterValue) {
