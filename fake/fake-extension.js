@@ -711,7 +711,7 @@ var generateMvcRequest = (function() {
                     if (type == 'begin-request') {
                         request._requestStartTime = payload.requestStartTime;
                         request._requestMethod = payload.requestMethod;
-                        request._requestUrl = payload.requestPath + payload.requestQueryString;
+                        request._requestUrl = (payload.requestPath || '') + (payload.requestQueryString || '');
                     }
                     if (type == 'end-request') {
                         request._responseStatusCode = payload.responseStatusCode; 
