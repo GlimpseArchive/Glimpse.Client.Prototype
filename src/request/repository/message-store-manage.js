@@ -4,6 +4,9 @@ var _ = require('lodash');
 var glimpse = require('glimpse');
 
 var processMessages = function(messages) { 
+    // NOTE: currently filtering out messages that aren't of type "request"
+    messages = _.filter(messages, 'context.type', 'request'); 
+    
     return {
         messages: messages,
         groupedById: _.groupBy(messages, 'context.id')
