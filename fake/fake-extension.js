@@ -310,7 +310,7 @@ var generateMvcRequest = (function() {
         source.duration = source.clientTime + source.serverTime + source.networkTime;
         source.statusCode = httpStatus.code;   
         source.statusText = httpStatus.text;
-        source.context = { type: 'request', id: source.id };
+        source.context = { type: 'Request', id: source.id };
         
         return source;  
     };

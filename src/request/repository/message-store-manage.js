@@ -5,7 +5,7 @@ var glimpse = require('glimpse');
 
 var processMessages = function(messages) { 
     // NOTE: currently filtering out messages that aren't of type "request"
-    messages = _.filter(messages, 'context.type', 'request'); 
+    messages = _.filter(messages, 'context.type', 'Request'); 
     
     return {
         messages: messages,
