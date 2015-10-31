@@ -36,6 +36,11 @@
 
 
 
+
+
+
+
+
 .tab-execution-title { 
     color: #737373;
 }
@@ -69,29 +74,6 @@
         font-weight: bold; 
     }
     
-    
-    
-    
-    /*
-    .tab-execution-route-name {
-        flex-grow: 2;
-        min-width: 150px;
-    }
-    .tab-execution-route-path, .tab-execution-route-pattern {
-        flex-grow: 3;
-    }
-    */
-    
-    .tab-execution-action-description {
-        flex-grow: 7;
-    }
-    .tab-execution-view-path {
-        flex-grow: 7;
-    }
-    
-    .tab-execution-command-items {
-        flex-grow: 8;
-    }
     .tab-execution-command-item {
         padding-bottom: 15px;
         padding-right: 5%;
@@ -105,7 +87,7 @@
     .tab-execution-command-text {
         margin-right: 10%;
         font-family: monospace;
-        font-size: 125%;
+        font-size: 120%;
         padding-top: 5px;
         
         > pre {
@@ -142,6 +124,8 @@
 .paramater-list {
     padding-left: 0;
     display: inline;
+    font-family: monospace;
+    font-size: 120%;
 }
 
 .paramater-list > li {
@@ -149,7 +133,7 @@
 }
 
 .paramater-list > li:before {
-    content:',\0000a0'; /* Non-breaking space */
+    content:', '; /* Non-breaking space */
 }
 .paramater-list > li:first-child:before {
     content: normal;

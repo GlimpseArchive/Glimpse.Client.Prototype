@@ -132,7 +132,25 @@ module.exports = React.createClass({
             var content;
             if (contentPayload && contentPayload.binding) {
                 content = _.map(contentPayload.binding, function(item, i) {
-                    return <li key={i}>{item.type} {item.name} {item.value}</li>;
+                    var value = '';
+                    if (item.value) {
+                        if (typeof item.value == 'string') {
+                            if (item.value == item.typeFullName) {
+                                value = <span>= <span className="hljs-doctag">{'{'}object{'}'}</span></span>;
+                            }
+                            else {
+                                value = <span>= <span className="hljs-string">"{item.value}"</span></span>;
+                            }
+                        }
+                        else if (typeof item.value == 'boolean') {
+                            value = <span>= <span className="hljs-keyword">{item.value.toString()}</span></span>;
+                        }
+                        else {
+                            value = <span>= <span className="hljs-number">{item.value}</span></span>;
+                        }
+                    }
+                    
+                    return <li key={i}><span className="hljs-keyword">{item.type}</span> <span className="hljs-params">{item.name}</span> {value}</li>;
                 });
                 
                 content = <ul className="paramater-list">{content}</ul>
