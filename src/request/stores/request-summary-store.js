@@ -32,7 +32,7 @@ var filterRequests = (function () {
         statusCode: { type: 'array' },
         contentCategory: {   // TODO: remove hack to temp filter what requests we deal with
             type: 'exact',
-            get: function (request) { return request._responseContentCategory.document || request._responseContentCategory.data; }
+            get: function (request) { return request._responseContentCategory && (request._responseContentCategory.document || request._responseContentCategory.data); }
         }
     };
     var filterSchemaActions = {
