@@ -552,6 +552,31 @@ var generateMvcRequest = (function() {
             
             return message;
         },
+        createBeforeViewComponent: function(action, context) {
+            var message = this.createMessage('before-view-component', context);
+            
+            var payload = message.payload; 
+            payload.componentId = action.actionId;
+            payload.componentDisplayName = 'Glimpse.AgentServer.Mvc.Sample.Components.' + action.action;
+            payload.componentName = action.action; 
+            
+            // TODO: Bring in timing data when we have it
+            //MessageGenerator.support.beforeTimings('actionInvoked', payload, null);
+            
+            return message; 
+        },
+        createAfterViewComponent: function(action, context) {
+            var message = this.createMessage('after-view-component', context);
+            
+            var payload = message.payload; 
+            payload.componentId = action.actionId;
+            payload.componentName = action.action; 
+            
+            // TODO: Bring in timing data when we have it 
+            MessageGenerator.support.afterTimings('component', payload, (parseInt(action.duration * 100)) / 100, null);
+            
+            return message; 
+        }, 
         createBrowserNavigationTiming: function(source) {
             var message = this.createMessage('browser-navigation-timing', source.context);
             
@@ -622,65 +647,74 @@ var generateMvcRequest = (function() {
         //     
         //     return message;
         // },
-        processAction: (function() { 
-            var modifyInstance = function(action) {
-                var availableTime = action.duration;
-                availableTime -= MessageGenerator.support.childTimings(action.actions, availableTime, 2.5);
-                availableTime -= MessageGenerator.support.childTimings(action.activities, availableTime, 1.5);  
-                
-                action.actionId = chance.guid();
-            };
+        modifyInstance: function(action) {
+            var availableTime = action.duration;
+            availableTime -= MessageGenerator.support.childTimings(action.actions, availableTime, 2.5);
+            availableTime -= MessageGenerator.support.childTimings(action.activities, availableTime, 1.5);  
             
-            return function(action, request, context) {
-                modifyInstance(action);
-                 
-                // route
-                this.messages.push(this.createActionRoute(action, action.route, context));
+            action.actionId = chance.guid();
+        },
+        processChildActions: function(action, request, context) {
+            this.modifyInstance(action);
                 
-                // filter
-                // this.messages.push(this.createFilter(action, 'OnAuthorization', 'Authorization', 'Authorization', null, context));
-                // this.messages.push(this.createLog({ template: { mask: 'User {0} authorized to execute this action', values: { '0': request.user.name } } }, context));
-                // this.messages.push(this.createFilter(action, 'OnActionExecuting', 'Action', 'Executing', null, context));
+            this.messages.push(this.createBeforeViewComponent(action, context));
+            if (action.activities) {
+                _.forEach(action.activities, function(activity) {
+                    this.messages.push(this.createBeforeExecuteCommand(action, activity, context));
+                    this.messages.push(this.createAfterExecuteCommand(action, activity, context));
+                }, this);
+            }
+            this.messages.push(this.createAfterViewComponent(action, context));
+        },
+        processAction: function(action, request, context) {
+            this.modifyInstance(action);
                 
-                // action
-                if (action.binding) {
-                    this.messages.push(this.createActionBinding(action, action.binding, context));
-                }
-                this.messages.push(this.createBeforeActionInvoked(action, context, action == request));
-                if (action.activities) {
-                    _.forEach(action.activities, function(activity) {
-                        this.messages.push(this.createBeforeExecuteCommand(action, activity, context));
-                        this.messages.push(this.createAfterExecuteCommand(action, activity, context));
-                    }, this);
-                }
-                // if (action.trace) {
-                //     _.forEach(action.trace, function(log) {
-                //         this.messages.push(this.createLog(log, context));
-                //     }, this);
-                // }
-                this.messages.push(this.createAfterActionInvoked(action, context));
-                
-                // filter
-                // this.messages.push(this.createFilter(action, 'OnActionExecuted', 'Action', 'Executed', null, context));
-                // this.messages.push(this.createFilter(action, 'OnResultExecuting', 'Result', 'Executing', null, context));
-                
-                // result
-                this.messages.push(this.createActionViewFound(action, action.result, context));
-                this.messages.push(this.createBeforeActionViewInvoked(action, action.result, context));
-                
-                // child actions
-                // if (action.actions) {
-                //     _.forEach(action.actions, function(childAction) {
-                //         this.processAction(childAction, request, context);
-                //     }, this);
-                // }
-                
-                // fitler
-                // this.messages.push(this.createFilter(action, 'OnResultExecuted', 'Result', 'Executed', null, context));
-                
-                this.messages.push(this.createAfterActionViewInvoked(action, action.result, context));
-            };
-        })(this),
+            // route
+            this.messages.push(this.createActionRoute(action, action.route, context));
+            
+            // filter
+            // this.messages.push(this.createFilter(action, 'OnAuthorization', 'Authorization', 'Authorization', null, context));
+            // this.messages.push(this.createLog({ template: { mask: 'User {0} authorized to execute this action', values: { '0': request.user.name } } }, context));
+            // this.messages.push(this.createFilter(action, 'OnActionExecuting', 'Action', 'Executing', null, context));
+            
+            // action
+            if (action.binding) {
+                this.messages.push(this.createActionBinding(action, action.binding, context));
+            }
+            this.messages.push(this.createBeforeActionInvoked(action, context, action == request));
+            if (action.activities) {
+                _.forEach(action.activities, function(activity) {
+                    this.messages.push(this.createBeforeExecuteCommand(action, activity, context));
+                    this.messages.push(this.createAfterExecuteCommand(action, activity, context));
+                }, this);
+            }
+            // if (action.trace) {
+            //     _.forEach(action.trace, function(log) {
+            //         this.messages.push(this.createLog(log, context));
+            //     }, this);
+            // }
+            this.messages.push(this.createAfterActionInvoked(action, context));
+            
+            // filter
+            // this.messages.push(this.createFilter(action, 'OnActionExecuted', 'Action', 'Executed', null, context));
+            // this.messages.push(this.createFilter(action, 'OnResultExecuting', 'Result', 'Executing', null, context));
+            
+            // result
+            this.messages.push(this.createActionViewFound(action, action.result, context));
+            this.messages.push(this.createBeforeActionViewInvoked(action, action.result, context));
+            
+            // child actions
+            if (action.actions) {
+                _.forEach(action.actions, function(childAction) {
+                    this.processChildActions(childAction, request, context);
+                }, this);
+            }
+            
+            // fitler
+            // this.messages.push(this.createFilter(action, 'OnResultExecuted', 'Result', 'Executed', null, context));
+            
+            this.messages.push(this.createAfterActionViewInvoked(action, action.result, context));
+        },
         processRequest: function(source) {
             this.messages.push(this.createBeginRequest(source));
             this.messages.push(this.createUserIdentification(source));
