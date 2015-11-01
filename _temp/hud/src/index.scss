@@ -1,10 +1,10 @@
 @font-face {
     font-family: 'Segoe Pro';
-    src: url('~/assets/SegoePro-Regular.ttf');
+    src: url('~/glimpse/hud/assets/SegoePro-Regular.ttf');
 }
 @font-face {
     font-family: 'Segoe Pro Light';
-    src: url('~/assets/SegoePro-Light.ttf');
+    src: url('~/glimpse/hud/assets/SegoePro-Light.ttf');
 }
 
 .glimpse, .glimpse *, .glimpse a, .glimpse td, .glimpse th, .glimpse table {
@@ -46,7 +46,7 @@
     height: 34px;
     width: 39px;
     cursor: pointer;
-    background-image: url(/assets/glimpse-logo.png);
+    background-image: url(/glimpse/hud/assets/glimpse-logo.png);
     background-repeat: no-repeat;
 }
 
