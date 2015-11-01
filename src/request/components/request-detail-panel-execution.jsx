@@ -33,7 +33,9 @@ var getMessages = (function() {
         'before-action-invoked': getItem,
         'after-action-invoked': getItem,
         'before-execute-command': getList,
-        'after-execute-command': getList
+        'after-execute-command': getList,
+        'before-view-component': getList,
+        'after-view-component': getList
     };
 		
     return function(request) {
@@ -53,19 +55,20 @@ var CommandItem = React.createClass({
         var afterCommand = this.props.afterCommand;
         var startIndex = this.props.startIndex;
         var endIndex = this.props.endIndex;
-        var containerClass = classNames({
-                'tab-execution-command-text': true,
-                'tab-execution-hidden': !this.state.show,
-            });
             
-        var commandItem = null;
+        var content = null;
         if (beforeCommand.ordinal > startIndex && afterCommand.ordinal < endIndex) {
+            var containerClass = classNames({
+                    'tab-execution-command-text': true,
+                    'tab-execution-hidden': !this.state.show,
+                });
+            
             var duration = '--'
             if (afterCommand.ordinal == beforeCommand.ordinal + 1) {
                 duration = afterCommand.payload.commandDuration;
             }
             
-            commandItem = (
+            content = (
                 <div className="tab-execution-command-item">
                     <div className="tab-execution-command-item-detail">
                         <div className="col-8"><span className="tab-execution-important">SQL:</span> {beforeCommand.payload.commandMethod} <span className="tab-execution-command-isAsync" title="Is Async">{(beforeCommand.payload.commandIsAsync ? 'async' : '')}</span></div>
@@ -81,9 +84,81 @@ var CommandItem = React.createClass({
             );
         }
     
-        return commandItem;
+        return content;
     }
 });
+
+var CommandList = React.createClass({
+    render: function() {
+        var beginMessage = this.props.beginMessage;
+        var endMessage = this.props.endMessage;
+        var beforeExecuteCommandMessages = this.props.beforeExecuteCommandMessages;
+        var afterExecuteCommandMessages = this.props.afterExecuteCommandMessages;
+        
+        var content = null;
+        if (beginMessage && endMessage && beforeExecuteCommandMessages && afterExecuteCommandMessages) {
+            var commandItems = [];
+            for (var i = 0; i < beforeExecuteCommandMessages.length; i++) {
+                var commandItem = <CommandItem key={beforeExecuteCommandMessages[i].id} beforeCommand={beforeExecuteCommandMessages[i]} afterCommand={afterExecuteCommandMessages[i]} startIndex={beginMessage.ordinal} endIndex={endMessage.ordinal} />
+                if (commandItem) {
+                    commandItems.push(commandItem);
+                }
+            }
+            
+            // process action
+            content = (
+                    <div className="flex tab-execution-command">
+                        <div className="tab-execution-header">
+                            <div></div>
+                            <div className="tab-execution-title col-9">Type/Method</div>
+                        </div>
+                        <section className="tab-execution-item">
+                            <div className="tab-execution-title">Data</div>
+                            <div className="tab-execution-command-items col-9">{commandItems}</div>
+                        </section>
+                    </div>
+                ); 
+        }
+        
+        return content;
+    }
+});
+
+var ParamaterList = React.createClass({
+    render: function() {
+        var argumentData = this.props.argumentData;
+        
+        var content = null;
+        if (argumentData) { 
+            content = _.map(argumentData, function(item, i) {
+                var value = '';
+                if (item.value) {
+                    if (typeof item.value == 'string') {
+                        if (item.value == item.typeFullName) {
+                            value = <span>= <span className="hljs-doctag">{'{'}object{'}'}</span></span>;
+                        }
+                        else {
+                            value = <span>= <span className="hljs-string">"{item.value}"</span></span>;
+                        }
+                    }
+                    else if (typeof item.value == 'boolean') {
+                        value = <span>= <span className="hljs-keyword">{item.value.toString()}</span></span>;
+                    }
+                    else {
+                        value = <span>= <span className="hljs-number">{item.value}</span></span>;
+                    }
+                }
+                
+                return <li key={i}><span className="hljs-keyword">{item.type}</span> <span className="hljs-params">{item.name}</span> {value}</li>;
+            });
+            
+            content = <ul className="paramater-list">{content}</ul>
+        }
+        
+        return content;
+    }
+});
+
 
 module.exports = React.createClass({
     render: function () {
@@ -102,6 +177,13 @@ module.exports = React.createClass({
         var afterActionInvokedMessage = message.afterActionInvoked;
         var beforeExecuteCommandMessages = message.beforeExecuteCommand;
         var afterExecuteCommandMessages = message.afterExecuteCommand;
+        var beforeViewComponentMessages = message.beforeViewComponent;
+        var afterViewComponentMessages = message.afterViewComponent;
+        
+        if (beforeExecuteCommandMessages && afterExecuteCommandMessages) {
+            beforeExecuteCommandMessages = beforeExecuteCommandMessages.sort(function(a, b) { return a.ordinal - b.ordinal; });
+            afterExecuteCommandMessages = afterExecuteCommandMessages.sort(function(a, b) { return a.ordinal - b.ordinal; });
+        }
         
         var route = <div>No route found yet.</div>;
         if (routePayload) {
@@ -109,14 +191,14 @@ module.exports = React.createClass({
         
             // process route
             route = (
-                    <div className="flex">
+                    <div className="flex tab-execution-route">
                         <div className="tab-execution-header">
                             <div></div>
                             <div className="tab-execution-title col-2">Name</div>
                             <div className="tab-execution-title col-3">Path</div>
                             <div className="tab-execution-title col-4">Pattern</div>
                         </div>
-                        <section className="tab-execution-item tab-execution-route"> 
+                        <section className="tab-execution-item"> 
                             <div className="tab-execution-title">Route</div>
                             <div className="col-2">{routePayload.routeName}</div>
                             <div className="col-3">{routePath}</div>
@@ -131,39 +213,17 @@ module.exports = React.createClass({
             // process content
             var content;
             if (contentPayload && contentPayload.binding) {
-                content = _.map(contentPayload.binding, function(item, i) {
-                    var value = '';
-                    if (item.value) {
-                        if (typeof item.value == 'string') {
-                            if (item.value == item.typeFullName) {
-                                value = <span>= <span className="hljs-doctag">{'{'}object{'}'}</span></span>;
-                            }
-                            else {
-                                value = <span>= <span className="hljs-string">"{item.value}"</span></span>;
-                            }
-                        }
-                        else if (typeof item.value == 'boolean') {
-                            value = <span>= <span className="hljs-keyword">{item.value.toString()}</span></span>;
-                        }
-                        else {
-                            value = <span>= <span className="hljs-number">{item.value}</span></span>;
-                        }
-                    }
-                    
-                    return <li key={i}><span className="hljs-keyword">{item.type}</span> <span className="hljs-params">{item.name}</span> {value}</li>;
-                });
-                
-                content = <ul className="paramater-list">{content}</ul>
+                content = <ParamaterList argumentData={contentPayload.binding} />
             }
             
             // process action
             action = (
-                    <div className="flex">
+                    <div className="flex tab-execution-action">
                         <div className="tab-execution-header">
                             <div></div>
                             <div className="tab-execution-title col-9">Controller/Action</div>
                         </div>
-                        <section className="tab-execution-item tab-execution-action">
+                        <section className="tab-execution-item">
                             <div className="tab-execution-title">Action</div>
                             <div className="tab-execution-important col-8">
                                 {afterActionInvokedPayload.actionControllerName}.{afterActionInvokedPayload.actionName}({content})
@@ -174,33 +234,7 @@ module.exports = React.createClass({
                 ); 
         }
         
-        var commands = '';
-        if (beforeExecuteCommandMessages && afterExecuteCommandMessages && beforeActionInvokedMessage && afterActionInvokedMessage) {
-            beforeExecuteCommandMessages = beforeExecuteCommandMessages.sort(function(a, b) { return a.ordinal - b.ordinal; });
-            afterExecuteCommandMessages = afterExecuteCommandMessages.sort(function(a, b) { return a.ordinal - b.ordinal; });
-            
-            var commandItems = [];
-            for (var i = 0; i < beforeExecuteCommandMessages.length; i++) {
-                var commandItem = <CommandItem key={beforeExecuteCommandMessages[i].id} beforeCommand={beforeExecuteCommandMessages[i]} afterCommand={afterExecuteCommandMessages[i]} startIndex={beforeActionInvokedMessage.ordinal} endIndex={afterActionInvokedMessage.ordinal} />
-                if (commandItem) {
-                    commandItems.push(commandItem);
-                }
-            }
-            
-            // process action
-            commands = (
-                    <div className="flex">
-                        <div className="tab-execution-header">
-                            <div></div>
-                            <div className="tab-execution-title col-9">Type/Method</div>
-                        </div>
-                        <section className="tab-execution-item tab-execution-command">
-                            <div className="tab-execution-title">Data</div>
-                            <div className="tab-execution-command-items col-9">{commandItems}</div>
-                        </section>
-                    </div>
-                ); 
-        }
+        var commands = <CommandList beforeExecuteCommandMessages={beforeExecuteCommandMessages} afterExecuteCommandMessages={afterExecuteCommandMessages} beginMessage={beforeActionInvokedMessage} endMessage={afterActionInvokedMessage} />;
         
         var view = <div>No view found yet.</div>;
         if (afterActionViewInvokedPayload) {
@@ -211,12 +245,12 @@ module.exports = React.createClass({
         
             // process action
             view = (
-                    <div className="flex">
+                    <div className="flex tab-execution-view">
                         <div className="tab-execution-header">
                             <div></div>
                             <div className="tab-execution-title col-9">Name/Path</div>
                         </div>
-                        <section className="tab-execution-item tab-execution-view">
+                        <section className="tab-execution-item">
                             <div className="tab-execution-title">View</div>
                             <div className="tab-execution-important col-8">{viewTitle}</div>
                             <div className="tab-execution-timing">{afterActionViewInvokedPayload.viewDuration}ms</div>
@@ -225,10 +259,43 @@ module.exports = React.createClass({
                 );
         }
         
+        var viewComponent = '';
+        if (beforeViewComponentMessages && afterViewComponentMessages) {
+            beforeViewComponentMessages = beforeViewComponentMessages.sort(function(a, b) { return a.ordinal - b.ordinal; });
+            afterViewComponentMessages = _.indexBy(afterViewComponentMessages, 'payload.componentId');
+            
+            viewComponent = _.map(beforeViewComponentMessages, function(beforeViewComponetMessage, i) {
+                var beforeViewComponetPayload = beforeViewComponetMessage.payload;
+                var afterViewComponetMessage = afterViewComponentMessages[beforeViewComponetPayload.componentId];
+                var afterViewComponetPayload = afterViewComponetMessage.payload;
+                
+                var componentCommands = <CommandList beforeExecuteCommandMessages={beforeExecuteCommandMessages} afterExecuteCommandMessages={afterExecuteCommandMessages} beginMessage={beforeViewComponetMessage} endMessage={afterViewComponetMessage} />;
+                
+                return (
+                        <div>
+                            <div className="flex tab-execution-view">
+                                <div className="tab-execution-header">
+                                    <div></div>
+                                    <div className="tab-execution-title col-9">Name</div>
+                                </div>
+                                <section className="tab-execution-item">
+                                    <div className="tab-execution-title">Component</div>
+                                    <div className="tab-execution-important col-8">{beforeViewComponetPayload.componentName}</div>
+                                    <div className="tab-execution-timing">{afterViewComponetPayload.componentDuration}ms</div>
+                                </section>
+                            </div>
+                            {componentCommands}
+                        </div>
+                    );
+            });
+        }
+        
         return (
             <div>
                 <div className="application-sub-item-header">Execution on Server</div>
                 {route}{action}{commands}{view}
+                <div className="application-item-header">Other Activities</div>
+                {viewComponent}
             </div>
         );
     }
