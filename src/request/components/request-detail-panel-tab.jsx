@@ -51,7 +51,7 @@ module.exports = React.createClass({
 
         var result = <div>No records found.</div>
         if (tabPayload) {
-            result = process(tabPayload);
+            result = process(tabPayload.data);
         }
 
         return result;
