@@ -1,6 +1,7 @@
 'use strict';
 
 var _ = require('lodash');
+var moment = require('moment');
 var glimpse = require('glimpse');
 var util = require('lib/util');
 var messageProcessor = require('./util/request-message-processor');
@@ -8,6 +9,7 @@ var messageProcessor = require('./util/request-message-processor');
 (function() {
 	var deepLinkRequestId;
 	var deepLinkUserId;
+	var deepLinkRequestStartTime;
 	var detailSubscription;
 	var summarySubscription;
 	
@@ -30,24 +32,23 @@ var messageProcessor = require('./util/request-message-processor');
 		if (request) {
 			glimpse.off(detailSubscription);
 			
-			var userMessage = messageProcessor.getTypePayloadItem(request, 'user-identification');
-			if (userMessage) {
-				deepLinkUserId = userMessage.userId;
+			// TODO: possibly race condition here... need to look into it more
+			if (request._userId && request._requestStartTime) {
+				deepLinkUserId = request._userId;
+				deepLinkRequestStartTime = request._requestStartTime;
 				
 				summarySubscription = glimpse.on('data.request.summary.found', foundRequestSummary);
 			}
 		}
 	};
 	
-	var foundRequestSummary = function(foundRequest) {
-		_.each(foundRequest.affectedRequests, function(request) {
-			var userMessage = messageProcessor.getTypePayloadItem(request, 'user-identification');
-			if (userMessage && userMessage.userId == deepLinkUserId) {
-				// TODO: need to some sort of check to see that this request happened after the last one
-				var endMessage = messageProcessor.getTypePayloadItem(request, 'end-request');
-				if (endMessage && endMessage.responseContentType && endMessage.responseContentType.indexOf('text/html') > -1) {
+	var foundRequestSummary = function(foundRequests) {
+		_.each(foundRequests.affectedRequests, function(request) {
+			// if its the same user, and this new requet happens after this one and its of document type
+			if (request._userId == deepLinkUserId 
+				&& moment(request._requestStartTime).isAfter(deepLinkUserId)
+				&& request._responseContentCategory && request._responseContentCategory.document) {
 					glimpse.emit('shell.request.summary.selected', { requestId: request.id });
-				}
 			}
 		});
 	};
@@ -56,6 +57,7 @@ var messageProcessor = require('./util/request-message-processor');
 		if (deepLinkRequestId) {
 			glimpse.off(summarySubscription);
 			
+			deepLinkRequestStartTime = null;
 			deepLinkRequestId = null;
 			deepLinkUserId = null;
 		}
