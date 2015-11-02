@@ -375,6 +375,36 @@ var generateMvcRequest = (function() {
                 ordinal: this.counter++
             };
         }, 
+        createTab: function(context) {
+            var message = this.createMessage('tab', context);
+            message.payload =  {
+                    name: 'Headers',
+                    data: {
+                        'Response': {
+                            'Server': 'GitHub.com',
+                            'Date': 'Mon, 02 Nov 2015 06:39:26 GMT',
+                            'Content-Type': 'text/html; charset=utf-8',
+                            'Transfer-Encoding': 'chunked',
+                            'Status': '200 OK',
+                            'Cache-Control': 'no-cache',
+                            'Strict-Transport-Security': 'max-age=31536000; includeSubdomains; preload',
+                            'Vary': 'Accept-Encoding',
+                            'Content-Encoding': 'gzip'
+                        },
+                        'Request': {
+                            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+                            'Accept-Encoding': 'gzip, deflate, sdch',
+                            'Accept-Language': 'en-US,en;q=0.8',
+                            'Cache-Control': 'no-cache',
+                            'Connection': 'keep-alive',
+                            'Host': 'github.com',
+                            'Pragma': 'no-cache'
+                        }
+                    }  
+                };
+            
+            return message;
+        },
         createUserIdentification: function(source) {
             var message = this.createMessage('user-identification', source.context);
             message.payload = source.user;
@@ -719,6 +749,7 @@ var generateMvcRequest = (function() {
             this.messages.push(this.createBeginRequest(source));
             this.messages.push(this.createUserIdentification(source));
             this.messages.push(this.createEnvironment(source));
+            this.messages.push(this.createTab(source.context))
             
             this.processAction(source, source, source.context);
             
