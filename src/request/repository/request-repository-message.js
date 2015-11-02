@@ -70,7 +70,16 @@ var processMessages = (function() {
 (function () {
     function adaptMessageDetail(messagePayload) {
         var requestRepositoryPayload = processMessages(messagePayload);
-
+        
+        // TODO: not sure if this should be like this yet... currently trying to catch
+        //       race conditions that happne between details coming in first and getting 
+        //       missed when the rest of the summaries come in. Currently only publishing
+        //       newRequests as I don't want to be too earger about publishing events 
+        //       that aren't needed. 
+        if (requestRepositoryPayload.newRequests.length > 0) {
+            glimpse.emit('data.request.summary.found.message', requestRepositoryPayload);
+        } 
+        
         glimpse.emit('data.request.detail.found.message', requestRepositoryPayload);
     }
 
