@@ -7,15 +7,16 @@ var classNames = require('classnames');
 module.exports = React.createClass({
     render: function () {
         var request = this.props.request;
-        var name = this.props.tab.key;
+        var tab = this.props.tab;
+        var name = tab.key;
         
         var containerClass = classNames({
             'tab-pane': true,
             'active': this.props.isActive
         });
         
-        var tabContent = requestTabController.resolveTab(name);
+        //var tabContent = requestTabController.resolveTab(name);
 
-        return <div className={containerClass}><tabContent.component key={name} request={request} /></div>;
+        return <div className={containerClass}><tab.component key={name} request={request} tab={tab} /></div>;
     }
 });

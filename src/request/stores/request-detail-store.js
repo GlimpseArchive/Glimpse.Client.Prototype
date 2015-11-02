@@ -2,6 +2,10 @@
 
 var _ = require('lodash');
 var glimpse = require('glimpse');
+
+var PanelTab = require('../components/request-detail-panel-tab');
+
+var messageProcessor = require('../util/request-message-processor');
 var requestRepository = require('../repository/request-repository');
 var requestTab = require('../request-tab');
 
@@ -18,11 +22,23 @@ function requestChanged(targetRequests) {
     glimpse.emit('shell.request.detail.changed', targetRequests);
 }
 
-function getTabs() {
-    // TODO: currently just returning this, but probably should be doing more..
-    //       like merging in the static set of tabs with the data we have from
-    //       the request.
-    return requestTab.registeredTabs();
+function getTabs(request) {
+    var tabs = requestTab.registeredTabs();
+    
+    var tabMessages = messageProcessor.getTypeMessageList(request, 'tab');
+    if (tabMessages) {
+        tabs = _.clone(tabs);
+        _.each(tabMessages, function(message) {
+            var key = 'tab.' + message.id;
+            tabs[key] = {
+                key: key,
+                title: message.payload.name,
+                component: PanelTab
+            };
+        });
+    }
+    
+    return tabs
 }
 
 // Clear Request
@@ -60,7 +76,7 @@ function getTabs() {
 
         if (targetRequest) {
             _viewModel.request = targetRequest;
-            _viewModel.tabs = getTabs();
+            _viewModel.tabs = getTabs(targetRequest);
 
             requestChanged(_viewModel);
         }
