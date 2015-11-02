@@ -19,7 +19,9 @@ var structure = {
             html += '<table class="glimpse-hud-listing" style="table-layout:fixed;"><thead><tr><th></th><th class="glimpse-hud-listing-value glimpse-data-childless-duration">duration (ms)</th><th class="glimpse-hud-listing-value glimpse-data-childless-start-point">from start (ms)</th></tr></thead>';  
             for (var i = 0; i < details.timings.data.length; i++) {
                 var item = details.timings.data[i],
-                    isTrivial = item.duration < 2;
+                    isTrivial = false;
+                    // TODO: need to put this back in at some point
+                    //isTrivial = item.duration < 2;
                 
                 if (!item.suppress) {
                     var maxLength = (16 + (details.sql ? 10 : 0)) - item.nesting * 2;
