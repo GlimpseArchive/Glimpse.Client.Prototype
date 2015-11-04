@@ -41,28 +41,39 @@
 
 
 
-.tab-execution-title { 
+.tab-title { 
     color: #737373;
 }
-.tab-execution-header {
+.tab-section {
+    padding: 10px 0;
+    margin: 0 20px;
+}
+.tab-section .tab-section {
+    border-right: 1px solid #aaa;
+}
+.tab-section-boxing {
+    border-left: 3px solid transparent;
+    padding-left: 10px;
+}
+.tab-section-header {
     width: 100%;
     display: flex;
     flex-wrap: nowrap;
     align-items: baseline;
+    padding-left: 10px;
     
     > div {
         flex: 1 0 0;
     }
-    .tab-execution-title {
+    .tab-title {
         font-size: 70%;
     }
 }
-.tab-execution-item {
+.tab-section-item {
     width: 100%;
     display: flex;
     flex-wrap: nowrap;
     align-items: baseline;
-    margin-bottom: 15px;
     
     > div {
         flex: 1 0 0;
@@ -72,19 +83,27 @@
     }
     .tab-execution-timing {
         font-weight: bold; 
+        text-align: right;
+        padding-right: 10px;
     }
     
-    .tab-execution-command-item {
+    .tab-section-execution-command-item {
         padding-bottom: 15px;
-        padding-right: 5%;
     }
-    .tab-execution-command-item-detail {
+    .tab-section-execution-command-item-detail {
         display: flex;
     }
-    .tab-execution-command-isAsync {
+    .tab-section-execution-command-isAsync {
         font-style: italic;
     }
-    .tab-execution-command-text {
+    .tab-section-execution-command-open {
+        color: #737373;
+        font-size: 70%;
+        cursor: pointer;
+        margin-left: 5px;
+        padding: 0 5px;
+    }
+    .tab-section-execution-command-text {
         margin-right: 10%;
         font-family: monospace;
         font-size: 120%;
@@ -98,6 +117,15 @@
             }
         } 
     }
+}
+.tab-section-execution-action > .tab-section-boxing, .tab-section-execution-component > .tab-section-boxing {
+    border-left-color: #559fdf;
+}
+.tab-section-execution-view > .tab-section-boxing {
+    border-left-color: #6161e0;
+}
+.tab-section-execution-command > .tab-section-boxing {
+    border-left-color: #e2875e;
 }
 
 .tab-execution-hidden-gradient {

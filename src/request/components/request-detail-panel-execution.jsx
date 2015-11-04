@@ -58,8 +58,9 @@ var CommandItem = React.createClass({
             
         var content = null;
         if (beforeCommand.ordinal > startIndex && afterCommand.ordinal < endIndex) {
+            var showText = this.state.show ? 'close' : 'open';
             var containerClass = classNames({
-                    'tab-execution-command-text': true,
+                    'tab-section-execution-command-text': true,
                     'tab-execution-hidden': !this.state.show,
                 });
             
@@ -69,10 +70,10 @@ var CommandItem = React.createClass({
             }
             
             content = (
-                <div className="tab-execution-command-item">
-                    <div className="tab-execution-command-item-detail">
-                        <div className="col-8"><span className="tab-execution-important">SQL:</span> {beforeCommand.payload.commandMethod} <span className="tab-execution-command-isAsync" title="Is Async">{(beforeCommand.payload.commandIsAsync ? 'async' : '')}</span></div>
-                        <div className="tab-execution-timing col-2">{duration}ms</div>
+                <div className="tab-section-execution-command-item">
+                    <div className="tab-section-execution-command-item-detail">
+                        <div className="col-8">{beforeCommand.payload.commandMethod} <span className="tab-section-execution-command-isAsync" title="Is Async">{(beforeCommand.payload.commandIsAsync ? 'async' : '')}</span><span className="tab-section-execution-command-open" onClick={this.onClick}>[{showText}]</span></div>
+                        <div className="tab-execution-timing col-2">{duration} ms</div>
                     </div>
                     <div className={containerClass} onClick={this.onClick}>
                         <Highlight className="sql">
@@ -107,15 +108,17 @@ var CommandList = React.createClass({
             
             // process action
             content = (
-                    <div className="flex tab-execution-command">
-                        <div className="tab-execution-header">
+                    <div className="flex tab-section tab-section-execution-command">
+                        <div className="tab-section-header">
                             <div></div>
-                            <div className="tab-execution-title col-9">Type/Method</div>
+                            <div className="tab-title col-9">Type/Method</div>
                         </div>
-                        <section className="tab-execution-item">
-                            <div className="tab-execution-title">Data</div>
-                            <div className="tab-execution-command-items col-9">{commandItems}</div>
-                        </section>
+                        <div className="tab-section-boxing">
+                            <section className="tab-section-item">
+                                <div className="tab-title">SQL</div>
+                                <div className="tab-section-execution-command-items col-9">{commandItems}</div>
+                            </section>
+                        </div>
                     </div>
                 ); 
         }
@@ -166,6 +169,7 @@ module.exports = React.createClass({
         
         var payload = getPayloads(request);
         var beginRequestPayload = payload.beginRequest;
+        var endRequestPayload = payload.endRequest;
         var routePayload = payload.actionRoute;
         var contentPayload = payload.actionContent;
         var afterActionInvokedPayload = payload.afterActionInvoked;
@@ -191,19 +195,21 @@ module.exports = React.createClass({
         
             // process route
             route = (
-                    <div className="flex tab-execution-route">
-                        <div className="tab-execution-header">
+                    <div className="flex tab-section tab-section-execution-route">
+                        <div className="tab-section-header">
                             <div></div>
-                            <div className="tab-execution-title col-2">Name</div>
-                            <div className="tab-execution-title col-3">Path</div>
-                            <div className="tab-execution-title col-4">Pattern</div>
+                            <div className="tab-title col-2">Name</div>
+                            <div className="tab-title col-3">Path</div>
+                            <div className="tab-title col-4">Pattern</div>
                         </div>
-                        <section className="tab-execution-item"> 
-                            <div className="tab-execution-title">Route</div>
-                            <div className="col-2">{routePayload.routeName}</div>
-                            <div className="col-3">{routePath}</div>
-                            <div className="col-4">{routePayload.routePattern}</div>
-                        </section>
+                        <div className="tab-section-boxing">
+                            <section className="tab-section-item"> 
+                                <div className="tab-title">Route</div>
+                                <div className="col-2">{routePayload.routeName}</div>
+                                <div className="col-3">{routePath}</div>
+                                <div className="col-4">{routePayload.routePattern}</div>
+                            </section>
+                        </div>
                     </div>
                 ); 
         }
@@ -218,45 +224,23 @@ module.exports = React.createClass({
             
             // process action
             action = (
-                    <div className="flex tab-execution-action">
-                        <div className="tab-execution-header">
+                    <div className="flex tab-section tab-section-execution-action">
+                        <div className="tab-section-header">
                             <div></div>
-                            <div className="tab-execution-title col-9">Controller/Action</div>
+                            <div className="tab-title col-9">Controller/Action</div>
                         </div>
-                        <section className="tab-execution-item">
-                            <div className="tab-execution-title">Action</div>
-                            <div className="tab-execution-important col-8">
-                                {afterActionInvokedPayload.actionControllerName}.{afterActionInvokedPayload.actionName}({content})
-                            </div>
-                            <div className="tab-execution-timing">{afterActionInvokedPayload.actionInvokedDuration}ms</div>
-                        </section>
+                        <div className="tab-section-boxing">
+                            <section className="tab-section-item">
+                                <div className="tab-title">Action</div>
+                                <div className="tab-execution-important col-8">
+                                    {afterActionInvokedPayload.actionControllerName}.{afterActionInvokedPayload.actionName}({content})
+                                </div>
+                                <div className="tab-execution-timing">{afterActionInvokedPayload.actionInvokedDuration} ms</div>
+                            </section>
+                            <CommandList beforeExecuteCommandMessages={beforeExecuteCommandMessages} afterExecuteCommandMessages={afterExecuteCommandMessages} beginMessage={beforeActionInvokedMessage} endMessage={afterActionInvokedMessage} />
+                        </div>
                     </div>
                 ); 
-        }
-        
-        var commands = <CommandList beforeExecuteCommandMessages={beforeExecuteCommandMessages} afterExecuteCommandMessages={afterExecuteCommandMessages} beginMessage={beforeActionInvokedMessage} endMessage={afterActionInvokedMessage} />;
-        
-        var view = <div>No view found yet.</div>;
-        if (afterActionViewInvokedPayload) {
-            var viewTitle = null;
-            if (actionViewFoundPayload) { 
-                viewTitle = <div><span className="tab-execution-important">{actionViewFoundPayload.viewName}</span> - <span>{actionViewFoundPayload.viewPath}</span></div>;
-            }
-        
-            // process action
-            view = (
-                    <div className="flex tab-execution-view">
-                        <div className="tab-execution-header">
-                            <div></div>
-                            <div className="tab-execution-title col-9">Name/Path</div>
-                        </div>
-                        <section className="tab-execution-item">
-                            <div className="tab-execution-title">View</div>
-                            <div className="tab-execution-important col-8">{viewTitle}</div>
-                            <div className="tab-execution-timing">{afterActionViewInvokedPayload.viewDuration}ms</div>
-                        </section>
-                    </div>
-                );
         }
         
         var viewComponent = '';
@@ -272,30 +256,54 @@ module.exports = React.createClass({
                 var componentCommands = <CommandList beforeExecuteCommandMessages={beforeExecuteCommandMessages} afterExecuteCommandMessages={afterExecuteCommandMessages} beginMessage={beforeViewComponetMessage} endMessage={afterViewComponetMessage} />;
                 
                 return (
-                        <div>
-                            <div className="flex tab-execution-view">
-                                <div className="tab-execution-header">
-                                    <div></div>
-                                    <div className="tab-execution-title col-9">Name</div>
-                                </div>
-                                <section className="tab-execution-item">
-                                    <div className="tab-execution-title">Component</div>
-                                    <div className="tab-execution-important col-8">{beforeViewComponetPayload.componentName}</div>
-                                    <div className="tab-execution-timing">{afterViewComponetPayload.componentDuration}ms</div>
-                                </section>
+                        <div className="flex tab-section tab-section-execution-component">
+                            <div className="tab-section-header">
+                                <div></div>
+                                <div className="tab-title col-9">Name</div>
                             </div>
-                            {componentCommands}
+                            <div className="tab-section-boxing">
+                                <section className="tab-section-item">
+                                    <div className="tab-title">Component</div>
+                                    <div className="tab-execution-important col-8">{beforeViewComponetPayload.componentName}</div>
+                                    <div className="tab-execution-timing">{afterViewComponetPayload.componentDuration} ms</div>
+                                </section>
+                                {componentCommands}
+                            </div>
                         </div>
                     );
             });
         }
         
+        var view = <div>No view found yet.</div>;
+        if (afterActionViewInvokedPayload) {
+            var viewTitle = null;
+            if (actionViewFoundPayload) { 
+                viewTitle = <div><span className="tab-execution-important">{actionViewFoundPayload.viewName}</span> - <span>{actionViewFoundPayload.viewPath}</span></div>;
+            }
+        
+            // process action
+            view = (
+                    <div className="flex tab-section tab-section-execution-view">
+                        <div className="tab-section-header">
+                            <div></div>
+                            <div className="tab-title col-9">Name/Path</div>
+                        </div>
+                        <div className="tab-section-boxing">
+                            <section className="tab-section-item">
+                                <div className="tab-title">View</div>
+                                <div className="tab-execution-important col-8">{viewTitle}</div>
+                                <div className="tab-execution-timing">{afterActionViewInvokedPayload.viewDuration} ms</div>
+                            </section>
+                            {viewComponent}
+                        </div>
+                    </div>
+                );
+        }
+        
         return (
             <div>
                 <div className="application-sub-item-header">Execution on Server</div>
-                {route}{action}{commands}{view}
-                <div className="application-item-header">Other Activities</div>
-                {viewComponent}
+                {route}{action}{view}
             </div>
         );
     }
