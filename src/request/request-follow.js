@@ -46,7 +46,7 @@ var messageProcessor = require('./util/request-message-processor');
 		_.each(foundRequests.affectedRequests, function(request) {
 			// if its the same user, and this new requet happens after this one and its of document type
 			if (request._userId == deepLinkUserId 
-				&& moment(request._requestStartTime).isAfter(deepLinkUserId)
+				&& moment(request._requestStartTime).isAfter(deepLinkRequestStartTime)
 				&& request._responseContentCategory && request._responseContentCategory.document) {
 					glimpse.emit('shell.request.summary.selected', { requestId: request.id });
 			}
