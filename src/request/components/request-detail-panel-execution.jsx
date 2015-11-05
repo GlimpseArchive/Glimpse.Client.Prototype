@@ -53,23 +53,18 @@ var CommandItem = React.createClass({
     render: function() {
         var beforeCommand = this.props.beforeCommand;
         var afterCommand = this.props.afterCommand;
-        var startIndex = this.props.startIndex;
-        var endIndex = this.props.endIndex;
             
-        var content = null;
-        if (beforeCommand.ordinal > startIndex && afterCommand.ordinal < endIndex) {
-            var showText = this.state.show ? 'close' : 'open';
-            var containerClass = classNames({
-                    'tab-section-execution-command-text': true,
-                    'tab-execution-hidden': !this.state.show,
-                });
+        var showText = this.state.show ? 'close' : 'open';
+        var containerClass = classNames({
+                'tab-section-execution-command-text': true,
+                'tab-execution-hidden': !this.state.show,
+            });
+        var duration = '--'
+        if (afterCommand.ordinal == beforeCommand.ordinal + 1) {
+            duration = afterCommand.payload.commandDuration;
+        }
             
-            var duration = '--'
-            if (afterCommand.ordinal == beforeCommand.ordinal + 1) {
-                duration = afterCommand.payload.commandDuration;
-            }
-            
-            content = (
+        var content = (
                 <div className="tab-section-execution-command-item">
                     <div className="tab-section-execution-command-item-detail">
                         <div className="col-8">{beforeCommand.payload.commandMethod} <span className="tab-section-execution-command-isAsync" title="Is Async">{(beforeCommand.payload.commandIsAsync ? 'async' : '')}</span><span className="tab-section-execution-command-open" onClick={this.onClick}>[{showText}]</span></div>
@@ -83,7 +78,6 @@ var CommandItem = React.createClass({
                     </div>
                 </div>
             );
-        }
     
         return content;
     }
@@ -100,27 +94,30 @@ var CommandList = React.createClass({
         if (beginMessage && endMessage && beforeExecuteCommandMessages && afterExecuteCommandMessages) {
             var commandItems = [];
             for (var i = 0; i < beforeExecuteCommandMessages.length; i++) {
-                var commandItem = <CommandItem key={beforeExecuteCommandMessages[i].id} beforeCommand={beforeExecuteCommandMessages[i]} afterCommand={afterExecuteCommandMessages[i]} startIndex={beginMessage.ordinal} endIndex={endMessage.ordinal} />
-                if (commandItem) {
-                    commandItems.push(commandItem);
+                var beforeCommand = beforeExecuteCommandMessages[i];
+                var afterCommand = afterExecuteCommandMessages[i];
+                if (beforeCommand.ordinal > beginMessage.ordinal && afterCommand.ordinal < endMessage.ordinal) {
+                    commandItems.push(<CommandItem key={beforeExecuteCommandMessages[i].id} beforeCommand={beforeCommand} afterCommand={afterCommand} />);
                 }
             }
             
             // process action
-            content = (
-                    <div className="flex tab-section tab-section-execution-command">
-                        <div className="tab-section-header">
-                            <div></div>
-                            <div className="tab-title col-9">Type/Method</div>
+            if (commandItems.length > 0) {
+                content = (
+                        <div className="flex tab-section tab-section-execution-command">
+                            <div className="tab-section-header">
+                                <div></div>
+                                <div className="tab-title col-9">Type/Method</div>
+                            </div>
+                            <div className="tab-section-boxing">
+                                <section className="tab-section-item">
+                                    <div className="tab-title">SQL</div>
+                                    <div className="tab-section-execution-command-items col-9">{commandItems}</div>
+                                </section>
+                            </div>
                         </div>
-                        <div className="tab-section-boxing">
-                            <section className="tab-section-item">
-                                <div className="tab-title">SQL</div>
-                                <div className="tab-section-execution-command-items col-9">{commandItems}</div>
-                            </section>
-                        </div>
-                    </div>
-                ); 
+                    ); 
+            }
         }
         
         return content;
