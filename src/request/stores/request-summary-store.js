@@ -22,15 +22,12 @@ function notifyRequestsChanged(targetRequests) {
 // TODO: Even at the moment this is going to need to be refactored
 var filterRequests = (function () {
     var filterSchema = {
-        userId: {
-            type: 'exact',
-            get: function (request) { return request.user.id; }
-        },
         url: { type: 'exact' }, // TODO: Switch over to `regex` at some point
         method: { type: 'array' },
         contentType: { type: 'array' },
         statusCode: { type: 'array' },
         contentCategory: {   // TODO: remove hack to temp filter what requests we deal with
+        _userId: { type: 'exact' },
             type: 'exact',
             get: function (request) { return request._responseContentCategory && (request._responseContentCategory.document || request._responseContentCategory.data); }
         }
@@ -132,7 +129,7 @@ var filterRequests = (function () {
 // Clear User
 (function () {
     function clearUser() {
-        _filters.userId = null;
+        _filters._userId = null;
 
         filterRequests(_requests, null, true);
     }
@@ -143,7 +140,7 @@ var filterRequests = (function () {
 // Select User
 (function () {
     function selectUser(payload) {
-        _filters.userId = payload.userId;
+        _filters._userId = payload.userId;
 
         filterRequests(_requests, null, true);
     }

@@ -36,7 +36,7 @@ module.exports = React.createClass({
         );
     },
     _onClick: function () {
-        glimpse.emit('shell.request.user.selected', { userId: this.props.user.details.id });
+        glimpse.emit('shell.request.user.selected', { userId: this.props.user.details.userId });
     }
 });
 
