@@ -8,10 +8,10 @@ module.exports = React.createClass({
     mixins: [ LinkedStateMixin ],
     getInitialState: function () {
         return {
-            url: '',
-            method: '',
-            contentType: '',
-            statusCode: ''
+            _requestUrl: '',
+            _requestMethod: '',
+            _responseContentCategory: '',
+            _responseStatusCode: ''
         };
     },
     render: function () {
@@ -20,19 +20,19 @@ module.exports = React.createClass({
                 <div className="application-item-header">Filters</div>
                 <div className="field-section">
                     <label className="field-label" htmlFor="request-fitler-url">Url</label><br />
-                    <input type="text" id="request-fitler-url" valueLink={this.linkState('url')} />
+                    <input type="text" id="request-fitler-url" valueLink={this.linkState('_requestUrl')} />
                 </div>
                 <div className="field-section">
                     <label className="field-label" htmlFor="request-fitler-method">Method</label><br />
-                    <input type="text" id="request-fitler-method" valueLink={this.linkState('method')} />
+                    <input type="text" id="request-fitler-method" valueLink={this.linkState('_requestMethod')} />
                 </div>
                 <div className="field-section">
                     <label className="field-label" htmlFor="request-fitler-contentType">Content Type</label><br />
-                    <input type="text" id="request-fitler-contentType" valueLink={this.linkState('contentType')} />
+                    <input type="text" id="request-fitler-contentType" valueLink={this.linkState('_responseContentCategory')} />
                 </div>
                 <div className="field-section">
                     <label className="field-label" htmlFor="request-fitler-statusCode">Status Code</label><br />
-                    <input type="text" id="request-fitler-statusCode" valueLink={this.linkState('statusCode')} />
+                    <input type="text" id="request-fitler-statusCode" valueLink={this.linkState('_responseStatusCode')} />
                 </div>
                 <div className="button-holder">
                     <div className="button button--default button--primary" onClick={this._onFilter}>Filter</div>
