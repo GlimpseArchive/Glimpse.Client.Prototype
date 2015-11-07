@@ -9,7 +9,7 @@ module.exports = React.createClass({
     render: function () {
         var user = this.props.user;
         var containerClass = classNames({
-            'list-item user-status': true, 
+            'request-user-item-holder': true, 
             'user-shell-selected': user.selected
         });
         var imgClass = classNames({ 
@@ -17,16 +17,14 @@ module.exports = React.createClass({
         });
 
         return (
-            <div className="request-user-item-holder" onClick={this._onClick}>
-                <table className={containerClass}>
-                    <tr>
-                        <td width="55" rowSpan="2"><img className={imgClass} src={user.details.image} width="40" /></td>
-                        <td>{user.details.username}</td>
-                    </tr>
-                    <tr>
-                        <td className="user-status-time"><Timeago time={user.lastActive} /></td>
-                    </tr>
-                </table>
+            <div className={containerClass} onClick={this._onClick}>
+                <div className="flex flex-row user-status">
+                    <div className="col-1"><img className={imgClass} src={user.details.image} width="40" /></div>
+                    <div className="col-2">
+                        {user.details.username}
+                        <div className="user-status-time"><Timeago time={user.lastActive} /></div>
+                    </div>
+                </div>
                 <div className="user-status-request-holder">
                     {user.latestRequests.map(function (request) {
                         return <div key={request.id}>{request.url}</div>;

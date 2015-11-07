@@ -24,7 +24,7 @@ module.exports = React.createClass({
                 <div className="request-detail-holder">
                     <div className="request-holder-content">
                         <div className="button button--link button--close" onClick={this.onClose}>x</div>
-                        <div className="application-item-header">Detail</div>
+                        <div className="application-item-header application-item-header-boxed">Detail</div>
                         {!model.request ?
                             <Loading /> :
                             <div>

@@ -1,28 +1,5 @@
 
-.user-shell-selected, .request-summary-item-selected {
-    background-color: #f0f7fd;
-}
 
-.request-summary-item-holder-enter, .request-user-item-holder-enter {
-    background-color: #F8F5EC;
-    transition: background-color 0.2s ease-in;
-}
-
-.request-summary-item-holder-enter.request-summary-item-holder-enter-active,
-.request-user-item-holder-enter.request-user-item-holder-enter-active {
-    background-color: transparent;
-}
-
-
-.request-summary-item-holder-leave, .request-user-item-holder-leave {
-    opacity: 1;
-    transition: opacity 0.05s ease-in;
-}
-
-.request-summary-item-holder-leave.request-summary-item-holder-leave-active,
-.request-user-item-holder-leave.request-user-item-holder-leave-active {
-    opacity: 0.01;
-}
 
 .tab-pane > table {
     border-spacing: 10px;
@@ -56,6 +33,7 @@ body, html {
 }
 
 .flex {
+    .col-1 { flex: 1; }
     .col-2 { flex: 2; }
     .col-3 { flex: 3; }
     .col-4 { flex: 4; }
@@ -65,20 +43,27 @@ body, html {
     .col-8 { flex: 8; }
     .col-9 { flex: 9; }
 }
+.flex-column, .flex-row {
+    display: flex;
+}
+.flex-column {
+    flex-direction: column;
+}
+.flex-row {
+    flex-direction: row;
+}
 
 //****** SHELL *******
 .glimpse-main {
     height: 100%;
     display: flex;
     flex-direction: column;
-    //font-family: Tahoma, "Helvetica Neue",Arial,sans-serif;
+    background-color: #323d42;
 }
 
 .glimpse-header {
-    background-color: #323d42;
     color: #fff;
     height: 40px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
     padding: 2px 15px;
     z-index: 1;
     text-align: right;
@@ -91,9 +76,8 @@ body, html {
 
 //****** APPLICATION LAYOUTS *******
 .application-holder {
-    background-color: #eee;
     flex: 1 1 auto;
-    padding-top: 10px;
+    padding: 10px 20px 0;
     //min-width: 920px; // TODO: once its made more responsive, we can fix tis up a bit more
     min-width: 1040px;
     display: flex;
@@ -107,47 +91,55 @@ body, html {
     position: relative;
 }
 .application-item-header {
-    font-size: 165%;
-    margin-bottom: 11px;
+    font-size: 115%;
+    margin: 10px 15px;
+    
+    &.application-item-header-boxed {
+        margin: 5px 15px 10px 20px; // taking into account the box shadow
+    }
 }
 .application-sub-item-header {
     font-size: 125%;
     margin-bottom: 8px;
 }
-.application-item-header {
-    font-size: 115%;
-    margin-bottom: 8px;
+.button-holder {
+    margin: 10px 15px;
+    text-align: right;
 }
 
     //***** SECTION LAYOUTS *******
     .request-user-holder, .request-summary-holder, .request-filter-holder, .request-detail-holder {
         background-color: #fff;
-        box-shadow: 0 1px 3px rgba(0,0,0,0.3);
-        border-radius: 3px 3px 0 0;
         display: flex;
         flex-direction: column;
-        margin: 0 15px;
     }
     
-    .request-user-holder {
+    .request-user-holder, .request-filter-holder {
+        color: white;
         flex: 2 1 200px;
         min-width: 175px;
         max-width: 225px;
     }
-    
+    .request-user-holder {
+        background-color: #49515D;
+        border-radius: 3px 0 0 0;
+    }
     .request-summary-holder {
         flex: 5 1 600px;
         min-width: 400px;
         max-width: 900px;
-    }
+        box-shadow: 5px 5px 0 0px #B1B4B9 inset;
         
-    .request-filter-holder {
-        flex: 2 1 200px;
-        min-width: 175px;
-        max-width: 225px;
+        .request-holder-content {
+            margin: 5px 0 0 5px;
+        }
     }
-    
+    .request-filter-holder {
+        border-radius: 0 3px 0 0;
+        background-color: #B1B4B9;
+    }
     .request-detail-holder {
+        box-shadow: 0 0 0 5px #71B2D1 inset;
         position: absolute;
         top: 0;
         bottom: 0;
@@ -155,9 +147,11 @@ body, html {
         width: 70vw;
         min-width: 65vm;
         margin-right: 0;
-        border-radius: 3px 0 0 0;
-        box-shadow: 0 2px 11px rgba(0, 0, 0, 0.4);
+        border-radius: 3px 3px 0 0;
         
+        .request-holder-content {
+            margin: 5px;
+        }
         > div {
             min-width: 65vw;
         }
@@ -187,27 +181,24 @@ body, html {
         height: 100px;
         overflow-y: auto;
         overflow-x: hidden;
-        padding: 10px 15px;
     }
     
     .request-summary-item-holder {
-        border-top: 1px solid #E1E2E4;
-        padding: 15px 10px;
+        padding: 15px 20px;
         
         .list-item {
             margin: 0;
         }
-        
-        &:first-child {
-            border-top-color: transparent;
-        }
+    }
+    .request-summary-item-holder:nth-child(even) {
+        background-color: #E5E9EA;
     }
     .request-summary-item-selected {
-        border-radius: 3px;
-        border-top-color: transparent;
+        background-color: #71B2D1 !important; // :(
+        color: #fff;
         
-        + .request-summary-item-holder {
-            border-top-color: transparent;
+        .request-summary-data-value-accent, .request-summary-data-row-title, .request-summary-data-value-soft {
+            color: #3D6B82;
         }
     }
 
@@ -220,7 +211,7 @@ body, html {
     }
     .user-status-time {
         font-size: 80%;
-        color: #737373;
+        color: #aaa;
         text-align: right;
         padding-right: 10px;
     }
@@ -229,6 +220,46 @@ body, html {
         text-overflow: ellipsis;
         white-space: nowrap;
     }
+    .request-user-item-holder {
+        padding: 8px 15px 5px;
+    }
+    
+    //******** TANSITIONS & HIGHLIGHTS ***********
+    .user-shell-selected {
+        background-color: #B1B4B9;
+    }
+    
+        // starting point
+        .request-summary-item-holder-enter {
+            background-color: #F8F5EC;
+        }
+        .request-summary-item-holder-enter:nth-child(even) {
+            background-color: #E4DFD2;
+        }
+        .request-user-item-holder-enter {
+            background-color: #454C56;
+        }
+        // finishing point
+        .request-summary-item-holder-enter.request-summary-item-holder-enter-active,
+        .request-user-item-holder-enter.request-user-item-holder-enter-active {
+            transition: background-color 1s ease-in;
+            background-color: transparent;
+        }
+        .request-summary-item-holder-enter:nth-child(even).request-summary-item-holder-enter-active {
+            background-color: #E5E9EA;
+        }
+    
+        // starting point
+        .request-summary-item-holder-leave, .request-user-item-holder-leave {
+            opacity: 1;
+        }
+        // finishing point
+        .request-summary-item-holder-leave.request-summary-item-holder-leave-active,
+        .request-user-item-holder-leave.request-user-item-holder-leave-active {
+            opacity: 0.01;
+            transition: opacity 0.05s ease-in;
+        }
+    
 
 
 //******* DETAIL LAYOUT ********
