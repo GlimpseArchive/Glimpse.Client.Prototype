@@ -189,7 +189,7 @@ var filterRequests = (function () {
 
         _requestSelectedId = requestId;
 
-        filterRequests(_requests, [], false);
+        filterRequests(_requests, null, false);
 
         glimpse.emit('data.request.detail.requested', payload);
     }
