@@ -299,7 +299,7 @@ module.exports = React.createClass({
         
         return (
             <div>
-                <div className="application-sub-item-header">Execution on Server</div>
+                <div className="tab-section application-sub-item-header">Execution on Server</div>
                 {route}{action}{view}
             </div>
         );

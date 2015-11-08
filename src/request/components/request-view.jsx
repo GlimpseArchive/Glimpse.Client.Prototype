@@ -9,18 +9,18 @@ var Detail = require('./request-detail-view');
 module.exports = React.createClass({
     render: function () {
         return (
-            <div className="request-holder application-item-holder">
-                <div className="request-user-holder">
+            <div className="request-holder application-section-group">
+                <div className="request-user-section application-section">
                     <div className="request-holder-content">
                         <User />
                     </div>
                 </div>
-                <div className="request-summary-holder">
+                <div className="request-summary-section application-section">
                     <div className="request-holder-content">
                         <Summary />
                     </div>
                 </div>
-                <div className="request-filter-holder">
+                <div className="request-filter-section application-section">
                     <div className="request-holder-content">
                         <Filter />
                     </div>

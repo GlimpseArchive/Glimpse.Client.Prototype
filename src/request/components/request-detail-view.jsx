@@ -21,10 +21,9 @@ module.exports = React.createClass({
         var content = '';
         if (model && model.selectedId) {
             content = (
-                <div className="request-detail-holder">
+                <div className="request-detail-section application-section">
                     <div className="request-holder-content">
                         <div className="button button--link button--close" onClick={this.onClose}>x</div>
-                        <div className="application-item-header application-item-header-boxed">Detail</div>
                         {!model.request ?
                             <Loading /> :
                             <div>
@@ -38,7 +37,7 @@ module.exports = React.createClass({
         }
         
         return (
-                <ReactCSSTransitionGroup component="div" transitionName="request-detail-holder">
+                <ReactCSSTransitionGroup component="div" transitionName="request-detail-section">
                     {content}
                 </ReactCSSTransitionGroup>
             );

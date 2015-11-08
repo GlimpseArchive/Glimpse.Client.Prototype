@@ -30,7 +30,7 @@ module.exports = React.createClass({
     
         return (
             <div>
-                <div className="application-item-header">User Sessions</div>
+                <div className="application-section-header">User Sessions</div>
                 <UserList allUsers={this.state.allUsers} />
                 {button}
             </div>

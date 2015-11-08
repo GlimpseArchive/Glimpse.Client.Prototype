@@ -64,7 +64,7 @@ module.exports = React.createClass({
         var browserNavigationTiming = payload.browserNavigationTiming || {};
         
         return (
-            <div className="request-summary-data-holder">
+            <div className="request-summary-item-holder request-summary-item-focus">
                 <div className="request-summary-data-row-request request-summary-data-value-sub">
                     <div className="request-summary-data-col-8">
                         <div className="request-summary-data-value-primary">{beginRequest.requestPath}{beginRequest.requestQueryString}</div>

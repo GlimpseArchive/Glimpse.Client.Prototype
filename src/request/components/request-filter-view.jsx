@@ -17,7 +17,7 @@ module.exports = React.createClass({
     render: function () {
         return (
             <div>
-                <div className="application-item-header">Filters</div>
+                <div className="application-section-header">Filters</div>
                 <div className="field-section">
                     <label className="field-label" htmlFor="request-fitler-url">Url</label><br />
                     <input type="text" id="request-fitler-url" valueLink={this.linkState('_requestUrl')} />

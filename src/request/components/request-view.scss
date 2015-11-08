@@ -84,17 +84,17 @@ body, html {
     justify-content: center;
 }
 
-.application-item-holder {
+.application-section-group {
     display: flex;
     justify-content: center;
     flex: 1 1 auto;
     position: relative;
 }
-.application-item-header {
+.application-section-header {
     font-size: 115%;
     margin: 10px 15px;
     
-    &.application-item-header-boxed {
+    &.application-section-header-boxed {
         margin: 5px 15px 10px 20px; // taking into account the box shadow
     }
 }
@@ -108,23 +108,30 @@ body, html {
 }
 
     //***** SECTION LAYOUTS *******
-    .request-user-holder, .request-summary-holder, .request-filter-holder, .request-detail-holder {
+    .application-section {
         background-color: #fff;
         display: flex;
         flex-direction: column;
     }
     
-    .request-user-holder, .request-filter-holder {
+    .request-user-section, .request-filter-section {
         color: white;
         flex: 2 1 200px;
         min-width: 175px;
         max-width: 225px;
     }
-    .request-user-holder {
+    .request-user-section {
         background-color: #49515D;
         border-radius: 3px 0 0 0;
+        
+        .text-primary {
+            color: white;
+        }
+        .text-minor {
+            color: #aaa;
+        }
     }
-    .request-summary-holder {
+    .request-summary-section {
         flex: 5 1 600px;
         min-width: 400px;
         max-width: 900px;
@@ -134,12 +141,12 @@ body, html {
             margin: 5px 0 0 5px;
         }
     }
-    .request-filter-holder {
+    .request-filter-section {
         border-radius: 0 3px 0 0;
         background-color: #B1B4B9;
     }
-    .request-detail-holder {
-        box-shadow: 0 0 0 5px #71B2D1 inset;
+    .request-detail-section {
+        box-shadow: inset 0px 5px 0px 0px #71B2D1, inset -5px 0px 0px 0px #71B2D1, inset 5px 0px 0px 0px #71B2D1;
         position: absolute;
         top: 0;
         bottom: 0;
@@ -150,27 +157,27 @@ body, html {
         border-radius: 3px 3px 0 0;
         
         .request-holder-content {
-            margin: 5px;
+            margin: 5px 5px 0 5px;
         }
         > div {
             min-width: 65vw;
         }
     }
     
-    .request-detail-holder-enter {
+    .request-detail-section-enter {
         max-width: 0;
         min-width: 0;
     }
-    .request-detail-holder-enter.request-detail-holder-enter-active {
+    .request-detail-section-enter.request-detail-section-enter-active {
         max-width: 70vw;
         min-width: 65vm;
         transition: max-width 200ms ease-in;
     }
-    .request-detail-holder-leave {
+    .request-detail-section-leave {
         max-width: 70vw;
         min-width: 65vm;
     }
-    .request-detail-holder-leave.request-detail-holder-leave-active {
+    .request-detail-section-leave.request-detail-section-leave-active {
         max-width: 0;
         min-width: 0;
         transition: max-width 100ms ease-in;
@@ -193,16 +200,23 @@ body, html {
     .request-summary-item-holder:nth-child(even) {
         background-color: #E5E9EA;
     }
-    .request-summary-item-selected {
+    .request-summary-item-focus {
         background-color: #71B2D1 !important; // :(
         color: #fff;
         
-        .request-summary-data-value-accent, .request-summary-data-row-title, .request-summary-data-value-soft {
+        .request-summary-data-value-accent, .request-summary-data-row-title, .request-summary-data-value-soft, .request-summary-data-row-metadata {
             color: #3D6B82;
         }
     }
 
     //***** USER SECTION *******
+    .request-user-group-item-selected {
+        background-color: #B1B4B9;
+        
+        .text-minor {
+            color: #323D42
+        }
+    }
     .user-status img {
         border-left: 5px solid #eee;
     }
@@ -211,24 +225,30 @@ body, html {
     }
     .user-status-time {
         font-size: 80%;
-        color: #aaa;
         text-align: right;
         padding-right: 10px;
     }
-    .user-status-request-holder > div {
+    .user-status-request-group > div {
         overflow-x: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
     }
-    .request-user-item-holder {
+    .request-user-group-item {
         padding: 8px 15px 5px;
     }
     
-    //******** TANSITIONS & HIGHLIGHTS ***********
-    .user-shell-selected {
-        background-color: #B1B4B9;
+    //******** FILTER SECTION **********
+    .field-section {
+        padding: 0 15px; 
+        
+        input[type="text"] {
+            border: 1px solid #3D464F;
+            outline: none;
+            width: 98%;
+        }
     }
     
+    //******** TANSITIONS & HIGHLIGHTS **********    
         // starting point
         .request-summary-item-holder-enter {
             background-color: #F8F5EC;
@@ -236,12 +256,12 @@ body, html {
         .request-summary-item-holder-enter:nth-child(even) {
             background-color: #E4DFD2;
         }
-        .request-user-item-holder-enter {
+        .request-user-group-item-enter {
             background-color: #454C56;
         }
         // finishing point
         .request-summary-item-holder-enter.request-summary-item-holder-enter-active,
-        .request-user-item-holder-enter.request-user-item-holder-enter-active {
+        .request-user-group-item-enter.request-user-group-item-enter-active {
             transition: background-color 1s ease-in;
             background-color: transparent;
         }
@@ -250,12 +270,12 @@ body, html {
         }
     
         // starting point
-        .request-summary-item-holder-leave, .request-user-item-holder-leave {
+        .request-summary-item-holder-leave, .request-user-group-item-leave {
             opacity: 1;
         }
         // finishing point
         .request-summary-item-holder-leave.request-summary-item-holder-leave-active,
-        .request-user-item-holder-leave.request-user-item-holder-leave-active {
+        .request-user-group-item-leave.request-user-group-item-leave-active {
             opacity: 0.01;
             transition: opacity 0.05s ease-in;
         }
@@ -326,17 +346,16 @@ body, html {
 .button.button--default {
     height: 24px;
     padding: 5px 10px 0;
-    border-radius: 3px;
     transition: box-shadow 200ms;
 }
 .button.button--primary {
     color: #fff;
     fill: #fff;
-    background: #1596D1;
+    background: #3D464F;
 }
 .button.button--primary:focus, .button.button--primary:hover {
-    background: #19B2F7;
-    box-shadow: 0 0 0 3px #33C0FF;
+    background: #49515D;
+    box-shadow: 0 0 0 3px #454C56;
 }
 .button.button--dull {
     color: #fff;
@@ -374,7 +393,7 @@ body, html {
 //******* TABS *******
 .nav-bar {
     border-bottom: 1px solid #E1E2E4;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
     
     &.nav-bar-center {
         text-align: center;

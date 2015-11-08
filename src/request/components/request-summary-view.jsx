@@ -24,7 +24,7 @@ module.exports = React.createClass({
     render: function () {
         return (
             <div>
-                <div className="application-item-header application-item-header-boxed">Requests</div>
+                <div className="application-section-header application-section-header-boxed">Requests</div>
                 <SummaryList allRequets={this.state.allRequets} />
             </div>
         );
