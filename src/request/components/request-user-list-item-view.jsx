@@ -9,25 +9,23 @@ module.exports = React.createClass({
     render: function () {
         var user = this.props.user;
         var containerClass = classNames({
-            'list-item user-status': true, 
-            'user-shell-selected': user.selected
+            'request-user-group-item text-primary': true, 
+            'request-user-group-item-selected': user.selected
         });
         var imgClass = classNames({ 
             'user-status-online': user.online,
         });
 
         return (
-            <div className="request-user-item-holder" onClick={this._onClick}>
-                <table className={containerClass}>
-                    <tr>
-                        <td width="55" rowSpan="2"><img className={imgClass} src={user.details.image} width="40" /></td>
-                        <td>{user.details.username}</td>
-                    </tr>
-                    <tr>
-                        <td className="user-status-time"><Timeago time={user.lastActive} /></td>
-                    </tr>
-                </table>
-                <div className="user-status-request-holder">
+            <div className={containerClass} onClick={this._onClick}>
+                <div className="flex flex-row user-status">
+                    <div className="col-1"><img className={imgClass} src={user.details.image} width="40" /></div>
+                    <div className="col-2">
+                        {user.details.username}
+                        <div className="user-status-time text-minor"><Timeago time={user.lastActive} /></div>
+                    </div>
+                </div>
+                <div className="user-status-request-group">
                     {user.latestRequests.map(function (request) {
                         return <div key={request.id}>{request.url}</div>;
                     })}
@@ -36,7 +34,7 @@ module.exports = React.createClass({
         );
     },
     _onClick: function () {
-        glimpse.emit('shell.request.user.selected', { userId: this.props.user.details.id });
+        glimpse.emit('shell.request.user.selected', { userId: this.props.user.details.userId });
     }
 });
 

@@ -19,13 +19,15 @@ var structure = {
             html += '<table class="glimpse-hud-listing" style="table-layout:fixed;"><thead><tr><th></th><th class="glimpse-hud-listing-value glimpse-data-childless-duration">duration (ms)</th><th class="glimpse-hud-listing-value glimpse-data-childless-start-point">from start (ms)</th></tr></thead>';  
             for (var i = 0; i < details.timings.data.length; i++) {
                 var item = details.timings.data[i],
-                    isTrivial = item.childlessDuration < 2;
+                    isTrivial = false;
+                    // TODO: need to put this back in at some point
+                    //isTrivial = item.duration < 2;
                 
                 if (!item.suppress) {
                     var maxLength = (16 + (details.sql ? 10 : 0)) - item.nesting * 2;
                     
                     html += '<tbody' + (isTrivial ? ' class="glimpse-data-trivial"' : '') + '>';
-                    html += '<tr' + (isTrivial ? ' class="glimpse-hud-quite"' : '') + '><td class="glimpse-hud-listing-overflow" style="padding-left:' + (item.nesting * 15) + 'px;" ' + (item.description.length > maxLength ? 'title="' + item.description + '"' : '') +'>' + item.description + '</td><td class="glimpse-hud-listing-value glimpse-data-childless-duration">' + item.childlessDuration + '</td><td class="glimpse-hud-listing-value glimpse-data-childless-start-point"><span class="glimpse-hud-prefix">+</span>' + item.startPoint + '</td></tr>';
+                    html += '<tr' + (isTrivial ? ' class="glimpse-hud-quite"' : '') + '><td class="glimpse-hud-listing-overflow" style="padding-left:' + (item.nesting * 15) + 'px;" ' + (item.description.length > maxLength ? 'title="' + item.description + '"' : '') +'>' + item.description + '</td><td class="glimpse-hud-listing-value glimpse-data-childless-duration">' + item.duration + '</td><td class="glimpse-hud-listing-value glimpse-data-childless-start-point"><span class="glimpse-hud-prefix">+</span>' + item.startPoint + '</td></tr>';
                     if (item.queries && item.queries.listing.length > 0) {
                         html += '<tr><td class="glimpse-data-query-summary" style="padding-left:' + ((item.nesting * 15) + 20) + 'px;"><span class="glimpse-hud-prefix">➥</span><span class="glimpse-hud-listing-value">' + item.queries.listing.length + '</span><span class="glimpse-hud-postfix">' + (item.queries.listing.length == 1 ? 'query' : 'queries') + '</span> <span class="glimpse-hud-listing-value">' + item.queries.durationSum.toFixed(2) + '</span><span class="glimpse-hud-postfix">ms</span></td><td></td><td></td></tr>';
                     }
@@ -131,6 +133,7 @@ var processEvents = function(details) {
             rootChildlessDuration -= event.duration;
 
         //Save calculate data
+        event.duration = event.duration;
         event.childlessDuration = event.duration;
         event.startPercent = left;
         event.endPercent = left + width;

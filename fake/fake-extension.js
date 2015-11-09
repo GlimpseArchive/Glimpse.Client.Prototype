@@ -90,7 +90,7 @@ var seedMvcActions = (function() {
                         action: 'CartSummary',
                         route: generate.common.route('shoppingcart', 'cartsummary', null),
                         activities: [
-                            { access: 'SQL', operation: 'Select', target: 'Carts', affected: 1, commmand: 'SELECT TOP (5) \n[Project1].[AlbumId] AS [AlbumId], \n[Project1].[GenreId] AS [GenreId], \n[Project1].[ArtistId] AS [ArtistId], \n[Project1].[Title] AS [Title], \n[Project1].[Price] AS [Price], \n[Project1].[AlbumArtUrl] AS [AlbumArtUrl]\nFROM ( SELECT \n    [Extent1].[AlbumId] AS [AlbumId], \n    [Extent1].[GenreId] AS [GenreId], \n    [Extent1].[ArtistId] AS [ArtistId], \n    [Extent1].[Title] AS [Title], \n    [Extent1].[Price] AS [Price], \n    [Extent1].[AlbumArtUrl] AS [AlbumArtUrl], \n    (SELECT \n        COUNT(1) AS [A1]\n        FROM [dbo].[OrderDetails] AS [Extent2]\n        WHERE [Extent1].[AlbumId] = [Extent2].[AlbumId]) AS [C1]\n    FROM [dbo].[Albums] AS [Extent1]\n)  AS [Project1]\nORDER BY [Project1].[C1] DESC'  }
+                            { access: 'SQL', operation: 'Select', target: 'Carts', affected: 1, command: 'SELECT TOP (50) \n[Project1].[AlbumId] AS [AlbumId], \n[Project1].[GenreId] AS [GenreId], \n[Project1].[ArtistId] AS [ArtistId], \n[Project1].[Title] AS [Title], \n[Project1].[Price] AS [Price], \n[Project1].[AlbumArtUrl] AS [AlbumArtUrl]\nFROM ( SELECT \n    [Extent1].[AlbumId] AS [AlbumId], \n    [Extent1].[GenreId] AS [GenreId], \n    [Extent1].[ArtistId] AS [ArtistId], \n    [Extent1].[Title] AS [Title], \n    [Extent1].[Price] AS [Price], \n    [Extent1].[AlbumArtUrl] AS [AlbumArtUrl], \n    (SELECT \n        COUNT(1) AS [A1]\n        FROM [dbo].[OrderDetails] AS [Extent2]\n        WHERE [Extent1].[AlbumId] = [Extent2].[AlbumId]) AS [C1]\n    FROM [dbo].[Albums] AS [Extent1]\n)  AS [Project1]\nORDER BY [Project1].[C1] DESC'  }
                         ],
                         result: { name: 'CartSummary' },
                         trace: [
@@ -121,7 +121,7 @@ var seedMvcActions = (function() {
                         action: 'Browse',
                         route: generate.common.route('store', 'browse', null),
                         binding: [
-                            { type: 'string', name: 'Genre', value: genre }
+                            { type: 'string', name: 'genre', value: genre }
                         ],
                         activities: [
                             { access: 'SQL', operation: 'Select', target: 'Albums', affected: chance.integerRange(2, 50), command: 'SELECT \n[Project1].[GenreId] AS [GenreId], \n[Project1].[Name] AS [Name], \n[Project1].[Description] AS [Description], \n[Project1].[C1] AS [C1], \n[Project1].[AlbumId] AS [AlbumId], \n[Project1].[GenreId1] AS [GenreId1], \n[Project1].[ArtistId] AS [ArtistId], \n[Project1].[Title] AS [Title], \n[Project1].[Price] AS [Price], \n[Project1].[AlbumArtUrl] AS [AlbumArtUrl]\nFROM ( SELECT \n    [Limit1].[GenreId] AS [GenreId], \n    [Limit1].[Name] AS [Name], \n    [Limit1].[Description] AS [Description], \n    [Extent2].[AlbumId] AS [AlbumId], \n    [Extent2].[GenreId] AS [GenreId1], \n    [Extent2].[ArtistId] AS [ArtistId], \n    [Extent2].[Title] AS [Title], \n    [Extent2].[Price] AS [Price], \n    [Extent2].[AlbumArtUrl] AS [AlbumArtUrl], \n    CASE WHEN ([Extent2].[AlbumId] IS NULL) THEN CAST(NULL AS int) ELSE 1 END AS [C1]\n    FROM  (SELECT TOP (2) [Extent1].[GenreId] AS [GenreId], [Extent1].[Name] AS [Name], [Extent1].[Description] AS [Description]\n        FROM [dbo].[Genres] AS [Extent1]\n        WHERE [Extent1].[Name] = "Rock" ) AS [Limit1]\n    LEFT OUTER JOIN [dbo].[Albums] AS [Extent2] ON [Limit1].[GenreId] = [Extent2].[GenreId]\n)  AS [Project1] ORDER BY [Project1].[GenreId] ASC, [Project1].[C1] ASC' }
@@ -144,6 +144,10 @@ var seedMvcActions = (function() {
                         controller: 'Store', 
                         action: 'Details',
                         route: generate.common.route('store', 'details', id),
+                        binding: [
+                            { type: 'int', name: 'id', value: id },
+                            { type: 'bool', name: 'showAll', value: true }
+                        ],
                         activities: [
                             { access: 'SQL', operation: 'Select', target: 'Albums', affected: 1, command: 'SELECT TOP (2) \n[Extent1].[AlbumId] AS [AlbumId], \n[Extent1].[GenreId] AS [GenreId], \n[Extent1].[ArtistId] AS [ArtistId], \n[Extent1].[Title] AS [Title], \n[Extent1].[Price] AS [Price], \n[Extent1].[AlbumArtUrl] AS [AlbumArtUrl]\nFROM [dbo].[Albums] AS [Extent1]\nWHERE [Extent1].[AlbumId] = 1 /* @p0 */' },
                             { access: 'SQL', operation: 'Select', target: 'Genres', affected: 1, command: 'SELECT \n[Extent1].[GenreId] AS [GenreId], \n[Extent1].[Name] AS [Name], \n[Extent1].[Description] AS [Description]\nFROM [dbo].[Genres] AS [Extent1]\nWHERE [Extent1].[GenreId] = 1 /* @EntityKeyValue1 */' },
@@ -184,6 +188,9 @@ var seedMvcActions = (function() {
                         controller: 'ShoppingCart', 
                         action: 'Index',
                         route: generate.common.route('shoppingcart', 'index', null),
+                        binding: [
+                            { type: 'UserCart', typeFullName: 'UserCart', name: 'cart', value: 'UserCart' }
+                        ],
                         activities: [
                             { access: 'SQL', operation: 'Select', target: 'Carts', affected: 1, command: 'SELECT \n[Extent1].[RecordId] AS [RecordId], \n[Extent1].[CartId] AS [CartId], \n[Extent1].[AlbumId] AS [AlbumId], \n[Extent1].[Count] AS [Count], \n[Extent1].[DateCreated] AS [DateCreated]\nFROM [dbo].[Carts] AS [Extent1]\nWHERE [Extent1].[CartId] = "df0238d4-5bd4-49b5-97f0-9ba2c9957dc1" /* @p__linq__0 */' },
                             { access: 'SQL', operation: 'Select', target: 'Carts', affected: 1, command: 'SELECT \n[GroupBy1].[A1] AS [C1]\nFROM ( SELECT \n    SUM([Filter1].[A1]) AS [A1]\n    FROM ( SELECT \n         CAST( [Extent1].[Count] AS decimal(19,0)) * [Extent2].[Price] AS [A1]\n        FROM  [dbo].[Carts] AS [Extent1]\n        INNER JOIN [dbo].[Albums] AS [Extent2] ON [Extent1].[AlbumId] = [Extent2].[AlbumId]\n        WHERE [Extent1].[CartId] = "df0238d4-5bd4-49b5-97f0-9ba2c9957dc1" /* @p__linq__0 */\n    )  AS [Filter1]\n)  AS [GroupBy1]' }
@@ -368,6 +375,36 @@ var generateMvcRequest = (function() {
                 ordinal: this.counter++
             };
         }, 
+        createTab: function(context) {
+            var message = this.createMessage('tab', context);
+            message.payload =  {
+                    name: 'Headers',
+                    data: {
+                        'Response': {
+                            'Server': 'GitHub.com',
+                            'Date': 'Mon, 02 Nov 2015 06:39:26 GMT',
+                            'Content-Type': 'text/html; charset=utf-8',
+                            'Transfer-Encoding': 'chunked',
+                            'Status': '200 OK',
+                            'Cache-Control': 'no-cache',
+                            'Strict-Transport-Security': 'max-age=31536000; includeSubdomains; preload',
+                            'Vary': 'Accept-Encoding',
+                            'Content-Encoding': 'gzip'
+                        },
+                        'Request': {
+                            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+                            'Accept-Encoding': 'gzip, deflate, sdch',
+                            'Accept-Language': 'en-US,en;q=0.8',
+                            'Cache-Control': 'no-cache',
+                            'Connection': 'keep-alive',
+                            'Host': 'github.com',
+                            'Pragma': 'no-cache'
+                        }
+                    }  
+                };
+            
+            return message;
+        },
         createUserIdentification: function(source) {
             var message = this.createMessage('user-identification', source.context);
             message.payload = source.user;
@@ -545,6 +582,31 @@ var generateMvcRequest = (function() {
             
             return message;
         },
+        createBeforeViewComponent: function(action, context) {
+            var message = this.createMessage('before-view-component', context);
+            
+            var payload = message.payload; 
+            payload.componentId = action.actionId;
+            payload.componentDisplayName = 'Glimpse.AgentServer.Mvc.Sample.Components.' + action.action;
+            payload.componentName = action.action; 
+            
+            // TODO: Bring in timing data when we have it
+            //MessageGenerator.support.beforeTimings('actionInvoked', payload, null);
+            
+            return message; 
+        },
+        createAfterViewComponent: function(action, context) {
+            var message = this.createMessage('after-view-component', context);
+            
+            var payload = message.payload; 
+            payload.componentId = action.actionId;
+            payload.componentName = action.action; 
+            
+            // TODO: Bring in timing data when we have it 
+            MessageGenerator.support.afterTimings('component', payload, (parseInt(action.duration * 100)) / 100, null);
+            
+            return message; 
+        }, 
         createBrowserNavigationTiming: function(source) {
             var message = this.createMessage('browser-navigation-timing', source.context);
             
@@ -615,69 +677,79 @@ var generateMvcRequest = (function() {
         //     
         //     return message;
         // },
-        processAction: (function() { 
-            var modifyInstance = function(action) {
-                var availableTime = action.duration;
-                availableTime -= MessageGenerator.support.childTimings(action.actions, availableTime, 2.5);
-                availableTime -= MessageGenerator.support.childTimings(action.activities, availableTime, 1.5);  
-                
-                action.actionId = chance.guid();
-            };
+        modifyInstance: function(action) {
+            var availableTime = action.duration;
+            availableTime -= MessageGenerator.support.childTimings(action.actions, availableTime, 2.5);
+            availableTime -= MessageGenerator.support.childTimings(action.activities, availableTime, 1.5);  
             
-            return function(action, request, context) {
-                modifyInstance(action);
-                 
-                // route
-                this.messages.push(this.createActionRoute(action, action.route, context));
+            action.actionId = chance.guid();
+        },
+        processChildActions: function(action, request, context) {
+            this.modifyInstance(action);
                 
-                // filter
-                // this.messages.push(this.createFilter(action, 'OnAuthorization', 'Authorization', 'Authorization', null, context));
-                // this.messages.push(this.createLog({ template: { mask: 'User {0} authorized to execute this action', values: { '0': request.user.name } } }, context));
-                // this.messages.push(this.createFilter(action, 'OnActionExecuting', 'Action', 'Executing', null, context));
+            this.messages.push(this.createBeforeViewComponent(action, context));
+            if (action.activities) {
+                _.forEach(action.activities, function(activity) {
+                    this.messages.push(this.createBeforeExecuteCommand(action, activity, context));
+                    this.messages.push(this.createAfterExecuteCommand(action, activity, context));
+                }, this);
+            }
+            this.messages.push(this.createAfterViewComponent(action, context));
+        },
+        processAction: function(action, request, context) {
+            this.modifyInstance(action);
                 
-                // action
-                if (action.binding) {
-                    this.messages.push(this.createActionBinding(action, action.binding, context));
-                }
-                this.messages.push(this.createBeforeActionInvoked(action, context, action == request));
-                if (action.activities) {
-                    _.forEach(action.activities, function(activity) {
-                        this.messages.push(this.createBeforeExecuteCommand(action, activity, context));
-                        this.messages.push(this.createAfterExecuteCommand(action, activity, context));
-                    }, this);
-                }
-                // if (action.trace) {
-                //     _.forEach(action.trace, function(log) {
-                //         this.messages.push(this.createLog(log, context));
-                //     }, this);
-                // }
-                this.messages.push(this.createAfterActionInvoked(action, context));
-                
-                // filter
-                // this.messages.push(this.createFilter(action, 'OnActionExecuted', 'Action', 'Executed', null, context));
-                // this.messages.push(this.createFilter(action, 'OnResultExecuting', 'Result', 'Executing', null, context));
-                
-                // result
-                this.messages.push(this.createActionViewFound(action, action.result, context));
-                this.messages.push(this.createBeforeActionViewInvoked(action, action.result, context));
-                
-                // child actions
-                // if (action.actions) {
-                //     _.forEach(action.actions, function(childAction) {
-                //         this.processAction(childAction, request, context);
-                //     }, this);
-                // }
-                
-                // fitler
-                // this.messages.push(this.createFilter(action, 'OnResultExecuted', 'Result', 'Executed', null, context));
-                
-                this.messages.push(this.createAfterActionViewInvoked(action, action.result, context));
-            };
-        })(this),
+            // route
+            this.messages.push(this.createActionRoute(action, action.route, context));
+            
+            // filter
+            // this.messages.push(this.createFilter(action, 'OnAuthorization', 'Authorization', 'Authorization', null, context));
+            // this.messages.push(this.createLog({ template: { mask: 'User {0} authorized to execute this action', values: { '0': request.user.name } } }, context));
+            // this.messages.push(this.createFilter(action, 'OnActionExecuting', 'Action', 'Executing', null, context));
+            
+            // action
+            if (action.binding) {
+                this.messages.push(this.createActionBinding(action, action.binding, context));
+            }
+            this.messages.push(this.createBeforeActionInvoked(action, context, action == request));
+            if (action.activities) {
+                _.forEach(action.activities, function(activity) {
+                    this.messages.push(this.createBeforeExecuteCommand(action, activity, context));
+                    this.messages.push(this.createAfterExecuteCommand(action, activity, context));
+                }, this);
+            }
+            // if (action.trace) {
+            //     _.forEach(action.trace, function(log) {
+            //         this.messages.push(this.createLog(log, context));
+            //     }, this);
+            // }
+            this.messages.push(this.createAfterActionInvoked(action, context));
+            
+            // filter
+            // this.messages.push(this.createFilter(action, 'OnActionExecuted', 'Action', 'Executed', null, context));
+            // this.messages.push(this.createFilter(action, 'OnResultExecuting', 'Result', 'Executing', null, context));
+            
+            // result
+            this.messages.push(this.createActionViewFound(action, action.result, context));
+            this.messages.push(this.createBeforeActionViewInvoked(action, action.result, context));
+            
+            // child actions
+            if (action.actions) {
+                _.forEach(action.actions, function(childAction) {
+                    this.processChildActions(childAction, request, context);
+                }, this);
+            }
+            
+            // fitler
+            // this.messages.push(this.createFilter(action, 'OnResultExecuted', 'Result', 'Executed', null, context));
+            
+            this.messages.push(this.createAfterActionViewInvoked(action, action.result, context));
+        },
         processRequest: function(source) {
             this.messages.push(this.createBeginRequest(source));
             this.messages.push(this.createUserIdentification(source));
             this.messages.push(this.createEnvironment(source));
+            this.messages.push(this.createTab(source.context))
             
             this.processAction(source, source, source.context);
             

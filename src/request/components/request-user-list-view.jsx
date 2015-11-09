@@ -7,19 +7,16 @@ var UserItem = require('./request-user-list-item-view');
 
 module.exports = React.createClass({
     render: function () {
-        var allUsers = this.props.allUsers;
+        var allUsers = this.props.allUsers;                
 
         return (
-            <div className="request-user-list-holder">
-                <ReactCSSTransitionGroup component="div" transitionName="request-user-item-holder" transitionLeave={false}>
+            <div className="request-user-group">
+                <ReactCSSTransitionGroup component="div" transitionName="request-user-group-item" transitionLeave={false}>
                     {allUsers.map(function(user) {
-                        return <UserItem key={user.details.id} user={user} />;
+                        return <UserItem key={user.details.userId} user={user} />;
                     })}
                 </ReactCSSTransitionGroup>
-                {glimpse.util.isEmpty(allUsers) ?
-                    <em>No found users.</em> :
-                    null
-                }
+                {glimpse.util.isEmpty(allUsers) ? <em>No found users.</em> : null}
             </div>
         );
     }

@@ -7,7 +7,7 @@ var PanelGeneric = require('./request-detail-panel-generic');
 module.exports = React.createClass({
     render: function () {    
         var request = this.props.request;
-	    var payload = _.values(request.messages).sort(function(a, b) { return a.ordinal - b.ordinal; });
+	    var payload = _.values(request.messages).sort(function(a, b) { return (a.ordinal || 0) - (b.ordinal || 0); });
 	
         return (
             <div>

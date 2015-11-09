@@ -10,7 +10,7 @@ var messageProcessor = require('../util/request-message-processor');
 var _requests = [];
 var _requestIndex = {};
 var _filteredRequests = [];
-var _filters = { contentCategory: true };  // TODO: remove hack to temp filter what requests we deal with
+var _filters = { _responseContentCategory: true };  // TODO: remove hack to temp filter what requests we deal with
 var _requestSelectedId = null;
 
 function notifyRequestsChanged(targetRequests) {
@@ -22,15 +22,11 @@ function notifyRequestsChanged(targetRequests) {
 // TODO: Even at the moment this is going to need to be refactored
 var filterRequests = (function () {
     var filterSchema = {
-        userId: {
-            type: 'exact',
-            get: function (request) { return request.user.id; }
-        },
-        url: { type: 'exact' }, // TODO: Switch over to `regex` at some point
-        method: { type: 'array' },
-        contentType: { type: 'array' },
-        statusCode: { type: 'array' },
-        contentCategory: {   // TODO: remove hack to temp filter what requests we deal with
+        _userId: { type: 'exact' },
+        _requestUrl: { type: 'exact' }, // TODO: Switch over to `regex` at some point
+        _requestMethod: { type: 'array' },
+        _responseStatusCode: { type: 'array' },
+        _responseContentCategory: {   // TODO: remove hack to temp filter what requests we deal with
             type: 'exact',
             get: function (request) { return request._responseContentCategory && (request._responseContentCategory.document || request._responseContentCategory.data); }
         }
@@ -132,7 +128,7 @@ var filterRequests = (function () {
 // Clear User
 (function () {
     function clearUser() {
-        _filters.userId = null;
+        _filters._userId = null;
 
         filterRequests(_requests, null, true);
     }
@@ -143,7 +139,7 @@ var filterRequests = (function () {
 // Select User
 (function () {
     function selectUser(payload) {
-        _filters.userId = payload.userId;
+        _filters._userId = payload.userId;
 
         filterRequests(_requests, null, true);
     }
@@ -193,7 +189,7 @@ var filterRequests = (function () {
 
         _requestSelectedId = requestId;
 
-        filterRequests(_requests, [], false);
+        filterRequests(_requests, null, false);
 
         glimpse.emit('data.request.detail.requested', payload);
     }

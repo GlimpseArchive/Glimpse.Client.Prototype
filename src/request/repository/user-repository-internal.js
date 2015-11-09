@@ -6,6 +6,8 @@ var glimpse = require('glimpse');
 // store Found Summary
 (function () {
     function processFoundSummary(requestRepositoryPayload) {
+        // TODO: need to update to deal with the fact that requests aren't distinct
+        
         var messages = requestRepositoryPayload.newMessageTypes['user-identification'];
         if (messages) {
             var messageIndex = _.indexBy(messages, 'context.id');
@@ -27,7 +29,6 @@ var glimpse = require('glimpse');
     }
  
     glimpse.on('data.request.summary.found.message', processFoundSummary);
-    glimpse.on('data.request.detail.found.message', processFoundSummary);
     // TODO: If we switch to storing session in local storage this needs to be removed
     glimpse.on('data.request.summary.found.local', processFoundSummary);
 })();

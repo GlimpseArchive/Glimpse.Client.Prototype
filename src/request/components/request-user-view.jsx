@@ -23,14 +23,16 @@ module.exports = React.createClass({
         this.addListener('shell.request.user.detail.changed', this._userChanged);
     },
     render: function () {
+        var button = null;
+        if (this.state.selectedUserId) {
+            button = <div className="button-holder"><div className="button button--link" onClick={this._onClearSelection}>Clear</div></div>;
+        }
+    
         return (
             <div>
-                <div className="application-item-header">Users</div>
-                {this.state.selectedUserId ?
-                    <input type="button" value="Clear Selection" onClick={this._onClearSelection} /> :
-                    null
-                }
+                <div className="application-section-header">User Sessions</div>
                 <UserList allUsers={this.state.allUsers} />
+                {button}
             </div>
         );
     },

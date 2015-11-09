@@ -57,7 +57,7 @@ module.exports = React.createClass({
         
         var containerClass = classNames({
             'request-summary-item-holder': true,
-            'request-summary-item-selected': request._selected
+            'request-summary-item-selected request-summary-item-focus': request._selected
         });
         
         var payload = messageProcessor.getSummaryMessages(request);
@@ -71,40 +71,38 @@ module.exports = React.createClass({
 
         return (
             <div className={containerClass} onClick={this.onSelect}>
-                <div className="request-summary-data-holder">
-                    <div className="request-summary-data-row-request request-summary-data-value-sub">
-                        <div className="request-summary-data-col-8">
-                            <div className="request-summary-data-value-primary">{beginRequest.requestPath}{beginRequest.requestQueryString}</div>
-                            <div className="request-summary-data-row-items request-summary-data-value-soft">
-                                <span>{beginRequest.requestMethod}</span>
-                                <span title={endRequest.responseStatusText}>{endRequest.responseStatusCode}</span>
-                                <span title={endRequest.responseContentType}>{contextTypeOrEmpty(endRequest.responseContentCategory)}</span>
-                            </div>
-                        </div>
-                        <div className="request-summary-data-row-metadata request-summary-data-col-2">
-                            {userIdentification.username} &nbsp; - &nbsp; <Timeago time={beginRequest.requestStartTime} />
+                <div className="request-summary-data-row-request request-summary-data-value-sub">
+                    <div className="request-summary-data-col-8">
+                        <div className="request-summary-data-value-primary">{beginRequest.requestPath}{beginRequest.requestQueryString}</div>
+                        <div className="request-summary-data-row-items request-summary-data-value-soft">
+                            <span>{beginRequest.requestMethod}</span>
+                            <span title={endRequest.responseStatusText}>{endRequest.responseStatusCode}</span>
+                            <span title={endRequest.responseContentType}>{contextTypeOrEmpty(endRequest.responseContentCategory)}</span>
                         </div>
                     </div>
-                    <div className="request-summary-data-row-title request-summary-data-title">
-                        <div>Request</div>
-                        <div>Server</div>
-                        <div>Client</div>
-                        <div className="request-summary-data-col-2">Network</div>
-                        <div>Action</div>
-                        <div>View</div>
-                        <div className="request-summary-data-col-4">Controller/Action</div>
-                        <div>Query/Count</div>
+                    <div className="request-summary-data-row-metadata request-summary-data-col-2">
+                        {userIdentification.username} &nbsp; - &nbsp; <Timeago time={beginRequest.requestStartTime} />
                     </div>
-                    <div className="request-summary-data-row-details">
-                        <div className="request-summary-data-value-primary">{requestTime(endRequest, browserNavigationTiming)}</div>
-                        <div>{timeOrEmpty(browserNavigationTiming.serverTime)}</div>
-                        <div>{timeOrEmpty(browserNavigationTiming.browserTime)}</div>
-                        <div className="request-summary-data-col-2">{timeOrEmpty(browserNavigationTiming.networkTime)}</div>
-                        <div>{timeOrEmpty(afterActionInvoked.actionInvokedDuration)}</div>
-                        <div>{timeOrEmpty(afterActionViewInvoked.viewDuration)}</div>
-                        <div className="request-summary-data-value-primary request-summary-data-col-4">{actionOrEmpty(afterActionInvoked.actionControllerName, afterActionInvoked.actionName)}</div>
-                        <div>{commandOrEmpty(afterExecuteCommand)}</div>
-                    </div>
+                </div>
+                <div className="request-summary-data-row-title request-summary-data-title">
+                    <div>Request</div>
+                    <div>Server</div>
+                    <div>Client</div>
+                    <div className="request-summary-data-col-2">Network</div>
+                    <div>Action</div>
+                    <div>View</div>
+                    <div className="request-summary-data-col-4">Controller/Action</div>
+                    <div>Query/Count</div>
+                </div>
+                <div className="request-summary-data-row-details">
+                    <div className="request-summary-data-value-primary">{requestTime(endRequest, browserNavigationTiming)}</div>
+                    <div>{timeOrEmpty(browserNavigationTiming.serverTime)}</div>
+                    <div>{timeOrEmpty(browserNavigationTiming.browserTime)}</div>
+                    <div className="request-summary-data-col-2">{timeOrEmpty(browserNavigationTiming.networkTime)}</div>
+                    <div>{timeOrEmpty(afterActionInvoked.actionInvokedDuration)}</div>
+                    <div>{timeOrEmpty(afterActionViewInvoked.viewDuration)}</div>
+                    <div className="request-summary-data-value-primary request-summary-data-col-4">{actionOrEmpty(afterActionInvoked.actionControllerName, afterActionInvoked.actionName)}</div>
+                    <div>{commandOrEmpty(afterExecuteCommand)}</div>
                 </div>
             </div>
         );

@@ -151,6 +151,9 @@ var setupIndex = function(request, type, payload) {
         payload.responseStatusText = request._responseStatusText;  
         payload.responseContentCategory = request._responseContentCategory;
     }
+    if (type == 'user-identification') {
+        request._userId = payload.userId;
+    }
 }
 
 module.exports = { 

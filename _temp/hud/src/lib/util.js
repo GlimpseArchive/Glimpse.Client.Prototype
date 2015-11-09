@@ -4,7 +4,7 @@ var $ = require('$jquery');
 
 var camelCaseRegEx = /^([A-Z])|[\s-_](\w)/g;
 var usedMessageTypes = function() {
-    return 'environment,user-identification,end-request,begin-request,after-action-invoked,after-action-view-invoked,after-execute-command';
+    return 'environment,user-identification,end-request,begin-request,after-action-invoked,after-action-view-invoked,after-execute-command,after-view-component';
 }
 var hudScriptElement = document.getElementById('__glimpse_hud');
     

@@ -32,6 +32,7 @@ var process = (function() {
 			'after-action-invoked': processItem,
 			'after-action-view-invoked': processItem,
 			'after-execute-command': processList,
+			'after-view-component': processList,
 			'end-request': processItem
 		});
 	}
@@ -111,6 +112,7 @@ var process = (function() {
 				var afterActionInvoked = payload.afterActionInvoked || {};
 				var afterActionViewInvoked = payload.afterActionViewInvoked || {};
 				var afterExecuteCommand = payload.afterExecuteCommand || [];
+				var afterViewComponent = payload.afterViewComponent || [];
 				
 				var result = [];
 				result.push({
@@ -127,6 +129,16 @@ var process = (function() {
 					startPoint: afterActionViewInvoked.viewOffset,
 					category: 'View'
 				});
+				for (var i = 0; i < afterViewComponent.length; i++) {
+					var component = afterViewComponent[i];
+					result.push({
+						title: 'Component: ' + component.componentName,
+						startTime: component.componentEndTime,
+						duration: component.componentDuration,
+						startPoint: component.componentOffset,
+						category: 'Controller'
+					});
+				}	
 				for (var i = 0; i < afterExecuteCommand.length; i++) {
 					var command = afterExecuteCommand[i];
 					result.push({
@@ -136,7 +148,9 @@ var process = (function() {
 						startPoint: command.commandOffset,
 						category: 'Command'
 					});
-				}			
+				}		
+				
+				result = result.sort(function(a, b) { return (a.startPoint || 0) - (b.startPoint || 0); });	
 				
 				return result;
 			}
