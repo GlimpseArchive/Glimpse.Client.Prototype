@@ -47,7 +47,7 @@ var messageProcessor = require('./util/request-message-processor');
 			// if its the same user, and this new requet happens after this one and its of document type
 			if (request._userId == deepLinkUserId 
 				&& moment(request._requestStartTime).isAfter(deepLinkRequestStartTime)
-				&& request._requestIsAjax
+				&& !request._requestIsAjax
 				&& request._responseContentType && request._responseContentType.indexOf('text/html') > -1) {
 					glimpse.emit('shell.request.summary.selected', { requestId: request.id });
 			}
