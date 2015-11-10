@@ -19,9 +19,9 @@ module.exports = React.createClass({
         return (
             <div className={containerClass} onClick={this._onClick}>
                 <div className="flex flex-row user-status">
-                    <div className="col-1"><img className={imgClass} src={user.details.image} width="40" /></div>
-                    <div className="col-2">
-                        {user.details.username}
+                    <div className="col-1 user-status-img"><img className={imgClass} src={user.details.image} width="40" /></div>
+                    <div className="col-2 truncate-outer">
+                        <div className="truncate">{user.details.username}</div>
                         <div className="user-status-time text-minor"><Timeago time={user.lastActive} /></div>
                     </div>
                 </div>

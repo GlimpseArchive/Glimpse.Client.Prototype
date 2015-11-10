@@ -10,17 +10,17 @@ var classNames = require('classnames');
 
 var timeOrEmpty = function(value) {
     if (value !== null && value !== undefined) {
-        return <span>{Math.round(value)}<span className="request-summary-data-value-accent">ms</span></span>;
+        return <span>{Math.round(value)} <span className="text-minor text-accent">ms</span></span>;
     }
     
-    return <span className="request-summary-data-value-soft">--</span>;
+    return <span className="text-minor">--</span>;
 };
 var actionOrEmpty = function(controller, action) {
     if (controller && action) {
-        return <span>{controller}<span className="request-summary-data-value-accent">.</span>{action}<span className="request-summary-data-value-accent">(...)</span></span>
+        return <div className="truncate">{controller}<span className="text-minor text-accent">.</span>{action}<span className="text-minor text-accent">(...)</span></div>
     }
     
-    return <span className="request-summary-data-value-soft">--</span>;
+    return <span className="text-minor">--</span>;
 };
 var commandOrEmpty = function(commands) {
     if (commands.length > 0) {
@@ -31,10 +31,10 @@ var commandOrEmpty = function(commands) {
             queryDuration += command.commandDuration;
         });
         
-        return <span>{Math.round(queryDuration)}<span className="request-summary-data-value-accent">ms / </span>{queryCount}</span>;
+        return <span>{Math.round(queryDuration)} <span className="text-minor text-accent">ms &nbsp;/&nbsp; </span>{queryCount}</span>;
     }
         
-    return <span className="request-summary-data-value-soft">--</span>;
+    return <span className="text-minor">--</span>;
 };
 var contextTypeOrEmpty = function(contentCategory) {
     return contentCategory ? _.keys(contentCategory).join(', ') : '';
@@ -56,8 +56,8 @@ module.exports = React.createClass({
         var request = this.props.request;
         
         var containerClass = classNames({
-            'request-summary-item-holder': true,
-            'request-summary-item-selected request-summary-item-focus': request._selected
+            'request-summary-group-item': true,
+            'request-summary-group-item-selected request-summary-group-item-focus': request._selected
         });
         
         var payload = messageProcessor.getSummaryMessages(request);
@@ -71,38 +71,38 @@ module.exports = React.createClass({
 
         return (
             <div className={containerClass} onClick={this.onSelect}>
-                <div className="request-summary-data-row-request request-summary-data-value-sub">
-                    <div className="request-summary-data-col-8">
-                        <div className="request-summary-data-value-primary">{beginRequest.requestPath}{beginRequest.requestQueryString}</div>
-                        <div className="request-summary-data-row-items request-summary-data-value-soft">
+                <div className="flex flex-row flex-base request-summary-title-section">
+                    <div className="flex flex-row flex-base col-8">
+                        <div className="text-focus">{beginRequest.requestPath}{beginRequest.requestQueryString}</div>
+                        <div className="text-minor request-summary-title-detail">
                             <span>{beginRequest.requestMethod}</span>
                             <span title={endRequest.responseStatusText}>{endRequest.responseStatusCode}</span>
                             <span title={endRequest.responseContentType}>{contextTypeOrEmpty(endRequest.responseContentCategory)}</span>
                         </div>
                     </div>
-                    <div className="request-summary-data-row-metadata request-summary-data-col-2">
+                    <div className="col-2 text-minor request-summary-metadata">
                         {userIdentification.username} &nbsp; - &nbsp; <Timeago time={beginRequest.requestStartTime} />
                     </div>
                 </div>
-                <div className="request-summary-data-row-title request-summary-data-title">
-                    <div>Request</div>
-                    <div>Server</div>
-                    <div>Client</div>
-                    <div className="request-summary-data-col-2">Network</div>
-                    <div>Action</div>
-                    <div>View</div>
-                    <div className="request-summary-data-col-4">Controller/Action</div>
-                    <div>Query/Count</div>
+                <div className="flex flex-row flex-inherit text-accent-small text-minor">
+                    <div className="col-3">Request</div>
+                    <div className="col-2">Server</div>
+                    <div className="col-2">Client</div>
+                    <div className="col-4">Network</div>
+                    <div className="col-2">Action</div>
+                    <div className="col-2">View</div>
+                    <div className="col-7">Controller/Action</div>
+                    <div className="col-3">Query/Count</div>
                 </div>
-                <div className="request-summary-data-row-details">
-                    <div className="request-summary-data-value-primary">{requestTime(endRequest, browserNavigationTiming)}</div>
-                    <div>{timeOrEmpty(browserNavigationTiming.serverTime)}</div>
-                    <div>{timeOrEmpty(browserNavigationTiming.browserTime)}</div>
-                    <div className="request-summary-data-col-2">{timeOrEmpty(browserNavigationTiming.networkTime)}</div>
-                    <div>{timeOrEmpty(afterActionInvoked.actionInvokedDuration)}</div>
-                    <div>{timeOrEmpty(afterActionViewInvoked.viewDuration)}</div>
-                    <div className="request-summary-data-value-primary request-summary-data-col-4">{actionOrEmpty(afterActionInvoked.actionControllerName, afterActionInvoked.actionName)}</div>
-                    <div>{commandOrEmpty(afterExecuteCommand)}</div>
+                <div className="flex flex-row flex-inherit flex-base">
+                    <div className="col-3 text-focus">{requestTime(endRequest, browserNavigationTiming)}</div>
+                    <div className="col-2">{timeOrEmpty(browserNavigationTiming.serverTime)}</div>
+                    <div className="col-2">{timeOrEmpty(browserNavigationTiming.browserTime)}</div>
+                    <div className="col-4">{timeOrEmpty(browserNavigationTiming.networkTime)}</div>
+                    <div className="col-2">{timeOrEmpty(afterActionInvoked.actionInvokedDuration)}</div>
+                    <div className="col-2">{timeOrEmpty(afterActionViewInvoked.viewDuration)}</div>
+                    <div className="col-7 text-focus truncate-outer">{actionOrEmpty(afterActionInvoked.actionControllerName, afterActionInvoked.actionName)}</div>
+                    <div className="col-3">{commandOrEmpty(afterExecuteCommand)}</div>
                 </div>
             </div>
         );

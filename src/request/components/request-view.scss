@@ -33,6 +33,8 @@ body, html {
 }
 
 .flex {
+    display: flex;
+    
     .col-1 { flex: 1; }
     .col-2 { flex: 2; }
     .col-3 { flex: 3; }
@@ -43,8 +45,19 @@ body, html {
     .col-8 { flex: 8; }
     .col-9 { flex: 9; }
 }
-.flex-column, .flex-row {
-    display: flex;
+.truncate-outer {
+    width: 50px;
+}
+.truncate { 
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis; 
+}
+.flex-inherit {
+    > div { flex: 1; }
+}
+.flex-base {
+    align-items: baseline;
 }
 .flex-column {
     flex-direction: column;
@@ -55,6 +68,7 @@ body, html {
 
 //****** SHELL *******
 .glimpse-main {
+    min-width: 1100px;
     height: 100%;
     display: flex;
     flex-direction: column;
@@ -78,8 +92,6 @@ body, html {
 .application-holder {
     flex: 1 1 auto;
     padding: 10px 20px 0;
-    //min-width: 920px; // TODO: once its made more responsive, we can fix tis up a bit more
-    min-width: 1040px;
     display: flex;
     justify-content: center;
 }
@@ -89,6 +101,7 @@ body, html {
     justify-content: center;
     flex: 1 1 auto;
     position: relative;
+    overflow: hidden;
 }
 .application-section-header {
     font-size: 115%;
@@ -97,10 +110,6 @@ body, html {
     &.application-section-header-boxed {
         margin: 5px 15px 10px 20px; // taking into account the box shadow
     }
-}
-.application-sub-item-header {
-    font-size: 125%;
-    margin-bottom: 8px;
 }
 .button-holder {
     margin: 10px 15px;
@@ -117,7 +126,7 @@ body, html {
     .request-user-section, .request-filter-section {
         color: white;
         flex: 2 1 200px;
-        min-width: 175px;
+        min-width: 130px;
         max-width: 225px;
     }
     .request-user-section {
@@ -152,7 +161,7 @@ body, html {
         bottom: 0;
         right: 0;
         width: 70vw;
-        min-width: 65vm;
+        min-width: 740px;
         margin-right: 0;
         border-radius: 3px 3px 0 0;
         
@@ -190,24 +199,6 @@ body, html {
         overflow-x: hidden;
     }
     
-    .request-summary-item-holder {
-        padding: 15px 20px;
-        
-        .list-item {
-            margin: 0;
-        }
-    }
-    .request-summary-item-holder:nth-child(even) {
-        background-color: #E5E9EA;
-    }
-    .request-summary-item-focus {
-        background-color: #71B2D1 !important; // :(
-        color: #fff;
-        
-        .request-summary-data-value-accent, .request-summary-data-row-title, .request-summary-data-value-soft, .request-summary-data-row-metadata {
-            color: #3D6B82;
-        }
-    }
 
     //***** USER SECTION *******
     .request-user-group-item-selected {
@@ -222,6 +213,9 @@ body, html {
     }
     .user-status img.user-status-online {
         border-left-color: green;
+    }
+    .user-status-img {
+        min-width: 55px;
     }
     .user-status-time {
         font-size: 80%;
@@ -250,31 +244,31 @@ body, html {
     
     //******** TANSITIONS & HIGHLIGHTS **********    
         // starting point
-        .request-summary-item-holder-enter {
+        .request-summary-group-item-enter {
             background-color: #F8F5EC;
         }
-        .request-summary-item-holder-enter:nth-child(even) {
+        .request-summary-group-item-enter:nth-child(even) {
             background-color: #E4DFD2;
         }
         .request-user-group-item-enter {
             background-color: #454C56;
         }
         // finishing point
-        .request-summary-item-holder-enter.request-summary-item-holder-enter-active,
+        .request-summary-group-item-enter.request-summary-group-item-enter-active,
         .request-user-group-item-enter.request-user-group-item-enter-active {
             transition: background-color 1s ease-in;
             background-color: transparent;
         }
-        .request-summary-item-holder-enter:nth-child(even).request-summary-item-holder-enter-active {
+        .request-summary-group-item-enter:nth-child(even).request-summary-group-item-enter-active {
             background-color: #E5E9EA;
         }
     
         // starting point
-        .request-summary-item-holder-leave, .request-user-group-item-leave {
+        .request-summary-group-item-leave, .request-user-group-item-leave {
             opacity: 1;
         }
         // finishing point
-        .request-summary-item-holder-leave.request-summary-item-holder-leave-active,
+        .request-summary-group-item-leave.request-summary-group-item-leave-active,
         .request-user-group-item-leave.request-user-group-item-leave-active {
             opacity: 0.01;
             transition: opacity 0.05s ease-in;
@@ -283,50 +277,51 @@ body, html {
 
 
 //******* DETAIL LAYOUT ********
-.request-summary-data-row-details, .request-summary-data-row-request, .request-summary-data-row-title {
-    display: flex;
-    align-items: baseline;
-}
-.request-summary-data-row-details, .request-summary-data-row-request, .request-summary-data-row-title {
-    > div {
-        flex: 1;
-    }
-    .request-summary-data-col-2 { flex: 2; }
-    .request-summary-data-col-3 { flex: 3; }
-    .request-summary-data-col-4 { flex: 4; }
-    .request-summary-data-col-8 { flex: 8; }
-}
-.request-summary-data-row-metadata {
-    font-size: 90%;
-    color: #737373;
-    justify-content: flex-end;
-}
-.request-summary-data-row-request {
-    margin-bottom: 5px;
+.request-summary-group-item {
+    padding: 15px 20px;
     
-    > div {
-        display: flex;
-        align-items: baseline;
+    .text-minor {
+        color: #737373;
+    }
+    .text-accent {
+        font-size: 80%;
+    }
+    .text-accent-small {
+        font-size: 70%;
+    }
+    .text-focus {
+        font-size: 120%;
+    }
+    .list-item {
+        margin: 0;
     }
 }
-.request-summary-data-row-items > span {
+.request-summary-group-item:nth-child(even) {
+    background-color: #E5E9EA;
+}
+.request-summary-group-item-focus {
+    background-color: #71B2D1 !important; // :(
+    color: #fff;
+    
+    .text-minor {
+        color: #3D6B82;
+    }
+}
+.request-summary-title-section {
+    font-size: 80%;
+    margin-bottom: 5px;
+}
+.request-summary-title-detail > span {
     padding-left: 15px;
 }
-.request-summary-data-row-items > span:first-child {
+.request-summary-title-detail > span:first-child {
     padding-left: 25px;
 }
-.request-summary-data-value-primary {
-    font-size: 120%;
-}
-.request-summary-data-value-soft, .request-summary-data-value-accent {
+.request-summary-metadata {
+    font-size: 90%;
     color: #737373;
-}
-.request-summary-data-value-sub, .request-summary-data-value-accent {
-    font-size: 80%;
-}
-.request-summary-data-title {
-    font-size: 70%;
-    color: #737373;
+    text-align: right;
+    margin-right: 1%;
 }
 
 
@@ -475,29 +470,21 @@ body, html {
     border-left: 3px solid transparent;
     padding-left: 10px;
 }
+
+.tab-section-title {
+    font-size: 125%;
+    margin-bottom: 8px;
+}
 .tab-section-header {
-    width: 100%;
-    display: flex;
-    flex-wrap: nowrap;
-    align-items: baseline;
-    padding-left: 10px;
+    padding-left: 13px;
     
-    > div {
-        flex: 1 0 0;
-    }
     .tab-title {
         font-size: 70%;
     }
 }
 .tab-section-item {
     width: 100%;
-    display: flex;
-    flex-wrap: nowrap;
-    align-items: baseline;
     
-    > div {
-        flex: 1 0 0;
-    } 
     .tab-execution-important {
         font-size: 120%;
     }
@@ -536,6 +523,23 @@ body, html {
                 padding: 0;
             }
         } 
+        
+        &.pre-open {
+            > pre {
+                background-color: #F5F5F5;
+                border: 1px solid #ccc;
+                border-radius: 3px;
+                margin: -6px 0 0 -6px;
+                padding: 5px;
+                
+                > code {
+                    background-color: transparent;
+                }
+            }
+        }
+    }
+    .tab-section-execution-command-items {
+        width: 575px;
     }
 }
 .tab-section-execution-action > .tab-section-boxing, .tab-section-execution-component > .tab-section-boxing {
@@ -565,5 +569,20 @@ body, html {
         width: 100%;
         height: 15px;
         background: linear-gradient(to bottom,  rgba(255,255,255,0) 0%,rgba(255,255,255,1) 100%);
+    }
+}
+
+@media only screen and (max-width: 1100px) {
+    .glimpse-main {
+        min-width: 600px;
+    }
+    
+    .user-status-time {
+        display: none;
+    }
+}
+@media only screen and (max-width: 920px) {
+    .request-filter-section {
+        display: none;
     }
 }

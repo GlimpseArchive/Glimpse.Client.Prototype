@@ -58,6 +58,7 @@ var CommandItem = React.createClass({
         var containerClass = classNames({
                 'tab-section-execution-command-text': true,
                 'tab-execution-hidden': !this.state.show,
+                'pre-open': this.state.show
             });
         var duration = '--'
         if (afterCommand.ordinal == beforeCommand.ordinal + 1) {
@@ -104,13 +105,13 @@ var CommandList = React.createClass({
             // process action
             if (commandItems.length > 0) {
                 content = (
-                        <div className="flex tab-section tab-section-execution-command">
-                            <div className="tab-section-header">
+                        <div className="tab-section tab-section-execution-command">
+                            <div className="flex flex-row flex-inherit tab-section-header">
                                 <div></div>
                                 <div className="tab-title col-9">Type/Method</div>
                             </div>
                             <div className="tab-section-boxing">
-                                <section className="tab-section-item">
+                                <section className="flex flex-row flex-inherit flex-base tab-section-item">
                                     <div className="tab-title">SQL</div>
                                     <div className="tab-section-execution-command-items col-9">{commandItems}</div>
                                 </section>
@@ -192,15 +193,15 @@ module.exports = React.createClass({
         
             // process route
             route = (
-                    <div className="flex tab-section tab-section-execution-route">
-                        <div className="tab-section-header">
+                    <div className="tab-section tab-section-execution-route">
+                        <div className="flex flex-row flex-inherit tab-section-header">
                             <div></div>
                             <div className="tab-title col-2">Name</div>
                             <div className="tab-title col-3">Path</div>
                             <div className="tab-title col-4">Pattern</div>
                         </div>
                         <div className="tab-section-boxing">
-                            <section className="tab-section-item"> 
+                            <section className="flex flex-row flex-inherit flex-base tab-section-item"> 
                                 <div className="tab-title">Route</div>
                                 <div className="col-2">{routePayload.routeName}</div>
                                 <div className="col-3">{routePath}</div>
@@ -221,13 +222,13 @@ module.exports = React.createClass({
             
             // process action
             action = (
-                    <div className="flex tab-section tab-section-execution-action">
-                        <div className="tab-section-header">
+                    <div className="tab-section tab-section-execution-action">
+                        <div className="flex flex-row flex-inherit tab-section-header">
                             <div></div>
                             <div className="tab-title col-9">Controller/Action</div>
                         </div>
                         <div className="tab-section-boxing">
-                            <section className="tab-section-item">
+                            <section className="flex flex-row flex-inherit flex-base tab-section-item">
                                 <div className="tab-title">Action</div>
                                 <div className="tab-execution-important col-8">
                                     {afterActionInvokedPayload.actionControllerName}.{afterActionInvokedPayload.actionName}({content})
@@ -253,13 +254,13 @@ module.exports = React.createClass({
                 var componentCommands = <CommandList beforeExecuteCommandMessages={beforeExecuteCommandMessages} afterExecuteCommandMessages={afterExecuteCommandMessages} beginMessage={beforeViewComponetMessage} endMessage={afterViewComponetMessage} />;
                 
                 return (
-                        <div className="flex tab-section tab-section-execution-component">
-                            <div className="tab-section-header">
+                        <div className="tab-section tab-section-execution-component">
+                            <div className="flex flex-row flex-inherit tab-section-header">
                                 <div></div>
                                 <div className="tab-title col-9">Name</div>
                             </div>
                             <div className="tab-section-boxing">
-                                <section className="tab-section-item">
+                                <section className="flex flex-row flex-inherit flex-base tab-section-item">
                                     <div className="tab-title">Component</div>
                                     <div className="tab-execution-important col-8">{beforeViewComponetPayload.componentName}</div>
                                     <div className="tab-execution-timing">{afterViewComponetPayload.componentDuration} ms</div>
@@ -280,13 +281,13 @@ module.exports = React.createClass({
         
             // process action
             view = (
-                    <div className="flex tab-section tab-section-execution-view">
-                        <div className="tab-section-header">
+                    <div className="tab-section tab-section-execution-view">
+                        <div className="flex flex-row flex-inherit tab-section-header">
                             <div></div>
                             <div className="tab-title col-9">Name/Path</div>
                         </div>
                         <div className="tab-section-boxing">
-                            <section className="tab-section-item">
+                            <section className="flex flex-row flex-inherit flex-base tab-section-item">
                                 <div className="tab-title">View</div>
                                 <div className="tab-execution-important col-8">{viewTitle}</div>
                                 <div className="tab-execution-timing">{afterActionViewInvokedPayload.viewDuration} ms</div>
@@ -299,7 +300,7 @@ module.exports = React.createClass({
         
         return (
             <div>
-                <div className="tab-section application-sub-item-header">Execution on Server</div>
+                <div className="tab-section tab-section-title">Execution on Server</div>
                 {route}{action}{view}
             </div>
         );
