@@ -14,9 +14,16 @@ var glimpse = require('glimpse');
             
             var matchedData = [];
             _.forEach(requestRepositoryPayload.affectedRequests, function(request) {
-                var message = messageIndex[request.id];
-                if (message) {
-                    matchedData.push({ request: request, user: message });
+                // only include if it matches our root filterset
+                // TODO: need to make sure users matches the smae filter set as request
+                if (request._responseContentCategory 
+                    && ((request._responseContentCategory.document && !request._requestIsAjax) 
+                        || request._responseContentCategory.data))
+                {
+                    var message = messageIndex[request.id];
+                    if (message) {
+                        matchedData.push({ request: request, user: message });
+                    } 
                 }
             });
             
