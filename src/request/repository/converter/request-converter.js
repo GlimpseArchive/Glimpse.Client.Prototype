@@ -142,10 +142,12 @@ var setupIndex = function(request, type, payload) {
         request._requestStartTime = payload.requestStartTime;
         request._requestMethod = payload.requestMethod;
         request._requestUrl = (payload.requestPath || '') + (payload.requestQueryString || '');
+        request._requestIsAjax = payload.requestIsAjax;
     }
     if (type == 'end-request') {
         request._responseStatusCode = payload.responseStatusCode; 
         request._responseStatusText = getStatusCodeText(payload.responseStatusCode);
+        request._responseContentType = payload.responseContentType;
         request._responseContentCategory = getContentTypeCategory(payload.responseContentType);  
         
         payload.responseStatusText = request._responseStatusText;  
