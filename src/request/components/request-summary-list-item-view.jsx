@@ -22,6 +22,9 @@ var actionOrEmpty = function(controller, action) {
     
     return <span className="text-minor">--</span>;
 };
+var actionOrEmptyTitle = function(controller, action) {
+    return controller && action ? controller + '.' + action + '(...)' : '';
+};
 var commandOrEmpty = function(commands) {
     if (commands.length > 0) {
         var queryCount = 0;
@@ -94,14 +97,14 @@ module.exports = React.createClass({
                     <div className="col-7">Controller/Action</div>
                     <div className="col-3">Query/Count</div>
                 </div>
-                <div className="flex flex-row flex-inherit flex-base">
+                <div className="flex flex-row flex-inherit flex-base request-summary-facets">
                     <div className="col-3 text-focus">{requestTime(endRequest, browserNavigationTiming)}</div>
                     <div className="col-2">{timeOrEmpty(browserNavigationTiming.serverTime)}</div>
                     <div className="col-2">{timeOrEmpty(browserNavigationTiming.browserTime)}</div>
                     <div className="col-4">{timeOrEmpty(browserNavigationTiming.networkTime)}</div>
                     <div className="col-2">{timeOrEmpty(afterActionInvoked.actionInvokedDuration)}</div>
                     <div className="col-2">{timeOrEmpty(afterActionViewInvoked.viewDuration)}</div>
-                    <div className="col-7 text-focus truncate-outer">{actionOrEmpty(afterActionInvoked.actionControllerName, afterActionInvoked.actionName)}</div>
+                    <div className="col-7 text-focus truncate-outer" title={actionOrEmptyTitle(afterActionInvoked.actionControllerName, afterActionInvoked.actionName)}>{actionOrEmpty(afterActionInvoked.actionControllerName, afterActionInvoked.actionName)}</div>
                     <div className="col-3">{commandOrEmpty(afterExecuteCommand)}</div>
                 </div>
             </div>

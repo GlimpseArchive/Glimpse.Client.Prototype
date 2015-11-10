@@ -21,7 +21,7 @@ module.exports = React.createClass({
                 <div className="flex flex-row user-status">
                     <div className="col-1 user-status-img"><img className={imgClass} src={user.details.image} width="40" /></div>
                     <div className="col-2 truncate-outer">
-                        <div className="truncate">{user.details.username}</div>
+                        <div className="truncate" title={user.details.username}>{user.details.username}</div>
                         <div className="user-status-time text-minor"><Timeago time={user.lastActive} /></div>
                     </div>
                 </div>

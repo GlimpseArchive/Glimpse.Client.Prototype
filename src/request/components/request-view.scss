@@ -125,7 +125,7 @@ body, html {
     
     .request-user-section, .request-filter-section {
         color: white;
-        flex: 2 1 200px;
+        flex: 2 1 130px;
         min-width: 130px;
         max-width: 225px;
     }
@@ -143,7 +143,6 @@ body, html {
     .request-summary-section {
         flex: 5 1 600px;
         min-width: 400px;
-        max-width: 900px;
         box-shadow: 5px 5px 0 0px #B1B4B9 inset;
         
         .request-holder-content {
@@ -160,16 +159,19 @@ body, html {
         top: 0;
         bottom: 0;
         right: 0;
-        width: 70vw;
-        min-width: 740px;
+        width: 73vw;
         margin-right: 0;
         border-radius: 3px 3px 0 0;
         
         .request-holder-content {
-            margin: 5px 5px 0 5px;
+            margin: 5px 4px 0 5px;
         }
         > div {
             min-width: 65vw;
+        }
+        
+        .text-minor {
+            color: #737373;
         }
     }
     
@@ -216,6 +218,10 @@ body, html {
     }
     .user-status-img {
         min-width: 55px;
+        
+        > img {
+            transition: width 0.1s ease-in;
+        }
     }
     .user-status-time {
         font-size: 80%;
@@ -322,6 +328,9 @@ body, html {
     color: #737373;
     text-align: right;
     margin-right: 1%;
+}
+.request-summary-facets {
+    white-space: nowrap;
 }
 
 
@@ -463,9 +472,6 @@ body, html {
     padding: 10px 0;
     margin: 0 20px;
 }
-.tab-section .tab-section {
-    border-right: 1px solid #aaa;
-}
 .tab-section-boxing {
     border-left: 3px solid transparent;
     padding-left: 10px;
@@ -492,6 +498,13 @@ body, html {
         font-weight: bold; 
         text-align: right;
         padding-right: 10px;
+        white-space: nowrap;
+    }
+    .tab-execution-timing-arrow {
+        transform: rotate(180deg);
+        display: inline-block;
+        padding-right: 5px;
+        color: #737373;
     }
     
     .tab-section-execution-command-item {
@@ -539,7 +552,7 @@ body, html {
         }
     }
     .tab-section-execution-command-items {
-        width: 575px;
+        width: 100px;
     }
 }
 .tab-section-execution-action > .tab-section-boxing, .tab-section-execution-component > .tab-section-boxing {
@@ -577,12 +590,33 @@ body, html {
         min-width: 600px;
     }
     
-    .user-status-time {
+    .request-summary-section {
+        border-radius: 0 3px 0 0;
+    }
+    .request-filter-section {
         display: none;
+    }
+    .request-detail-section {
+        width: 67vw;
     }
 }
 @media only screen and (max-width: 920px) {
-    .request-filter-section {
+    .user-status-time {
+        display: none;
+    }
+    .user-status-img {
+        min-width: 25px; 
+        
+        > img {
+            width: 20px;
+        }
+    }
+}
+@media only screen and (max-width: 760px) {
+    .request-detail-section {
+        width: 83vw;
+    }
+    .request-user-section {
         display: none;
     }
 }
