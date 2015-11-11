@@ -37,5 +37,5 @@ repository.getData(function(details) {
 		$('.glimpse-icon').click(function() {
 			window.open(util.resolveClientUrl(util.currentRequestId(), true), 'GlimpseClient');
 		});
-	}, 5); });
+	}, 0); });
 });
