@@ -23,9 +23,9 @@
     float: right;
     position: fixed;
     min-width: 1370px;
-    height: 34px;
     transform: translatez(0);
     z-index: 100000;
+    height: 36px;
 }
 .glimpse td, .glimpse span, .glimpse div, .glimpse th {
     color: #fff;
@@ -43,11 +43,11 @@
     margin: 0;
     padding: 0 8px;
     float: right;
-    height: 34px;
     width: 39px;
     cursor: pointer;
     background-image: url(/glimpse/hud/assets/glimpse-logo.png);
     background-repeat: no-repeat;
+    height: 36px;
 }
 .glimpse .glimpse-icon-text {
     font-size: 5px;
@@ -68,9 +68,9 @@
     float: left; 
     transition: all 0.3s ease;
     border-left: 11px solid #71b1d1;
-    height: 34px;
     position: relative;
     cursor: default;
+    height: 37px;
 }
 .glimpse .glimpse-hud-title { 
     position: absolute;
@@ -97,6 +97,7 @@
     min-width: 0px;
     margin-top: -1px;
     overflow: hidden;
+    height: 37px;
 }
 .glimpse .glimpse-hud-section-input {
     display: none !important;
