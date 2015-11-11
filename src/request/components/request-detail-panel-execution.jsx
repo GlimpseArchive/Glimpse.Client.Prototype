@@ -216,7 +216,7 @@ module.exports = React.createClass({
             }
             
             // process route
-            var route = <div className="tab-section">No route found yet.</div>;
+            var route = null;
             if (routePayload) {
                 var routePath = beginRequestPayload ? (<span><span>{beginRequestPayload.requestPath}</span><span>{beginRequestPayload.requestQueryString}</span></span>) : '';
             
@@ -235,7 +235,7 @@ module.exports = React.createClass({
             }
             
             // process action
-            var action = <div className="tab-section">No action found yet.</div>;
+            var action = null;
             if (afterActionInvokedPayload) {
                 var content;
                 if (contentPayload && contentPayload.binding) {
@@ -291,7 +291,7 @@ module.exports = React.createClass({
             }
             
             // process action
-            var view = <div className="tab-section">No view found yet.</div>;
+            var view = null;
             if (actionViewFoundPayload && afterActionViewInvokedPayload) {
                 var viewTitle = null;
                 if (actionViewFoundPayload) { 
