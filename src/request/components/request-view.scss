@@ -564,6 +564,15 @@ body, html {
 .tab-section-execution-command > .tab-section-boxing {
     border-left-color: #e2875e;
 }
+.tab-section-listing {
+    > *:nth-child(even) {
+        background-color: #E5E9EA;
+    }
+    > * {
+        margin: 3px -3px;
+        padding: 3px;
+    }
+}
 
 .tab-execution-hidden-gradient {
     display: none;

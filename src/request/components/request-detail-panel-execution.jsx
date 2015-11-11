@@ -43,6 +43,30 @@ var getMessages = (function() {
     }
 })();
 
+var RequestHeaders = React.createClass({
+    render: function() {
+        return (
+            <div>
+                <div className="tab-section">{this.props.title}</div>
+                <div className="tab-section tab-section-execution-headers">
+                    <div className="flex flex-row flex-inherit tab-section-header">
+                        <div className="tab-title col-2">Variable</div>
+                        <div className="tab-title col-8">Value</div>
+                    </div>
+                    <div className="tab-section-boxing tab-section-listing">
+                        {_.map(this.props.headers, function(value, key) {
+                            return (<section className="flex flex-row">
+                                    <div className="col-2">{key}</div>
+                                    <div className="col-8">{value}</div>
+                                </section>);
+                        })}
+                    </div>
+                </div>
+            </div>
+        );
+    }
+});
+
 var CommandItem = React.createClass({
     getInitialState: function() {
         return { show: false };
@@ -160,9 +184,13 @@ var ParamaterList = React.createClass({
 
 
 module.exports = React.createClass({
+    getInitialState: function () {
+        return { checkedState: false };
+    },
     render: function () {
         var request = this.props.request;
         
+        // get payloads 
         var payload = getPayloads(request);
         var beginRequestPayload = payload.beginRequest;
         var endRequestPayload = payload.endRequest;
@@ -172,124 +200,140 @@ module.exports = React.createClass({
         var actionViewFoundPayload = payload.actionViewFound;
         var afterActionViewInvokedPayload = payload.afterActionViewInvoked;
         
-        var message = getMessages(request);
-        var beforeActionInvokedMessage = message.beforeActionInvoked;
-        var afterActionInvokedMessage = message.afterActionInvoked;
-        var beforeExecuteCommandMessages = message.beforeExecuteCommand;
-        var afterExecuteCommandMessages = message.afterExecuteCommand;
-        var beforeViewComponentMessages = message.beforeViewComponent;
-        var afterViewComponentMessages = message.afterViewComponent;
-        
-        if (beforeExecuteCommandMessages && afterExecuteCommandMessages) {
-            beforeExecuteCommandMessages = beforeExecuteCommandMessages.sort(function(a, b) { return a.ordinal - b.ordinal; });
-            afterExecuteCommandMessages = afterExecuteCommandMessages.sort(function(a, b) { return a.ordinal - b.ordinal; });
-        }
-        
-        var route = <div className="tab-section">No route found yet.</div>;
-        if (routePayload) {
-            var routePath = beginRequestPayload ? (<span><span>{beginRequestPayload.requestPath}</span><span>{beginRequestPayload.requestQueryString}</span></span>) : '';
-        
-            // process route
-            route = (
-                    <div className="tab-section tab-section-execution-route">
-                        <div className="flex flex-row flex-inherit tab-section-header">
-                            <div className="tab-title col-9">Route</div>
-                        </div>
-                        <div className="tab-section-boxing">
-                            <section className="flex flex-row flex-inherit flex-base tab-section-item">
-                                <div className="col-2">{routePayload.routeName} - {routePath} &nbsp; <span className="text-minor">{routePayload.routePattern}</span></div>
-                            </section>
-                        </div>
-                    </div>
-                ); 
-        }
-        
-        var action = <div className="tab-section">No action found yet.</div>;
-        if (afterActionInvokedPayload) {
-            // process content
-            var content;
-            if (contentPayload && contentPayload.binding) {
-                content = <ParamaterList argumentData={contentPayload.binding} />
+        var content = null;
+        if (routePayload || afterActionInvokedPayload || actionViewFoundPayload || afterActionViewInvokedPayload) {
+            // get messages 
+            var message = getMessages(request);
+            var beforeActionInvokedMessage = message.beforeActionInvoked;
+            var afterActionInvokedMessage = message.afterActionInvoked;
+            var beforeExecuteCommandMessages = message.beforeExecuteCommand;
+            var afterExecuteCommandMessages = message.afterExecuteCommand;
+            var beforeViewComponentMessages = message.beforeViewComponent;
+            var afterViewComponentMessages = message.afterViewComponent;
+            if (beforeExecuteCommandMessages && afterExecuteCommandMessages) {
+                beforeExecuteCommandMessages = beforeExecuteCommandMessages.sort(function(a, b) { return a.ordinal - b.ordinal; });
+                afterExecuteCommandMessages = afterExecuteCommandMessages.sort(function(a, b) { return a.ordinal - b.ordinal; });
             }
             
-            // process action
-            action = (
-                    <div className="tab-section tab-section-execution-action">
-                        <div className="flex flex-row flex-inherit tab-section-header">
-                            <div className="tab-title col-9">Action</div>
-                        </div>
-                        <div className="tab-section-boxing">
-                            <section className="flex flex-row flex-inherit flex-base tab-section-item">
-                                <div className="tab-execution-important col-8">
-                                    {afterActionInvokedPayload.actionControllerName}.{afterActionInvokedPayload.actionName}({content})
-                                </div>
-                                <div className="tab-execution-timing">{afterActionInvokedPayload.actionInvokedDuration} ms</div>
-                            </section>
-                            <CommandList beforeExecuteCommandMessages={beforeExecuteCommandMessages} afterExecuteCommandMessages={afterExecuteCommandMessages} beginMessage={beforeActionInvokedMessage} endMessage={afterActionInvokedMessage} />
-                        </div>
-                    </div>
-                ); 
-        }
-        
-        var viewComponent = '';
-        if (beforeViewComponentMessages && afterViewComponentMessages) {
-            beforeViewComponentMessages = beforeViewComponentMessages.sort(function(a, b) { return a.ordinal - b.ordinal; });
-            afterViewComponentMessages = _.indexBy(afterViewComponentMessages, 'payload.componentId');
+            // process route
+            var route = <div className="tab-section">No route found yet.</div>;
+            if (routePayload) {
+                var routePath = beginRequestPayload ? (<span><span>{beginRequestPayload.requestPath}</span><span>{beginRequestPayload.requestQueryString}</span></span>) : '';
             
-            viewComponent = _.map(beforeViewComponentMessages, function(beforeViewComponetMessage, i) {
-                var beforeViewComponetPayload = beforeViewComponetMessage.payload;
-                var afterViewComponetMessage = afterViewComponentMessages[beforeViewComponetPayload.componentId];
-                var afterViewComponetPayload = afterViewComponetMessage.payload;
-                
-                var componentCommands = <CommandList beforeExecuteCommandMessages={beforeExecuteCommandMessages} afterExecuteCommandMessages={afterExecuteCommandMessages} beginMessage={beforeViewComponetMessage} endMessage={afterViewComponetMessage} />;
-                
-                return (
-                        <div className="tab-section tab-section-execution-component">
+                route = (
+                        <div className="tab-section tab-section-execution-route">
                             <div className="flex flex-row flex-inherit tab-section-header">
-                                <div className="tab-title col-9">View Component</div>
+                                <div className="tab-title col-9">Route</div>
                             </div>
                             <div className="tab-section-boxing">
                                 <section className="flex flex-row flex-inherit flex-base tab-section-item">
-                                    <div className="tab-execution-important col-8">{beforeViewComponetPayload.componentName}</div>
-                                    <div className="tab-execution-timing">{afterViewComponetPayload.componentDuration} ms<span className="tab-execution-timing-arrow">➦</span></div>
+                                    <div className="col-2">{routePayload.routeName} - {routePath} &nbsp; <span className="text-minor">{routePayload.routePattern}</span></div>
                                 </section>
-                                {componentCommands}
+                            </div>
+                        </div>
+                    ); 
+            }
+            
+            // process action
+            var action = <div className="tab-section">No action found yet.</div>;
+            if (afterActionInvokedPayload) {
+                var content;
+                if (contentPayload && contentPayload.binding) {
+                    content = <ParamaterList argumentData={contentPayload.binding} />
+                }
+                
+                action = (
+                        <div className="tab-section tab-section-execution-action">
+                            <div className="flex flex-row flex-inherit tab-section-header">
+                                <div className="tab-title col-9">Action</div>
+                            </div>
+                            <div className="tab-section-boxing">
+                                <section className="flex flex-row flex-inherit flex-base tab-section-item">
+                                    <div className="tab-execution-important col-8">
+                                        {afterActionInvokedPayload.actionControllerName}.{afterActionInvokedPayload.actionName}({content})
+                                    </div>
+                                    <div className="tab-execution-timing">{afterActionInvokedPayload.actionInvokedDuration} ms</div>
+                                </section>
+                                <CommandList beforeExecuteCommandMessages={beforeExecuteCommandMessages} afterExecuteCommandMessages={afterExecuteCommandMessages} beginMessage={beforeActionInvokedMessage} endMessage={afterActionInvokedMessage} />
+                            </div>
+                        </div>
+                    ); 
+            }
+            
+            // process view component
+            var viewComponent = '';
+            if (beforeViewComponentMessages && afterViewComponentMessages) {
+                beforeViewComponentMessages = beforeViewComponentMessages.sort(function(a, b) { return a.ordinal - b.ordinal; });
+                afterViewComponentMessages = _.indexBy(afterViewComponentMessages, 'payload.componentId');
+                
+                viewComponent = _.map(beforeViewComponentMessages, function(beforeViewComponetMessage, i) {
+                    var beforeViewComponetPayload = beforeViewComponetMessage.payload;
+                    var afterViewComponetMessage = afterViewComponentMessages[beforeViewComponetPayload.componentId];
+                    var afterViewComponetPayload = afterViewComponetMessage.payload;
+                    
+                    var componentCommands = <CommandList beforeExecuteCommandMessages={beforeExecuteCommandMessages} afterExecuteCommandMessages={afterExecuteCommandMessages} beginMessage={beforeViewComponetMessage} endMessage={afterViewComponetMessage} />;
+                    
+                    return (
+                            <div className="tab-section tab-section-execution-component">
+                                <div className="flex flex-row flex-inherit tab-section-header">
+                                    <div className="tab-title col-9">View Component</div>
+                                </div>
+                                <div className="tab-section-boxing">
+                                    <section className="flex flex-row flex-inherit flex-base tab-section-item">
+                                        <div className="tab-execution-important col-8">{beforeViewComponetPayload.componentName}</div>
+                                        <div className="tab-execution-timing">{afterViewComponetPayload.componentDuration} ms<span className="tab-execution-timing-arrow">➦</span></div>
+                                    </section>
+                                    {componentCommands}
+                                </div>
+                            </div>
+                        );
+                });
+            }
+            
+            // process action
+            var view = <div className="tab-section">No view found yet.</div>;
+            if (actionViewFoundPayload && afterActionViewInvokedPayload) {
+                var viewTitle = null;
+                if (actionViewFoundPayload) { 
+                    viewTitle = <div><span className="tab-execution-important">{actionViewFoundPayload.viewName}</span> - <span>{actionViewFoundPayload.viewPath}</span></div>;
+                }
+            
+                view = (
+                        <div className="tab-section tab-section-execution-view">
+                            <div className="flex flex-row flex-inherit tab-section-header">
+                                <div className="tab-title col-9">View Result</div>
+                            </div>
+                            <div className="tab-section-boxing">
+                                <section className="flex flex-row flex-inherit flex-base tab-section-item">
+                                    <div className="tab-execution-important col-8">{viewTitle}</div>
+                                    <div className="tab-execution-timing">{afterActionViewInvokedPayload.viewDuration} ms</div>
+                                </section>
+                                {viewComponent}
                             </div>
                         </div>
                     );
-            });
-        }
-        
-        var view = <div className="tab-section">No view found yet.</div>;
-        if (actionViewFoundPayload && afterActionViewInvokedPayload) {
-            var viewTitle = null;
-            if (actionViewFoundPayload) { 
-                viewTitle = <div><span className="tab-execution-important">{actionViewFoundPayload.viewName}</span> - <span>{actionViewFoundPayload.viewPath}</span></div>;
             }
-        
-            // process action
-            view = (
-                    <div className="tab-section tab-section-execution-view">
-                        <div className="flex flex-row flex-inherit tab-section-header">
-                            <div className="tab-title col-9">View Result</div>
-                        </div>
-                        <div className="tab-section-boxing">
-                            <section className="flex flex-row flex-inherit flex-base tab-section-item">
-                                <div className="tab-execution-important col-8">{viewTitle}</div>
-                                <div className="tab-execution-timing">{afterActionViewInvokedPayload.viewDuration} ms</div>
-                            </section>
-                            {viewComponent}
-                        </div>
-                    </div>
-                );
+            
+            content = (
+                <div>
+                    <div className="tab-section text-minor">Execution on Server</div>{route}{action}{view}
+                </div>
+            );
+        }   
+        else if (beginRequestPayload && endRequestPayload) {
+            content = (
+                <div>
+                    <div className="tab-section text-minor">Execution on Server</div>
+                    <RequestHeaders title="Request Headers" headers={beginRequestPayload.requestHeaders} />;
+                    <RequestHeaders title="Response Headers" headers={endRequestPayload.responseHeaders} />;
+                </div>
+            );
+        }
+        else {
+            content = <div className="tab-section text-minor">Could not find any data.</div>;
         }
         
-        return (
-            <div>
-                <div className="tab-section text-minor">Execution on Server</div>
-                {route}{action}{view}
-            </div>
-        );
+        return content;
     }
 });
 
