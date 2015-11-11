@@ -16,6 +16,14 @@ module.exports = React.createClass({
             'user-status-online': user.online,
         });
 
+/*
+                <div className="user-status-request-group">
+                    {user.latestRequests.map(function (request) {
+                        return <div key={request.id}>{request.url}</div>;
+                    })}
+                </div>
+*/
+
         return (
             <div className={containerClass} onClick={this._onClick}>
                 <div className="flex flex-row user-status">
@@ -24,11 +32,6 @@ module.exports = React.createClass({
                         <div className="truncate" title={user.details.username}>{user.details.username}</div>
                         <div className="user-status-time text-minor"><Timeago time={user.lastActive} /></div>
                     </div>
-                </div>
-                <div className="user-status-request-group">
-                    {user.latestRequests.map(function (request) {
-                        return <div key={request.id}>{request.url}</div>;
-                    })}
                 </div>
             </div>
         );
