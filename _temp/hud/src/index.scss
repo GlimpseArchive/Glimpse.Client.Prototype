@@ -192,6 +192,13 @@
 .glimpse .glimpse-hud-prefix {
     padding-right: 2px;
 }
+.glimpse .glimpse-hud-prefix-super {
+    font-size: 0.4em;
+    font-weight: normal;
+    opacity: 0.4;
+    position: relative;
+    top: -0.5em;
+}
 .glimpse .glimpse-hud-spacer {
     padding: 0 10px;
 }
@@ -400,3 +407,4 @@
 .glimpse .glimpse-data-ajax-detail a {
     color:inherit;  
 }
+
