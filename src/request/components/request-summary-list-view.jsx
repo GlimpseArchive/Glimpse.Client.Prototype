@@ -3,6 +3,7 @@
 var glimpse = require('glimpse');
 var React = require('react');
 var ReactCSSTransitionGroup = React.addons.CSSTransitionGroup;
+var Loading = require('lib/components/loading');
 var SummaryItem = require('./request-summary-list-item-view');
 
 module.exports = React.createClass({
@@ -22,10 +23,7 @@ module.exports = React.createClass({
                 {allRequets.map(function(request) {
                     return <SummaryItem key={request.id} request={request} />;
                 })}
-                {glimpse.util.isEmpty(allRequets) ?
-                    <em>No found entries.</em> :
-                    null
-                }
+                {glimpse.util.isEmpty(allRequets) ? <Loading message="No requests found yet." mandatory={false} /> : null}
             </div>
         );
     }

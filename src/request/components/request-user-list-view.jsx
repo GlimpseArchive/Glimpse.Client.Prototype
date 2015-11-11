@@ -3,6 +3,7 @@
 var glimpse = require('glimpse');
 var React = require('react');
 var ReactCSSTransitionGroup = React.addons.CSSTransitionGroup;
+var Loading = require('lib/components/loading');
 var UserItem = require('./request-user-list-item-view');
 
 module.exports = React.createClass({
@@ -22,7 +23,7 @@ module.exports = React.createClass({
                 {allUsers.map(function(user) {
                     return <UserItem key={user.details.userId} user={user} />;
                 })}
-                {glimpse.util.isEmpty(allUsers) ? <em>No found users.</em> : null}
+                {glimpse.util.isEmpty(allUsers) ? <Loading message="No users found yet." mandatory={false} /> : null}
             </div>
         );
     }

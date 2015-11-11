@@ -111,6 +111,10 @@ body, html {
         margin: 5px 15px 10px 20px; // taking into account the box shadow
     }
 }
+.application-section-message {
+    font-style: italic;
+    margin: 10px 15px;
+}
 .button-holder {
     margin: 10px 15px;
     text-align: right;
@@ -147,6 +151,9 @@ body, html {
         
         .request-holder-content {
             margin: 5px 0 0 5px;
+        }
+        .application-section-message {
+            margin-left: 18px;
         }
     }
     .request-filter-section {
@@ -286,6 +293,9 @@ body, html {
 .request-summary-group-item {
     padding: 15px 20px;
     
+    &:first-child {
+        padding-top: 8px;
+    }
     .text-minor {
         color: #737373;
     }
