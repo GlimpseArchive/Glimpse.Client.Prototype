@@ -55,7 +55,7 @@ var process = (function() {
 				result.serverTime = environment.serverTime;
 				result.serverTimezoneOffset = environment.serverTimezoneOffset;
 				result.serverDaylightSavingTime = environment.serverDaylightSavingTime;
-				result.user = userIdentification.username;
+				result.user = !userIdentification.isAnonymous ? userIdentification.username : null;
 				
 				return result;
 			},
