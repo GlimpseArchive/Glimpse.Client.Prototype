@@ -37,6 +37,6 @@ repository.getData(function(details) {
 		state.setup(holder);
 		
 		// setup events that we need to listen to
-		sections.postRender(holder);
+		sections.postRender(holder, details);
 	}, 0); });
 });

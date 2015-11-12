@@ -12,10 +12,10 @@ var render = function(details, state) {
 	}
 	return html;
 }
-var postRender = function(holder) {
+var postRender = function(holder, details) {
 	for (var i = 0; i < _sections.length; i++) {
 		if (_sections[i].postRender) {
-			_sections[i].postRender(holder);
+			_sections[i].postRender(holder, details);
 		}
 	}
 }

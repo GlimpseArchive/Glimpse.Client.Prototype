@@ -2,6 +2,15 @@
 
 var rendering = require('./util/rendering');
 var process = require('./util/process');
+var $ = require('$jquery');
+
+var timingsRaw = (window.performance || window.mozPerformance || window.msPerformance || window.webkitPerformance || {}).timing;
+
+var triggerOnLoad = false;
+var detectedOnLoad = false;
+$(window).on('load', function() { 
+	detectedOnLoad = true;
+});
 
 var structure = {
 	title: 'HTTP',
@@ -20,10 +29,10 @@ var structure = {
 		}
 	},
 	defaults: {
-		request: { title: 'Request', description: 'Total request time from click to dom ready', visible: true, size: 1, position: 0, align: 0, postfix: 'ms', getData: function(details) { return details.request.data.total.duration; } },
+		request: { title: 'Request', description: 'Total request time from click to dom ready', visible: true, size: 1, position: 0, align: 0, postfix: 'ms', getData: function(details) { return details.request.data.total.duration; }, id: 'glimpse-hud-data-request' },
 		wire: { title: 'Network', description: 'Total time on the network', visible: true, size: 2, position: 0, align: 0, postfix: 'ms', getData: function(details) { return details.request.data.network.duration; } },
 		server: { title: 'Server', description: 'Total time on the server', visible: true, size: 2, position: 0, align: 0, postfix: 'ms', getData: function(details) { return details.request.data.server.duration; } },
-		client: { title: 'Client', description: 'Total time once client kicks in to dom ready', visible: true, size: 2, position: 0, align: 0, postfix: 'ms', getData: function(details) { return details.request.data.browser.duration; } }, 
+		client: { title: 'Client', description: 'Total time once client kicks in to dom ready', visible: true, size: 2, position: 0, align: 0, postfix: 'ms', getData: function(details) { var duration = details.request.data.browser.duration; return duration === null ? '...' : duration; }, id: 'glimpse-hud-data-client' }, 
 		host: { title: 'Host', description: 'Server that responded to the request', visible: true, size: 2, position: 1, align: 1, postfix: '', getLayoutData: function(details) { return '<div class="glimpse-hud-listing-overflow" style="max-width:170px;">' + details.environment.data.serverName + '</div>'; } }, 
 		principal: { title: 'Principal', description: 'Principal that is currently logged in for this session', visible: function(details) { return details.environment.data.user; }, size: 2, position: 1, align: 1, postfix: '', getLayoutData: function(details) { return '<div class="glimpse-hud-listing-overflow" style="max-width:120px;">' + details.environment.data.user + '</div>'; } }
 	},
@@ -51,14 +60,19 @@ var processTimings = function(details, timingsRaw) {
 		networkPost = calculateTimings(timingsRaw, 'responseStart', 'responseEnd'),
 		network = networkPre + networkPost,
 		server = calculateTimings(timingsRaw, 'requestStart', 'responseStart'),
-		browser = calculateTimings(timingsRaw, 'responseEnd', 'domComplete'),
-		total = network + server + browser;
+		browser = calculateTimings(timingsRaw, 'responseEnd', 'domComplete');
+	
+	if (browser < 0) {
+		browser = 0;
+		triggerOnLoad = true;
+	}
+	var total = network + server + browser;
 		
 	result.networkSending = { categoryColor: '#FDBF45', duration: networkPre, percentage: (networkPre / total) * 100 };
 	result.networkReceiving = { categoryColor: '#FDBF45', duration: networkPost, percentage: (networkPost / total) * 100 };
 	result.network = { categoryColor: '#FDBF45', duration: network, percentage: (network / total) * 100 };
 	result.server = { categoryColor: '#AF78DD', duration: server, percentage: (server / total) * 100 };
-	result.browser = { categoryColor: '#72A3E4', duration: browser, percentage: (browser / total) * 100 };
+	result.browser = { categoryColor: '#72A3E4', duration: browser === 0 ? null : browser, percentage: (browser / total) * 100 };
 	result.total = { categoryColor: '#10E309', duration: network + server + browser, percentage: 100 };
 	
 	details.request = { data: result, name: 'Request' };
@@ -70,18 +84,45 @@ var calculateTimings = function(timingsRaw, startIndex, finishIndex) {
 var render = function(details, opened) {
 	var html = '';
 	
-	var timingsRaw = (window.performance || window.mozPerformance || window.msPerformance || window.webkitPerformance || {}).timing;
 	if (timingsRaw) {
 		process.init(structure);
 		processTimings(details, timingsRaw); 
+		
 		html = rendering.section(structure, details, opened); 
 	}
 
 	return html;
 };
+var postRender = function(holder, details) {
+
+	if (triggerOnLoad) {
+		if (detectedOnLoad) {
+			updateBrowserData(details);
+		}
+		else {
+			$(window).on('load', function() { updateBrowserData(details); });
+		}
+	}
+};
+
+var updateBrowserData = function(details) {
+	var data = details.request.data;
+	
+	// adjust timings
+	data.browser.duration = calculateTimings(timingsRaw, 'responseEnd', 'domComplete');
+	data.total.duration = data.browser.duration + data.server.duration + data.network.duration;
+	
+	// adjust percentage
+	data.browser.percentage = (data.browser.duration / data.total.duration) * 100;
+	data.server.percentage = (data.server.duration / data.total.duration) * 100;
+	data.network.percentage = (data.network.duration / data.total.duration) * 100;
+	
+	// TODO: manually update the dom
+}
 
 module.exports = {
-	render: render
+	render: render,
+	postRender: postRender
 };
 
 // TODO: Need to come up with a better self registration process
