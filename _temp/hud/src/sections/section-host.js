@@ -91,6 +91,14 @@ var processEvents = function(details) {
         rootDuration = details.request ? details.request.data.server.duration : 1,
         rootChildlessDuration = rootDuration;
 
+    details.timings.data.unshift({
+        category: 'Request',
+        title: 'Request: ' + (window.location.pathname + window.location.search),
+        duration: rootDuration,
+        startPoint: 0,
+        startTime: 'NOT SURE'
+    });
+    
     for (var i = 0; i < details.timings.data.length; i += 1) {
         var event = details.timings.data[i],
             topEvent = eventStack.length > 0 ? eventStack[eventStack.length - 1] : null, 
@@ -147,20 +155,6 @@ var processEvents = function(details) {
 
         lastEvent = event;
     }
-        
-    details.timings.data.unshift({
-            description: 'Request: ' + (window.location.pathname + window.location.search),
-            title: (window.location.pathname + window.location.search),
-            startTime: 'NOT SURE',
-            duration: rootDuration,
-            startPoint: '0.0',
-            category: 'Request',
-            childlessDuration: Math.round(rootChildlessDuration * 10) / 10,
-            startPercent: 0,
-            endPercent: 100,
-            widthPercent: 100,
-            nesting: 0
-        }); 
 };
 
 var render = function(details, opened) {
