@@ -23,7 +23,7 @@ var structure = {
 			html += '<div><div class="glimpse-hud-summary-left">' + rendering.item(structure.layout.popup.request, details) + '</div>';
 			html += '<table class="glimpse-hud-summary glimpse-hud-summary-right"><tr><td width="1" class="glimpse-hud-listing-overflow">' + rendering.item(structure.layout.popup.host, details) + '</td></tr><tr><td class="glimpse-hud-listing-overflow">' + rendering.item(structure.layout.popup.principal, details)  + '</td></tr></table></div>';
 			html += '<div class="glimpse-hud-popup-clear"></div>';
-			html += '<div class="glimpse-data-request-parts"><table><tr><td colspan="3"><div class="glimpse-hud-bar glimpse-hud-tooltips-non"><div><div class="glimpse-hud-bar-item" style="width: 100%;background-color: ' + requestDetails.browser.categoryColor + '"></div><div class="glimpse-hud-bar-item" style="width: ' + (requestDetails.server.percentage + requestDetails.network.percentage) + '%;background-color: ' + requestDetails.server.categoryColor + ';"></div><div class="glimpse-hud-bar-item" style="width: ' + requestDetails.network.percentage + '%;background-color: ' + requestDetails.network.categoryColor + ';"></div></div></div></td></tr><tr><td class="glimpse-data-wire-part">' + rendering.item(structure.layout.popup.wire, details) + '</td><td class="glimpse-data-server-part">' + rendering.item(structure.layout.popup.server, details) + '</td><td class="glimpse-data-client-part">' + rendering.item(structure.layout.popup.client, details) + '</td></tr></table></div>'; 
+			html += '<div class="glimpse-data-request-parts"><table><tr><td colspan="3"><div class="glimpse-hud-bar glimpse-hud-tooltips-non"><div><div class="glimpse-hud-bar-item" style="width: 100%;background-color: ' + requestDetails.browser.categoryColor + '"></div><div class="glimpse-hud-bar-item glimpse-hud-bar-item-server" style="width: ' + (requestDetails.server.percentage + requestDetails.network.percentage) + '%;background-color: ' + requestDetails.server.categoryColor + ';"></div><div class="glimpse-hud-bar-item glimpse-hud-bar-item-network" style="width: ' + requestDetails.network.percentage + '%;background-color: ' + requestDetails.network.categoryColor + ';"></div></div></div></td></tr><tr><td class="glimpse-data-wire-part">' + rendering.item(structure.layout.popup.wire, details) + '</td><td class="glimpse-data-server-part">' + rendering.item(structure.layout.popup.server, details) + '</td><td class="glimpse-data-client-part">' + rendering.item(structure.layout.popup.client, details) + '</td></tr></table></div>'; 
 
 			return html;
 		}
@@ -94,7 +94,6 @@ var render = function(details, opened) {
 	return html;
 };
 var postRender = function(holder, details) {
-
 	if (triggerOnLoad) {
 		if (detectedOnLoad) {
 			updateBrowserData(details);
@@ -117,7 +116,12 @@ var updateBrowserData = function(details) {
 	data.server.percentage = (data.server.duration / data.total.duration) * 100;
 	data.network.percentage = (data.network.duration / data.total.duration) * 100;
 	
-	// TODO: manually update the dom
+	// manually update the dom
+	$('.glimpse-hud-data-client .glimpse-hud-data').text(data.browser.duration);
+	$('.glimpse-hud-data-request .glimpse-hud-data').text(data.total.duration);
+	
+	$('.glimpse-hud-bar-item-server').attr('style', 'background-color: ' + data.server.categoryColor + ';width:' + (data.server.percentage + data.network.percentage) + '%');
+	$('.glimpse-hud-bar-item-network').attr('style', 'background-color: ' + data.network.categoryColor + ';width:' + data.network.percentage + '%');
 }
 
 module.exports = {
