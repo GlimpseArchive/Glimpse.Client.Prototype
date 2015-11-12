@@ -14,14 +14,26 @@ module.exports = {
 	},
 	getTypePayloadItem: function(index, type) {
 		var messages = index[type]; 
-		if (messages)	{
+		if (messages) {
 			return messages[0].payload;
 		}
 	},
 	getTypePayloadList: function(index, type) {
 		var messages = index[type]; 
-		if (messages)	{
+		if (messages) {
 			return messages.map(function(message) { return message.payload; });
+		}
+	},
+	getTypeMessageItem: function(index, type) {
+		var messages = index[type]; 
+		if (messages) {
+			return messages[0];
+		}
+	},
+	getTypeMessageList: function(index, type) {
+		var messages = index[type]; 
+		if (messages) {
+			return messages;
 		}
 	}
 };

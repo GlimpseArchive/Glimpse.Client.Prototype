@@ -54,8 +54,6 @@ var processTimings = function(details, timingsRaw) {
 		browser = calculateTimings(timingsRaw, 'responseEnd', 'domComplete'),
 		total = network + server + browser;
 		
-		console.log(timingsRaw)
-
 	result.networkSending = { categoryColor: '#FDBF45', duration: networkPre, percentage: (networkPre / total) * 100 };
 	result.networkReceiving = { categoryColor: '#FDBF45', duration: networkPost, percentage: (networkPost / total) * 100 };
 	result.network = { categoryColor: '#FDBF45', duration: network, percentage: (network / total) * 100 };

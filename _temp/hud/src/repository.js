@@ -23,6 +23,7 @@ var process = (function() {
 	var getPayload = function(index) {
 		var processItem = messageProcessor.getTypePayloadItem;
 		var processList = messageProcessor.getTypePayloadList;
+		var messageList = messageProcessor.getTypeMessageList;
 		
 		return messageProcessor.getTypeStucture(index, {
 			'begin-request': processItem,
@@ -31,7 +32,8 @@ var process = (function() {
 			//'browser-navigation-timing': processItem,
 			'after-action-invoked': processItem,
 			'after-action-view-invoked': processItem,
-			'after-execute-command': processList,
+			'before-execute-command': messageList,
+			'after-execute-command': messageList,
 			'after-view-component': processList,
 			'end-request': processItem
 		});
@@ -85,7 +87,7 @@ var process = (function() {
 				// result.connectionOpenTime = 0;
 				result.queryExecutionTime = 0;
 				for (var i = 0; i < afterExecuteCommand.length; i++) {
-					result.queryExecutionTime += afterExecuteCommand[i].commandDuration;
+					result.queryExecutionTime += afterExecuteCommand[i].payload.commandDuration;
 				}
 				
 				return result;
@@ -111,6 +113,7 @@ var process = (function() {
 			timings: function(payload) {
 				var afterActionInvoked = payload.afterActionInvoked || {};
 				var afterActionViewInvoked = payload.afterActionViewInvoked || {};
+				var beforeExecuteCommand = payload.beforeExecuteCommand || [];
 				var afterExecuteCommand = payload.afterExecuteCommand || [];
 				var afterViewComponent = payload.afterViewComponent || [];
 				
@@ -139,13 +142,16 @@ var process = (function() {
 						category: 'Controller'
 					});
 				}	
+				afterExecuteCommand = afterExecuteCommand.sort(function(a, b) { return a.ordinal - b.ordinal; });
+				beforeExecuteCommand = beforeExecuteCommand.sort(function(a, b) { return a.ordinal - b.ordinal; });
 				for (var i = 0; i < afterExecuteCommand.length; i++) {
-					var command = afterExecuteCommand[i];
+					var afterCommand = afterExecuteCommand[i].payload;
+					var beforeCommand = beforeExecuteCommand[i].payload;
 					result.push({
-						title: 'Command: ' + command.commandMethod,
-						startTime: command.commandEndTime,
-						duration: command.commandDuration,
-						startPoint: command.commandOffset,
+						title: 'Command: ' + beforeCommand.commandMethod,
+						startTime: afterCommand.commandEndTime,
+						duration: afterCommand.commandDuration,
+						startPoint: afterCommand.commandOffset,
 						category: 'Command'
 					});
 				}		
