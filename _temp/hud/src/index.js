@@ -19,16 +19,14 @@ var setup = state.current();
 
 // get into dom asap to trigger asset loading
 $(function() {
-	var html = '<div class="glimpse"><a class="glimpse-icon" target="_blank"><div class="glimpse-icon-text">Glimpse</div></a><div class="glimpse-hud"></div></div>'
+	var url = util.resolveClientUrl(util.currentRequestId(), true);
+	var html = '<div class="glimpse"><a class="glimpse-icon" target="_blank" href="' + url + '"><div class="glimpse-icon-text">Glimpse</div></a><div class="glimpse-hud"></div></div>'
 	$(html).appendTo('body');
 });
 
 // only load things when we have the data ready to go
 repository.getData(function(details) { 
 	$(function() { setTimeout(function() { 
-		// TODO: need to find a better place for this
-		$('.glimpse-icon').attr('href', util.resolveClientUrl(util.currentRequestId(), true))
-		
 		// generate the html needed for the sections
 		var html = sections.render(details, setup);
 		
