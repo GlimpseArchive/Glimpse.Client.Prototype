@@ -84,10 +84,10 @@ var CommandItem = React.createClass({
                 'tab-execution-hidden': !this.state.show,
                 'pre-open': this.state.show
             });
-        var duration = '--'
-        if (afterCommand.ordinal == beforeCommand.ordinal + 1) {
-            duration = afterCommand.payload.commandDuration;
-        }
+        // NOTE: this was a way I tried to do correlation but it doesn't work really well
+        //var duration = (afterCommand.ordinal == beforeCommand.ordinal + 1) ? afterCommand.payload.commandDuration : '--';
+        var duration = afterCommand.payload.commandDuration;
+        var nesting = this.props.isRoot ? null : <span className="tab-execution-timing-arrow">➦</span>;
             
         var content = (
                 <div className="tab-section-execution-command-item">
