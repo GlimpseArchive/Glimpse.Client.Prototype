@@ -13,6 +13,40 @@
 
 
 
+// TEMP HACK FOR DEMO
+.request-user-section {
+    display:none !important;
+}
+.request-summary-section {
+    border-radius: 3px 0 0 0;
+}
+.request-summary-metadata span {
+    display: none;
+}
+.request-summary-metadata span:last-child {
+    display: inline;
+}
+.request-detail-section {
+    width: 89vw !important;
+}
+@media only screen and (max-width: 1100px) {
+    .request-summary-section {
+        border-radius: 3px 3px 0 0 !important;
+    }
+    .request-detail-section {
+        width: 85vw !important;
+    }
+}
+@media only screen and (max-width: 760px) {
+    .request-detail-section {
+        width: 80vw !important;
+    }
+}
+// TEMP HACK FOR DEMO
+
+
+
+
 
 
 //****** GENERAL *******
