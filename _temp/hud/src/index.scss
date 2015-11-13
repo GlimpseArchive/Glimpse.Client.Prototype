@@ -46,8 +46,9 @@
     padding: 0 8px;
     float: right;
     width: 39px;
-    background-image: url(/glimpse/hud/assets/glimpse-logo.png);
+    background-image: url(~/glimpse/hud/assets/glimpse-logo.png);
     background-repeat: no-repeat;
+    background-size: 47px 37px;
     height: 36px;
 }
 .glimpse .glimpse-icon-text {
@@ -75,7 +76,7 @@
 }
 .glimpse .glimpse-hud-title { 
     position: absolute;
-    font-family: "Segoe UI Semibold", "Segoe UI", "Helvetica Neue", Helvetica, Arial;
+    font-family: 'Segoe Pro', 'Helvetica Neue', Helvetica, Arial;
     color: white;
     text-transform: uppercase; 
     cursor: pointer;
@@ -87,7 +88,7 @@
 .glimpse .glimpse-hud-title span { 
     position: absolute;
     line-height: 100%;
-    font-size: 9px;
+    font-size: 10px;
     top: 2px;
     transform-origin: 16px 14px;
     transform: rotate(270deg);
