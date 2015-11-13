@@ -5,12 +5,7 @@ var process = require('./util/process');
 var $ = require('$jquery');
 
 var timingsRaw = (window.performance || window.mozPerformance || window.msPerformance || window.webkitPerformance || {}).timing;
-
-var triggerOnLoad = false;
-var detectedOnLoad = false;
-$(window).on('load', function() { 
-	detectedOnLoad = true;
-});
+var timingIncomplete = false;
 
 var structure = {
 	title: 'HTTP',
@@ -30,7 +25,7 @@ var structure = {
 	},
 	defaults: {
 		request: { title: 'Request', description: 'Total request time from click to dom ready', visible: true, size: 1, position: 0, align: 0, postfix: 'ms', getData: function(details) { return details.request.data.total.duration; }, id: 'glimpse-hud-data-request' },
-		wire: { title: 'Network', description: 'Total time on the network', visible: true, size: 2, position: 0, align: 0, postfix: 'ms', getData: function(details) { return details.request.data.network.duration; } },
+		wire: { title: 'Network', description: 'Total time on the network', visible: true, size: 2, position: 0, align: 0, postfix: 'ms', getData: function(details) { var duration = details.request.data.network.duration; return duration === null ? '...' : duration; }, id: 'glimpse-hud-data-network' },
 		server: { title: 'Server', description: 'Total time on the server', visible: true, size: 2, position: 0, align: 0, postfix: 'ms', getData: function(details) { return details.request.data.server.duration; } },
 		client: { title: 'Client', description: 'Total time once client kicks in to dom ready', visible: true, size: 2, position: 0, align: 0, postfix: 'ms', getData: function(details) { var duration = details.request.data.browser.duration; return duration === null ? '...' : duration; }, id: 'glimpse-hud-data-client' }, 
 		host: { title: 'Host', description: 'Server that responded to the request', visible: true, size: 2, position: 1, align: 1, postfix: '', getLayoutData: function(details) { return '<div class="glimpse-hud-listing-overflow" style="max-width:170px;">' + details.environment.data.serverName + '</div>'; } }, 
@@ -53,32 +48,41 @@ var structure = {
 		}
 	}
 };
-	
-var processTimings = function(details, timingsRaw) {
-	var result = { },
-		networkPre = calculateTimings(timingsRaw, 'navigationStart', 'requestStart'),
-		networkPost = calculateTimings(timingsRaw, 'responseStart', 'responseEnd'),
-		network = networkPre + networkPost,
-		server = calculateTimings(timingsRaw, 'requestStart', 'responseStart'),
-		browser = calculateTimings(timingsRaw, 'responseEnd', 'domComplete');
-	
-	if (browser < 0) {
-		browser = 0;
-		triggerOnLoad = true;
-	}
-	var total = network + server + browser;
-		
-	result.networkSending = { categoryColor: '#FDBF45', duration: networkPre, percentage: (networkPre / total) * 100 };
-	result.networkReceiving = { categoryColor: '#FDBF45', duration: networkPost, percentage: (networkPost / total) * 100 };
-	result.network = { categoryColor: '#FDBF45', duration: network, percentage: (network / total) * 100 };
-	result.server = { categoryColor: '#AF78DD', duration: server, percentage: (server / total) * 100 };
-	result.browser = { categoryColor: '#72A3E4', duration: browser === 0 ? null : browser, percentage: (browser / total) * 100 };
-	result.total = { categoryColor: '#10E309', duration: network + server + browser, percentage: 100 };
-	
-	details.request = { data: result, name: 'Request' };
-};
+
 var calculateTimings = function(timingsRaw, startIndex, finishIndex) { 
 	return timingsRaw[finishIndex] - timingsRaw[startIndex];
+};
+var getTimings = function(timingsRaw) {
+	var network = calculateTimings(timingsRaw, 'responseStart', 'responseEnd') + calculateTimings(timingsRaw, 'navigationStart', 'requestStart'),
+		server = calculateTimings(timingsRaw, 'requestStart', 'responseStart'),
+		browser = calculateTimings(timingsRaw, 'responseEnd', 'domComplete');
+		
+	// trying to avoid negitive values showing up
+	if (network < 0 || browser < 0) {
+		if (network < 0) {
+			network = 0;
+		}
+		if (browser < 0) {
+			browser = 0;
+		}
+		timingIncomplete = true;
+	}
+	else {
+		timingIncomplete = false;
+	}
+	
+	return { network: network, server: server, browser: browser, total: network + server + browser };
+};
+var processTimings = function(details, timingsRaw) {
+	var timing = getTimings(timingsRaw),
+		result = {
+			network: { categoryColor: '#FDBF45', duration: timing.network === 0 ? null : timing.network, percentage: (timing.network / timing.total) * 100 },
+			server: { categoryColor: '#AF78DD', duration: timing.server, percentage: (timing.server / timing.total) * 100 },
+			browser: { categoryColor: '#72A3E4', duration: timing.browser === 0 ? null : timing.browser, percentage: (timing.browser / timing.total) * 100 },
+			total: { categoryColor: '#10E309', duration: timing.total, percentage: 100 }
+		};
+		
+	details.request = { data: result, name: 'Request' };
 };
 	
 var render = function(details, opened) {
@@ -94,22 +98,27 @@ var render = function(details, opened) {
 	return html;
 };
 var postRender = function(holder, details) {
-	if (triggerOnLoad) {
-		if (detectedOnLoad) {
-			updateBrowserData(details);
-		}
-		else {
-			$(window).on('load', function() { updateBrowserData(details); });
-		}
+	if (timingIncomplete) {
+		tryUpdateBrowserData(details);
 	}
 };
 
-var updateBrowserData = function(details) {
+var tryUpdateBrowserData = function(details) {
+	var timing = getTimings(timingsRaw);
+	if (timingIncomplete) {
+		setTimeout(function() { tryUpdateBrowserData(details); }, 100)
+	}
+	else {
+		updateBrowserData(details, timing);
+	}
+};
+var updateBrowserData = function(details, timing) {
 	var data = details.request.data;
 	
 	// adjust timings
-	data.browser.duration = calculateTimings(timingsRaw, 'responseEnd', 'domComplete');
-	data.total.duration = data.browser.duration + data.server.duration + data.network.duration;
+	data.network.duration = timing.network;
+	data.browser.duration = timing.browser;
+	data.total.duration = timing.total;
 	
 	// adjust percentage
 	data.browser.percentage = (data.browser.duration / data.total.duration) * 100;
@@ -117,6 +126,7 @@ var updateBrowserData = function(details) {
 	data.network.percentage = (data.network.duration / data.total.duration) * 100;
 	
 	// manually update the dom
+	$('.glimpse-hud-data-network .glimpse-hud-data').text(data.network.duration);
 	$('.glimpse-hud-data-client .glimpse-hud-data').text(data.browser.duration);
 	$('.glimpse-hud-data-request .glimpse-hud-data').text(data.total.duration);
 	
