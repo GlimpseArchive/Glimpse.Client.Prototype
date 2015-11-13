@@ -62,8 +62,8 @@ module.exports = {
     },
     plugins: [
         new webpack.DefinePlugin({
-            DIAGNOSTICS: true,
-            FAKE_SERVER: true
+            DIAGNOSTICS: false,
+            FAKE_SERVER: false
         }),
         
         progressPlugin

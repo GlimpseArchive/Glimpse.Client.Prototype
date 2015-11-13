@@ -1,10 +1,12 @@
 @font-face {
     font-family: 'Segoe Pro';
-    src: url('~/glimpse/hud/assets/SegoePro-Regular.ttf');
+    src: url('~/glimpse/hud/assets/segoepro-regular.woff2') format('woff2'),
+         url('~/glimpse/hud/assets/segoepro-regular.woff') format('woff');
 }
 @font-face {
     font-family: 'Segoe Pro Light';
-    src: url('~/glimpse/hud/assets/SegoePro-Light.ttf');
+    src: url('~/glimpse/hud/assets/segoepro-light.woff2') format('woff2'),
+         url('~/glimpse/hud/assets/segoepro-light.woff') format('woff');
 }
 
 .glimpse, .glimpse *, .glimpse a, .glimpse td, .glimpse th, .glimpse table {

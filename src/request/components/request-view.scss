@@ -18,11 +18,13 @@
 //****** GENERAL *******
 @font-face {
     font-family: 'Segoe Pro';
-    src: url('~/assets/SegoePro-Regular.ttf');
+    src: url('~/assets/segoepro-regular.woff2') format('woff2'),
+         url('~/assets/segoepro-regular.woff') format('woff');
 }
 @font-face {
     font-family: 'Segoe Pro Light';
-    src: url('~/assets/SegoePro-Light.ttf');
+    src: url('~/assets/segoepro-light.woff2') format('woff2'),
+         url('~/assets/segoepro-light.woff') format('woff');
 }
 
 body, html {
