@@ -30,12 +30,15 @@ var getMessages = (function() {
     var getList = messageProcessor.getTypeMessageList;
     
     var options = {
+        'end-request': getItem,
+        'begin-request': getItem,
         'before-action-invoked': getItem,
         'after-action-invoked': getItem,
         'before-execute-command': getList,
         'after-execute-command': getList,
         'before-view-component': getList,
-        'after-view-component': getList
+        'after-view-component': getList,
+        'after-action-result': getItem
     };
 		
     return function(request) {
@@ -93,7 +96,7 @@ var CommandItem = React.createClass({
                 <div className="tab-section-execution-command-item">
                     <div className="tab-section-execution-command-item-detail">
                         <div className="col-8">{beforeCommand.payload.commandMethod} <span className="tab-section-execution-command-isAsync text-minor" title="Is Async">{(beforeCommand.payload.commandIsAsync ? 'async' : '')}</span><span className="tab-section-execution-command-open" onClick={this.onClick}>[{showText}]</span></div>
-                        <div className="tab-execution-timing col-2">{duration} ms<span className="tab-execution-timing-arrow">➦</span></div>
+                        <div className="tab-execution-timing col-2">{duration} ms{nesting}</div>
                     </div>
                     <div className={containerClass} onClick={this.onClick}>
                         <Highlight className="sql">
@@ -122,7 +125,7 @@ var CommandList = React.createClass({
                 var beforeCommand = beforeExecuteCommandMessages[i];
                 var afterCommand = afterExecuteCommandMessages[i];
                 if (beforeCommand.ordinal > beginMessage.ordinal && afterCommand.ordinal < endMessage.ordinal) {
-                    commandItems.push(<CommandItem key={beforeExecuteCommandMessages[i].id} beforeCommand={beforeCommand} afterCommand={afterCommand} />);
+                    commandItems.push(<CommandItem key={beforeExecuteCommandMessages[i].id} beforeCommand={beforeCommand} afterCommand={afterCommand} isRoot={this.props.isRoot} />);
                 }
             }
             
@@ -204,15 +207,24 @@ module.exports = React.createClass({
         if (routePayload || afterActionInvokedPayload || actionViewFoundPayload || afterActionViewInvokedPayload) {
             // get messages 
             var message = getMessages(request);
+            var beginRequestMessage = message.beginRequest;
+            var endRequestMessage = message.endRequest;
             var beforeActionInvokedMessage = message.beforeActionInvoked;
             var afterActionInvokedMessage = message.afterActionInvoked;
             var beforeExecuteCommandMessages = message.beforeExecuteCommand;
             var afterExecuteCommandMessages = message.afterExecuteCommand;
             var beforeViewComponentMessages = message.beforeViewComponent;
             var afterViewComponentMessages = message.afterViewComponent;
+            var afterActionResultMessage = message.afterActionResult;
             if (beforeExecuteCommandMessages && afterExecuteCommandMessages) {
                 beforeExecuteCommandMessages = beforeExecuteCommandMessages.sort(function(a, b) { return a.ordinal - b.ordinal; });
                 afterExecuteCommandMessages = afterExecuteCommandMessages.sort(function(a, b) { return a.ordinal - b.ordinal; });
+            }
+            
+            //process pre action commands
+            var preCommands = null;
+            if (beginRequestMessage && beforeActionInvokedMessage) { 
+                preCommands = <CommandList beforeExecuteCommandMessages={beforeExecuteCommandMessages} afterExecuteCommandMessages={afterExecuteCommandMessages} beginMessage={beginRequestMessage} endMessage={beforeActionInvokedMessage} isRoot={true} />            
             }
             
             // process route
@@ -314,9 +326,16 @@ module.exports = React.createClass({
                     );
             }
             
+            //process post action commands
+            var postCommands = null;
+            if (afterActionResultMessage && endRequestMessage) { 
+                postCommands = <CommandList beforeExecuteCommandMessages={beforeExecuteCommandMessages} afterExecuteCommandMessages={afterExecuteCommandMessages} beginMessage={afterActionResultMessage} endMessage={endRequestMessage} isRoot={true} />            
+            }
+            
             content = (
                 <div>
-                    <div className="tab-section text-minor">Execution on Server</div>{route}{action}{view}
+                    <div className="tab-section text-minor">Execution on Server</div>
+                    {preCommands}{route}{action}{view}{postCommands}
                 </div>
             );
         }   

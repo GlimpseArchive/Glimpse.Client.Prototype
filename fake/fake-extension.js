@@ -169,8 +169,14 @@ var seedMvcActions = (function() {
                         controller: 'Home', 
                         action: 'Index',
                         route: generate.common.route('home', 'index', null),
+                        preActivities: [
+                            { access: 'SQL', operation: 'Select', target: 'Albums', affected: 1, command: 'SELECT TOP (2) \n[Extent1].[AlbumId] AS [AlbumId], \n[Extent1].[GenreId] AS [GenreId], \n[Extent1].[ArtistId] AS [ArtistId], \n[Extent1].[Title] AS [Title], \n[Extent1].[Price] AS [Price], \n[Extent1].[AlbumArtUrl] AS [AlbumArtUrl]\nFROM [dbo].[Albums] AS [Extent1]\nWHERE [Extent1].[AlbumId] = 1 /* @p0 */' }
+                        ],
                         activities: [
                             { access: 'SQL', operation: 'Select', target: 'Albums', affected: chance.integerRange(2, 50), command: 'SELECT TOP (5) \n[Project1].[AlbumId] AS [AlbumId], \n[Project1].[GenreId] AS [GenreId], \n[Project1].[ArtistId] AS [ArtistId], \n[Project1].[Title] AS [Title], \n[Project1].[Price] AS [Price], \n[Project1].[AlbumArtUrl] AS [AlbumArtUrl]\nFROM ( SELECT \n    [Extent1].[AlbumId] AS [AlbumId], \n    [Extent1].[GenreId] AS [GenreId], \n    [Extent1].[ArtistId] AS [ArtistId], \n    [Extent1].[Title] AS [Title], \n    [Extent1].[Price] AS [Price], \n    [Extent1].[AlbumArtUrl] AS [AlbumArtUrl], \n    (SELECT \n        COUNT(1) AS [A1]\n        FROM [dbo].[OrderDetails] AS [Extent2]\n        WHERE [Extent1].[AlbumId] = [Extent2].[AlbumId]) AS [C1]\n    FROM [dbo].[Albums] AS [Extent1]\n)  AS [Project1]\nORDER BY [Project1].[C1] DESC'  }
+                        ],
+                        postActivities: [
+                            { access: 'SQL', operation: 'Select', target: 'Genres', affected: 1, command: 'SELECT \n[Extent1].[GenreId] AS [GenreId], \n[Extent1].[Name] AS [Name], \n[Extent1].[Description] AS [Description]\nFROM [dbo].[Genres] AS [Extent1]\nWHERE [Extent1].[GenreId] = 1 /* @EntityKeyValue1 */' }
                         ],
                         actions: [
                             generate.instance.childAction.shoppingCart(),
@@ -684,16 +690,19 @@ var generateMvcRequest = (function() {
             
             action.actionId = chance.guid();
         },
-        processChildActions: function(action, request, context) {
-            this.modifyInstance(action);
-                
-            this.messages.push(this.createBeforeViewComponent(action, context));
-            if (action.activities) {
-                _.forEach(action.activities, function(activity) {
+        processActivities: function(activities, action, context) {
+            if (activities) {
+                _.forEach(activities, function(activity) {
                     this.messages.push(this.createBeforeExecuteCommand(action, activity, context));
                     this.messages.push(this.createAfterExecuteCommand(action, activity, context));
                 }, this);
             }
+        },
+        processChildActions: function(action, request, context) {
+            this.modifyInstance(action);
+                
+            this.messages.push(this.createBeforeViewComponent(action, context));
+            this.processActivities(action.activities, action, context);
             this.messages.push(this.createAfterViewComponent(action, context));
         },
         processAction: function(action, request, context) {
@@ -712,12 +721,7 @@ var generateMvcRequest = (function() {
                 this.messages.push(this.createActionBinding(action, action.binding, context));
             }
             this.messages.push(this.createBeforeActionInvoked(action, context, action == request));
-            if (action.activities) {
-                _.forEach(action.activities, function(activity) {
-                    this.messages.push(this.createBeforeExecuteCommand(action, activity, context));
-                    this.messages.push(this.createAfterExecuteCommand(action, activity, context));
-                }, this);
-            }
+            this.processActivities(action.activities, action, context);
             // if (action.trace) {
             //     _.forEach(action.trace, function(log) {
             //         this.messages.push(this.createLog(log, context));
@@ -747,11 +751,16 @@ var generateMvcRequest = (function() {
         },
         processRequest: function(source) {
             this.messages.push(this.createBeginRequest(source));
+            
+            this.processActivities(source.preActivities, source, source.context);
+            
             this.messages.push(this.createUserIdentification(source));
             this.messages.push(this.createEnvironment(source));
             this.messages.push(this.createTab(source.context))
             
             this.processAction(source, source, source.context);
+            
+            this.processActivities(source.postActivities, source, source.context);
             
             this.messages.push(this.createEndRequest(source)); 
             this.messages.push(this.createBrowserNavigationTiming(source))
