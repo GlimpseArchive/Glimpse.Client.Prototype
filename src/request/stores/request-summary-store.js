@@ -59,6 +59,10 @@ var filterRequests = (function () {
                 var schemaAction = filterSchemaActions[schema.type];
                 var requestValue = schema.get ? schema.get(request) : request[key];
 
+                // force to uppercase so that searches are case insensitive
+                if (requestValue != undefined) { requestValue = requestValue.toString().toUpperCase(); }
+                if (filterValue != undefined) { filterValue = filterValue.toString().toUpperCase(); }
+
                 if (!schemaAction(requestValue, filterValue)) {
                     return false;
                 }
