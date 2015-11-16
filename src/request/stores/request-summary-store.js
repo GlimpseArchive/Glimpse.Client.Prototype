@@ -23,7 +23,7 @@ function notifyRequestsChanged(targetRequests) {
 var filterRequests = (function () {
     var filterSchema = {
         _userId: { type: 'exact' },
-        _requestUrl: { type: 'exact' }, // TODO: Switch over to `regex` at some point
+        _requestUrl: { type: 'part' }, // TODO: Switch over to `regex` at some point
         _requestMethod: { type: 'array' },
         _responseStatusCode: { type: 'array' },
         _responseContentCategory: {   // TODO: remove hack to temp filter what requests we deal with
@@ -34,10 +34,13 @@ var filterRequests = (function () {
         }
     };
     var filterSchemaActions = {
-        exact: function (recordValue, filterValue) {
+        part: function(recordValue, filterValue) {
+            return recordValue.indexOf(filterValue) > -1;
+        },
+        exact: function(recordValue, filterValue) {
             return recordValue === filterValue;
         },
-        array: function (recordValue, filterValue) {
+        array: function(recordValue, filterValue) {
             var filterValues = filterValue.split(',').map(function (item) { return item.trim(); });
 
             return filterValues.indexOf(recordValue + '') > -1;
