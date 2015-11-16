@@ -54,21 +54,19 @@
 
 //****** GENERAL *******
 @font-face {
-    font-family: 'Segoe Pro';
-    src: url('~/assets/segoepro-regular.woff2') format('woff2'),
-         url('~/assets/segoepro-regular.woff') format('woff');
+    font-family: 'Selawik';
+    src: url('~/assets/selawk.ttf');
 }
 @font-face {
-    font-family: 'Segoe Pro Light';
-    src: url('~/assets/segoepro-light.woff2') format('woff2'),
-         url('~/assets/segoepro-light.woff') format('woff');
+    font-family: 'Selawik Light';
+    src: url('~/assets/selawkl.ttf');
 }
 
 body, html {
     margin: 0;
     height: 100%;
     color: #111;
-    font-family: 'Segoe Pro', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: 'Segoe UI', 'Selawik', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 .flex {
