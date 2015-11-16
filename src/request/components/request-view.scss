@@ -393,10 +393,10 @@ body, html {
 .button {
     margin-left: 10px;
     cursor: pointer;
+    border: 0;
 }
 .button.button--default {
-    height: 24px;
-    padding: 5px 10px 0;
+    padding: 5px 10px;
     transition: box-shadow 200ms;
 }
 .button.button--primary {

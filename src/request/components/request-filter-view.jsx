@@ -16,7 +16,7 @@ module.exports = React.createClass({
     },
     render: function () {
         return (
-            <div>
+            <form onSubmit={this._onFilter}>
                 <div className="application-section-header">Filters</div>
                 <div className="field-section">
                     <label className="field-label" htmlFor="request-fitler-url">Url</label><br />
@@ -35,16 +35,18 @@ module.exports = React.createClass({
                     <input type="text" id="request-fitler-statusCode" valueLink={this.linkState('_responseStatusCode')} />
                 </div>
                 <div className="button-holder">
-                    <div className="button button--default button--primary" onClick={this._onFilter}>Filter</div>
+                    <input type="submit" className="button button--default button--primary" value="Filter" />
                     <div className="button button--link" onClick={this._onClear}>Clear</div>
                 </div>
-            </div>
+            </form>
         );
     },
-    _onFilter: function () {
+    _onFilter: function(e) {
+        e.preventDefault();
+        
         glimpse.emit('shell.request.filter.updated', this.state);
     },
-    _onClear: function () {
+    _onClear: function() {
         var resetState = this.getInitialState();
         this.setState(resetState);
 
