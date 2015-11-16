@@ -1,10 +1,12 @@
 @font-face {
     font-family: 'Selawik';
-    src: url('~/glimpse/hud/assets/selawk.ttf');
+    src: url('~/glimpse/hud/assets/selawk.woff2') format('woff2'),
+         url('~/glimpse/hud/assets/selawk.woff') format('woff');
 }
 @font-face {
     font-family: 'Selawik Light';
-    src: url('~/glimpse/hud/assets/selawkl.ttf');
+    src: url('~/glimpse/hud/assets/selawkl.woff2') format('woff2'),
+         url('~/glimpse/hud/assets/selawkl.woff') format('woff');
 }
 
 .glimpse, .glimpse *, .glimpse a, .glimpse td, .glimpse th, .glimpse table {

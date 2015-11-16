@@ -55,11 +55,13 @@
 //****** GENERAL *******
 @font-face {
     font-family: 'Selawik';
-    src: url('~/assets/selawk.ttf');
+    src: url('~/assets/selawk.woff2') format('woff2'),
+         url('~/assets/selawk.woff') format('woff');
 }
 @font-face {
     font-family: 'Selawik Light';
-    src: url('~/assets/selawkl.ttf');
+    src: url('~/assets/selawkl.woff2') format('woff2'),
+         url('~/assets/selawkl.woff') format('woff');
 }
 
 body, html {
