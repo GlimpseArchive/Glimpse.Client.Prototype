@@ -30,8 +30,13 @@ var structure = {
                 if (!item.suppress) {
                     var maxLength = (16 + (details.sql ? 10 : 0)) - item.nesting * 2;
                     
+                    var rowClass = '';
+                    if (item.id || isTrivial) {
+                        rowClass = ' class="' + (item.id ? item.id : '' ) + (isTrivial ? ' glimpse-hud-quite' : '') + '"';
+                    }
+                    
                     html += '<tbody' + (isTrivial ? ' class="glimpse-data-trivial"' : '') + '>';
-                    html += '<tr' + (isTrivial ? ' class="glimpse-hud-quite"' : '') + '><td class="glimpse-hud-listing-overflow" style="padding-left:' + (item.nesting * 15) + 'px;" ' + (item.description.length > maxLength ? 'title="' + item.description + '"' : '') +'>' + item.description + '</td><td class="glimpse-hud-listing-value glimpse-data-childless-duration">' + item.duration + '</td><td class="glimpse-hud-listing-value glimpse-data-childless-start-point"><span class="glimpse-hud-prefix">+</span>' + item.startPoint + '</td></tr>';
+                    html += '<tr' + rowClass + '><td class="glimpse-hud-listing-overflow" style="padding-left:' + (item.nesting * 15) + 'px;" ' + (item.description.length > maxLength ? 'title="' + item.description + '"' : '') +'>' + item.description + '</td><td class="glimpse-hud-listing-value glimpse-data-childless-duration glimpse-hud-data">' + item.duration + '</td><td class="glimpse-hud-listing-value glimpse-data-childless-start-point"><span class="glimpse-hud-prefix">+</span>' + item.startPoint + '</td></tr>';
                     if (item.queries && item.queries.listing.length > 0) {
                         html += '<tr><td class="glimpse-data-query-summary" style="padding-left:' + ((item.nesting * 15) + 20) + 'px;"><span class="glimpse-hud-prefix">➥</span><span class="glimpse-hud-listing-value">' + item.queries.listing.length + '</span><span class="glimpse-hud-postfix">' + (item.queries.listing.length == 1 ? 'query' : 'queries') + '</span> <span class="glimpse-hud-listing-value">' + item.queries.durationSum.toFixed(2) + '</span><span class="glimpse-hud-postfix">ms</span></td><td></td><td></td></tr>';
                     }
@@ -48,7 +53,7 @@ var structure = {
         }
     },
     defaults: {
-        server: { title: 'Server Time', description: 'Total time on the server', visible: function(details) { return details.request; }, size: 1, position: 1, align: 1, postfix: 'ms', getData: function (details) { return details.request.data.server.duration; } },
+        server: { title: 'Server Time', description: 'Total time on the server', visible: function(details) { return details.request; }, size: 1, position: 1, align: 1, postfix: 'ms', getData: function (details) { return details.request.data.server.duration; }, id: 'glimpse-hud-data-server' },
         action: { title: 'Action', description: 'How long root Action took to execute', visible: function(details) { return details.mvc && details.mvc.data && details.mvc.data.actionExecutionTime != null; }, size: 1, position: 0, align: 0, postfix: 'ms', getData: function(details) { return getTimeValue(parseInt(details.mvc.data.actionExecutionTime)); } },
         view: { title: 'View', description: 'How long root View took to render', visible: function(details) { return details.mvc && details.mvc.data && details.mvc.data.viewRenderTime != null; }, size: 1, position: 0, align: 0, postfix: 'ms', getData: function(details) { return getTimeValue(parseInt(details.mvc.data.viewRenderTime)); } },
         controller: { title: 'Controller/Action', description: 'Name of the root Controller and Action', visible: function(details) { return details.mvc && details.mvc.data; }, size: 2, position: 0, align: 0, postfix: 'ms', getLayoutData: function(details) { return '<span class="glimpse-hud-data">' + details.mvc.data.controllerName + '</span><span class="glimpse-hud-plain">.</span><span class="glimpse-hud-data">' + details.mvc.data.actionName + '</span><span class="glimpse-hud-plain">(...)</span>'; } },
@@ -96,7 +101,8 @@ var processEvents = function(details) {
         title: 'Request: ' + (window.location.pathname + window.location.search),
         duration: rootDuration,
         startPoint: 0,
-        startTime: 'NOT SURE'
+        startTime: 'NOT SURE',
+        id: 'glimpse-hud-data-server'
     });
     
     for (var i = 0; i < details.timings.data.length; i += 1) {
