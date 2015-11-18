@@ -27,7 +27,7 @@ var structure = {
 		request: { title: 'Request', description: 'Total request time from click to dom ready', visible: true, size: 1, position: 0, align: 0, postfix: 'ms', getData: function(details) { return details.request.data.total.duration; }, id: 'glimpse-hud-data-request' },
 		wire: { title: 'Network', description: 'Total time on the network', visible: true, size: 2, position: 0, align: 0, postfix: 'ms', getData: function(details) { var duration = details.request.data.network.duration; return duration === null ? '...' : duration; }, id: 'glimpse-hud-data-network' },
 		server: { title: 'Server', description: 'Total time on the server', visible: true, size: 2, position: 0, align: 0, postfix: 'ms', getData: function(details) { return details.request.data.server.duration; }, id: 'glimpse-hud-data-server' },
-		client: { title: 'Client', description: 'Total time once client kicks in to dom ready', visible: true, size: 2, position: 0, align: 0, postfix: 'ms', getData: function(details) { var duration = details.request.data.browser.duration; return duration === null ? '...' : duration; }, id: 'glimpse-hud-data-client' }, 
+		client: { title: 'Client', description: 'Total time in browser (to load)', visible: true, size: 2, position: 0, align: 0, postfix: 'ms', getData: function(details) { var duration = details.request.data.browser.duration; return duration === null ? '...' : duration; }, id: 'glimpse-hud-data-client' }, 
 		host: { title: 'Host', description: 'Server that responded to the request', visible: true, size: 2, position: 1, align: 1, postfix: '', getLayoutData: function(details) { return '<div class="glimpse-hud-listing-overflow" style="max-width:170px;">' + details.environment.data.serverName + '</div>'; } }, 
 		principal: { title: 'Principal', description: 'Principal that is currently logged in for this session', visible: function(details) { return details.environment.data.user; }, size: 2, position: 1, align: 1, postfix: '', getLayoutData: function(details) { return '<div class="glimpse-hud-listing-overflow" style="max-width:120px;">' + details.environment.data.user + '</div>'; } }
 	},
@@ -54,8 +54,9 @@ var calculateTimings = function(timingsRaw, startIndex, finishIndex) {
 };
 var getTimings = function(details, timingsRaw) {
 	var network = calculateTimings(timingsRaw, 'responseStart', 'responseEnd') + calculateTimings(timingsRaw, 'navigationStart', 'requestStart'),
-		server = calculateTimings(timingsRaw, 'requestStart', 'responseStart'),
-		browser = calculateTimings(timingsRaw, 'responseEnd', 'domComplete');
+		server = calculateTimings(timingsRaw, 'requestStart', 'responseEnd'),
+		browser = calculateTimings(timingsRaw, 'responseStart', 'loadEventEnd'),
+		total = calculateTimings(timingsRaw, 'navigationStart', 'loadEventEnd');
 		
 	// trying to avoid negitive values showing up
 	if (server <= 0) {
@@ -74,7 +75,7 @@ var getTimings = function(details, timingsRaw) {
 		timingIncomplete = false;
 	}
 	
-	return { network: network, server: server, browser: browser, total: network + server + browser };
+	return { network: network, server: server, browser: browser, total: total };
 };
 var processTimings = function(details, timingsRaw) {
 	var timing = getTimings(details, timingsRaw),

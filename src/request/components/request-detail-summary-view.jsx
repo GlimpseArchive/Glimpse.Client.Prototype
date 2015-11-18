@@ -41,16 +41,26 @@ var commandOrEmpty = function(commands) {
 var contextTypeOrEmpty = function(contentCategory) {
     return contentCategory ? _.keys(contentCategory).join(', ') : '';
 };
+var serverTime = function(endRequest, browserNavigationTiming) {
+    var total = null;
+    if (browserNavigationTiming && browserNavigationTiming.serverTime > 0) {
+        total = browserNavigationTiming.serverTime;
+    }
+    else if (endRequest && endRequest.responseDuration) {
+        total = endRequest.responseDuration;
+    }
+    return total;
+}
 var requestTime = function(endRequest, browserNavigationTiming) {
-    var total = ''
-    if (browserNavigationTiming && browserNavigationTiming.serverTime) {
-        total = browserNavigationTiming.serverTime + browserNavigationTiming.browserTime + browserNavigationTiming.networkTime;
+    var total = null;
+    if (browserNavigationTiming && browserNavigationTiming.total) {
+        total = browserNavigationTiming.total;
     }
     else if (endRequest && endRequest.responseDuration) {
         total = endRequest.responseDuration;
     }
     
-    return timeOrEmpty(total);
+    return total;
 };
 
 module.exports = React.createClass({
@@ -83,19 +93,19 @@ module.exports = React.createClass({
                 </div>
                 <div className="flex flex-row flex-inherit text-accent-small text-minor">
                     <div className="col-3">Request</div>
+                    <div className="col-2">Network</div>
                     <div className="col-2">Server</div>
-                    <div className="col-2">Client</div>
-                    <div className="col-4">Network</div>
+                    <div className="col-4">Client</div>
                     <div className="col-2">Action</div>
                     <div className="col-2">View</div>
                     <div className="col-7">Controller/Action</div>
                     <div className="col-3">Query/Count</div>
                 </div>
                 <div className="flex flex-row flex-inherit flex-base request-summary-facets">
-                    <div className="col-3 text-focus">{requestTime(endRequest, browserNavigationTiming)}</div>
-                    <div className="col-2">{timeOrEmpty(browserNavigationTiming.serverTime)}</div>
-                    <div className="col-2">{timeOrEmpty(browserNavigationTiming.browserTime)}</div>
-                    <div className="col-4">{timeOrEmpty(browserNavigationTiming.networkTime)}</div>
+                    <div className="col-3 text-focus">{timeOrEmpty(requestTime(endRequest, browserNavigationTiming))}</div>
+                    <div className="col-2">{timeOrEmpty(browserNavigationTiming.networkTime)}</div>
+                    <div className="col-2">{timeOrEmpty(serverTime(endRequest, browserNavigationTiming))}</div>
+                    <div className="col-4">{timeOrEmpty(browserNavigationTiming.browserTime)}</div>
                     <div className="col-2">{timeOrEmpty(afterActionInvoked.actionInvokedDuration)}</div>
                     <div className="col-2">{timeOrEmpty(afterActionViewInvoked.viewDuration)}</div>
                     <div className="col-7 text-focus truncate-outer" title={actionOrEmptyTitle(afterActionInvoked.actionControllerName, afterActionInvoked.actionName)}>{actionOrEmpty(afterActionInvoked.actionControllerName, afterActionInvoked.actionName)}</div>
