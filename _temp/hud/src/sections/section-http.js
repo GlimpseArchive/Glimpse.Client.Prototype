@@ -60,7 +60,7 @@ var getTimings = function(details, timingsRaw) {
 		
 	// trying to avoid negitive values showing up
 	if (server <= 0) {
-		server = praseInt(details.request.data.responseDuration);
+		server = parseInt(details.request.data.responseDuration);
 	}
 	if (network < 0 || browser < 0) {
 		if (network < 0) {
