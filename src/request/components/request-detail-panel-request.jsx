@@ -71,7 +71,7 @@ module.exports = React.createClass({
         if (beginRequestPayload && endRequestPayload) {
             content = (
                 <div>
-                    <div className="tab-section text-minor">Http Request/Response</div>
+                    <div className="tab-section text-minor">Web Request/Response</div>
                     <RequestUrl url={beginRequestPayload.requestUrl} />
                     <RequestHeaders title="Request Headers" headers={beginRequestPayload.requestHeaders} />
                     <RequestHeaders title="Response Headers" headers={endRequestPayload.responseHeaders} />
