@@ -33,5 +33,6 @@ module.exports = {
 
 // TODO: Need to come up with a better self registration process
 require('./components/request-detail-panel-execution');
+require('./components/request-detail-panel-request');
 //require('./components/request-detail-panel-trace');
 require('./components/request-detail-panel-messages');
