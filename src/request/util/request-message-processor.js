@@ -14,11 +14,7 @@ module.exports = {
 			'after-action-invoked': processItem,
 			'after-action-view-invoked': processItem,
 			'after-execute-command': processList,
-			'browser-navigation-timing': processItem,
-			'data-mongodb-insert': processList,
-			'data-mongodb-read': processList,
-			'data-mongodb-update': processList,
-			'data-mongodb-delete': processList
+			'browser-navigation-timing': processItem
 		};
 	},
 	getSummaryMessages: function(request) {
