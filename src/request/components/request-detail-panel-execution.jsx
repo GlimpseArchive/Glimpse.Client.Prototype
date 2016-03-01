@@ -108,7 +108,7 @@ var CommandList = React.createClass({
             // process action
             if (commandItems.length > 0) {
                 content = (
-                        <div className="tab-section tab-section-execution-command">
+                        <div className="tab-section tab-section-boxed tab-section-execution-command">
                             <div className="flex flex-row flex-inherit tab-section-header">
                                 <div className="tab-title col-9">SQL Query</div>
                             </div>
@@ -209,7 +209,7 @@ module.exports = React.createClass({
                 var routePath = beginRequestPayload ? (<span><span>{beginRequestPayload.requestPath}</span><span>{beginRequestPayload.requestQueryString}</span></span>) : '';
             
                 route = (
-                        <div className="tab-section tab-section-execution-route">
+                        <div className="tab-section tab-section-boxed tab-section-execution-route">
                             <div className="flex flex-row flex-inherit tab-section-header">
                                 <div className="tab-title col-9">Route</div>
                             </div>
@@ -231,7 +231,7 @@ module.exports = React.createClass({
                 }
                 
                 action = (
-                        <div className="tab-section tab-section-execution-action">
+                        <div className="tab-section tab-section-boxed tab-section-execution-action">
                             <div className="flex flex-row flex-inherit tab-section-header">
                                 <div className="tab-title col-9">Action</div>
                             </div>
@@ -262,7 +262,7 @@ module.exports = React.createClass({
                     var componentCommands = <CommandList beforeExecuteCommandMessages={beforeExecuteCommandMessages} afterExecuteCommandMessages={afterExecuteCommandMessages} beginMessage={beforeViewComponetMessage} endMessage={afterViewComponetMessage} />;
                     
                     return (
-                            <div className="tab-section tab-section-execution-component">
+                            <div className="tab-section tab-section-boxed tab-section-execution-component">
                                 <div className="flex flex-row flex-inherit tab-section-header">
                                     <div className="tab-title col-9">View Component</div>
                                 </div>
@@ -287,7 +287,7 @@ module.exports = React.createClass({
                 }
             
                 view = (
-                        <div className="tab-section tab-section-execution-view">
+                        <div className="tab-section tab-section-boxed tab-section-execution-view">
                             <div className="flex flex-row flex-inherit tab-section-header">
                                 <div className="tab-title col-9">View Result</div>
                             </div>

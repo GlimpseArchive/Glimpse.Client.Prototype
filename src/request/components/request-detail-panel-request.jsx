@@ -22,11 +22,11 @@ var RequestUrl = React.createClass({
     render: function() {
         return (
             <div>
-                <div className="tab-section tab-section-execution-headers">
+                <div className="tab-section tab-section-execution-url">
                     <div className="flex flex-row flex-inherit tab-section-header">
                         <div className="tab-title col-10">Url</div>
                     </div>
-                    <div className="tab-section-boxing tab-section-listing">{this.props.url}</div>
+                    <div>{this.props.url}</div>
                 </div>
             </div>
         );
@@ -41,7 +41,7 @@ var RequestHeaders = React.createClass({
                     <div className="flex flex-row flex-inherit tab-section-header">
                         <div className="tab-title col-10">{this.props.title}</div>
                     </div>
-                    <div className="tab-section-boxing tab-section-listing">
+                    <div className="tab-section-listing">
                         {_.map(this.props.headers, function(value, key) {
                             return (<section className="flex flex-row">
                                     <div className="col-2">{key}</div>

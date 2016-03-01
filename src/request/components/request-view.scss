@@ -489,10 +489,13 @@ body, html {
     margin-bottom: 8px;
 }
 .tab-section-header {
-    padding-left: 13px;
-    
     .tab-title {
         font-size: 70%;
+    }
+}
+.tab-section-boxed {
+    .tab-section-header {
+        padding-left: 13px;
     }
 }
 .tab-section-item {
