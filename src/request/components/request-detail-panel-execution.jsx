@@ -221,7 +221,7 @@ var CommandList = React.createClass({
         var afterExecuteCommandMessages = this.props.afterExecuteCommandMessages;
         var mongoDBMessages = this.props.mongoDBMessages;
         
-        var content = null;
+        var content = [];
         if (beginMessage && endMessage && beforeExecuteCommandMessages && afterExecuteCommandMessages) {
             var commandItems = [];
             for (var i = 0; i < beforeExecuteCommandMessages.length; i++) {
@@ -234,8 +234,8 @@ var CommandList = React.createClass({
         
             // process action
             if (commandItems.length > 0) {
-                content = (
-                        <div className="tab-section tab-section-boxed tab-section-execution-command">
+                content.push(
+                        <div key="sql" className="tab-section tab-section-boxed tab-section-execution-command">
                             <div className="flex flex-row flex-inherit tab-section-header">
                                 <div className="tab-title col-9">SQL Query</div>
                             </div>
@@ -263,8 +263,8 @@ var CommandList = React.createClass({
             
             // process action
             if (mongoOperations.length > 0) {
-                content = (
-                    <div className="tab-section tab-section-boxed tab-section-execution-command">
+                content.push(
+                    <div key="mongo" className="tab-section tab-section-boxed tab-section-execution-command">
                         <div className="flex flex-row flex-inherit tab-section-header">
                             <div className="tab-title col-9">MongoDB</div>
                         </div>
@@ -278,7 +278,7 @@ var CommandList = React.createClass({
             }
         }
         
-        return content;
+        return <div>{content}</div>;
     }
 });
 
