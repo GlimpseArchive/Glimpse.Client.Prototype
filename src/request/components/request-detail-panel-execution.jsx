@@ -235,17 +235,17 @@ var CommandList = React.createClass({
             // process action
             if (commandItems.length > 0) {
                 content.push(
-                        <div key="sql" className="tab-section tab-section-boxed tab-section-execution-command">
-                            <div className="flex flex-row flex-inherit tab-section-header">
-                                <div className="tab-title col-9">SQL Query</div>
-                            </div>
-                            <div className="tab-section-boxing">
-                                <section className="flex flex-row flex-inherit flex-base tab-section-item">
-                                    <div className="tab-section-execution-command-items col-9">{commandItems}</div>
-                                </section>
-                            </div>
+                    <div key="sql" className="tab-section tab-section-boxed tab-section-execution-command">
+                        <div className="flex flex-row flex-inherit tab-section-header">
+                            <div className="tab-title col-9">SQL Query</div>
                         </div>
-                    ); 
+                        <div className="tab-section-boxing">
+                            <section className="flex flex-row flex-inherit flex-base tab-section-item">
+                                <div className="tab-section-execution-command-items col-9">{commandItems}</div>
+                            </section>
+                        </div>
+                    </div>
+                ); 
             }
         }
             
