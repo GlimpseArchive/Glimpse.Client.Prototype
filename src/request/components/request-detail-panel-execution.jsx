@@ -94,7 +94,7 @@ var MongoInsertCommand = React.createClass({
     mixins: [MongoCommandMixin],
     
     getTitle: function() {
-        return 'MongoDB - Inserted ' + this.props.mongoOperation.payload.count +  ' documents';
+        return 'Mongo DB - Inserted ' + this.props.mongoOperation.payload.count +  ' documents';
     },
     
     getDetails: function() {
@@ -113,7 +113,7 @@ var MongoReadCommand = React.createClass({
   mixins: [MongoCommandMixin],
   
   getTitle: function() {
-      return 'MongoDB - Read documents';
+      return 'Mongo DB - Read documents';
   },
   
   getDetails: function() {
@@ -123,7 +123,7 @@ var MongoReadCommand = React.createClass({
               <div>Operation: {mongoOperation.payload.operation}</div>
               <div>Mongo DB URI: {mongoOperation.payload.connectionHost}:{mongoOperation.payload.connectionPort}/{mongoOperation.payload.database}/{mongoOperation.payload.collection} </div>
               <div>Query: {JSON.stringify(mongoOperation.payload.query)}</div>
-              <div>options: {JSON.stringify(mongoOperation.payload.options)}</div>
+              <div>Options: {JSON.stringify(mongoOperation.payload.options)}</div>
           </div>;
       return details;
   }
@@ -133,7 +133,7 @@ var MongoUpdateCommand = React.createClass({
     mixins: [MongoCommandMixin],
     
     getTitle: function() {
-        return 'MongoDB - Updated ' + this.props.mongoOperation.payload.modifiedCount +  ' documents';
+        return 'Mongo DB - Updated ' + this.props.mongoOperation.payload.modifiedCount +  ' documents';
     },
     
     getDetails: function() {
@@ -142,11 +142,11 @@ var MongoUpdateCommand = React.createClass({
         <div> 
             <div>Operation: {mongoOperation.payload.operation}</div>
             <div>Mongo DB URI: {mongoOperation.payload.connectionHost}:{mongoOperation.payload.connectionPort}/{mongoOperation.payload.database}/{mongoOperation.payload.collection} </div>
-            <div>matched count: {mongoOperation.payload.matchedCount}</div>
-            <div>modified count: {mongoOperation.payload.modifiedCount}</div>
-            <div>upserted count: {mongoOperation.payload.upsertedCount}</div>
-            <div>query: {JSON.stringify(mongoOperation.payload.query)}</div>
-            <div>options: {JSON.stringify(mongoOperation.payload.options)}</div>
+            <div>Matched count: {mongoOperation.payload.matchedCount}</div>
+            <div>Modified count: {mongoOperation.payload.modifiedCount}</div>
+            <div>Upserted count: {mongoOperation.payload.upsertedCount}</div>
+            <div>Query: {JSON.stringify(mongoOperation.payload.query)}</div>
+            <div>Options: {JSON.stringify(mongoOperation.payload.options)}</div>
         </div>;
         return details;
     }
@@ -156,7 +156,7 @@ var MongoDeleteCommand = React.createClass({
     mixins: [MongoCommandMixin],
     
     getTitle: function() {
-      return 'MongoDB - Deleted ' + this.props.mongoOperation.payload.count +  ' documents';
+      return 'Mongo DB - Deleted ' + this.props.mongoOperation.payload.count +  ' documents';
     },
     
     getDetails: function() {
@@ -165,8 +165,8 @@ var MongoDeleteCommand = React.createClass({
         <div> 
             <div>Operation: {mongoOperation.payload.operation}</div>
             <div>Mongo DB URI: {mongoOperation.payload.connectionHost}:{mongoOperation.payload.connectionPort}/{mongoOperation.payload.database}/{mongoOperation.payload.collection} </div>
-            <div>query: {JSON.stringify(mongoOperation.payload.query)}</div>
-            <div>options: {JSON.stringify(mongoOperation.payload.options)}</div>
+            <div>Query: {JSON.stringify(mongoOperation.payload.query)}</div>
+            <div>Options: {JSON.stringify(mongoOperation.payload.options)}</div>
         </div>;
         return details;
     }
@@ -343,6 +343,20 @@ module.exports = React.createClass({
     },
     render: function () {
                 
+        function combineMongoMessages(message) {
+            var mongoDBMessages = [];
+            var m = [message.dataMongodbInsert, message.dataMongodbRead, message.dataMongodbUpdate, message.dataMongodbDelete];
+            for ( var i = 0; i<m.length;i++) {
+                if ( m[i] && m[i].length > 0) {
+                    mongoDBMessages = mongoDBMessages.concat(m[i]);
+                }
+            }
+            if ( mongoDBMessages) {
+                mongoDBMessages = mongoDBMessages.sort(function(a,b) { return a.ordinal - b.ordinal;});
+            }
+            return mongoDBMessages;
+        }
+                
         var request = this.props.request;
         
         // get payloads 
@@ -375,16 +389,7 @@ module.exports = React.createClass({
             }
 
             // combine and sort all mongoDB messages
-            var mongoDBMessages = [];
-            var m = [message.dataMongodbInsert, message.dataMongodbRead, message.dataMongodbUpdate, message.dataMongodbDelete];
-            for ( var i = 0; i<m.length;i++) {
-                if ( m[i] && m[i].length > 0) {
-                    mongoDBMessages = mongoDBMessages.concat(m[i]);
-                }
-            }
-            if ( mongoDBMessages) {
-                mongoDBMessages = mongoDBMessages.sort(function(a,b) { return a.ordinal - b.ordinal;});
-            }
+            var mongoDBMessages = combineMongoMessages(message);
             
             //process pre action commands
             var preCommands = null;
