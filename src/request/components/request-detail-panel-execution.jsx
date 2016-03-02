@@ -259,22 +259,22 @@ var CommandList = React.createClass({
                         mongoOperations.push(commandItem);
                      }
                 }
-         }
+            }
             
-         // process action
-         if (mongoOperations.length > 0) {
+            // process action
+            if (mongoOperations.length > 0) {
                 content = (
-                        <div className="tab-section tab-section-boxed tab-section-execution-command">
-                            <div className="flex flex-row flex-inherit tab-section-header">
-                                <div className="tab-title col-9">MongoDB</div>
-                            </div>
-                            <div className="tab-section-boxing">
-                                <section className="flex flex-row flex-inherit flex-base tab-section-item">
-                                    <div className="tab-section-execution-command-items col-9">{mongoOperations}</div>
-                                </section>
-                            </div>
+                    <div className="tab-section tab-section-boxed tab-section-execution-command">
+                        <div className="flex flex-row flex-inherit tab-section-header">
+                            <div className="tab-title col-9">MongoDB</div>
                         </div>
-                    ); 
+                        <div className="tab-section-boxing">
+                            <section className="flex flex-row flex-inherit flex-base tab-section-item">
+                                <div className="tab-section-execution-command-items col-9">{mongoOperations}</div>
+                            </section>
+                        </div>
+                    </div>
+                ); 
             }
         }
         
