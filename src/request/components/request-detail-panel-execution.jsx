@@ -253,7 +253,7 @@ var CommandList = React.createClass({
             var mongoOperations = [];
             for (var i = 0; i < mongoDBMessages.length; i++) {
                 // TODO:  figure out why end-request ordinal is greater than mongo ordinal. 
-                if (mongoDBMessages[i].ordinal > beginMessage.ordinal /*&& mongoDBMessages[i].ordinal < endMessage.ordinal*/) {
+                if (mongoDBMessages[i].ordinal > beginMessage.ordinal && mongoDBMessages[i].ordinal < endMessage.ordinal) {
                     var commandItem = CreateMongoCommandItem(mongoDBMessages[i]);
                     if ( commandItem ) {
                         mongoOperations.push(commandItem);
