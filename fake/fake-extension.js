@@ -170,7 +170,8 @@ var seedMvcActions = (function() {
                         action: 'Index',
                         route: generate.common.route('home', 'index', null),
                         preActivities: [
-                            { access: 'SQL', operation: 'Select', target: 'Albums', affected: 1, command: 'SELECT TOP (2) \n[Extent1].[AlbumId] AS [AlbumId], \n[Extent1].[GenreId] AS [GenreId], \n[Extent1].[ArtistId] AS [ArtistId], \n[Extent1].[Title] AS [Title], \n[Extent1].[Price] AS [Price], \n[Extent1].[AlbumArtUrl] AS [AlbumArtUrl]\nFROM [dbo].[Albums] AS [Extent1]\nWHERE [Extent1].[AlbumId] = 1 /* @p0 */' }
+                            { access: 'SQL', operation: 'Select', target: 'Albums', affected: 1, command: 'SELECT TOP (2) \n[Extent1].[AlbumId] AS [AlbumId], \n[Extent1].[GenreId] AS [GenreId], \n[Extent1].[ArtistId] AS [ArtistId], \n[Extent1].[Title] AS [Title], \n[Extent1].[Price] AS [Price], \n[Extent1].[AlbumArtUrl] AS [AlbumArtUrl]\nFROM [dbo].[Albums] AS [Extent1]\nWHERE [Extent1].[AlbumId] = 1 /* @p0 */' },
+                            { access: 'mongo', type: 'data-mongodb-read', operation: 'toArray', query: {}, startTime: '2016-02-29T14:54:39.073 -0800', options: { find: 'MusicStore.AlbumCollection', limit: 0, skip: 0, query: {}, slaveOk: true, readPreference: { mode: 'primary' } }, connectionHost: 'localhost', connectionPort: 27017, database: 'MusicStore', collection: 'AlbumCollection' }
                         ],
                         activities: [
                             { access: 'SQL', operation: 'Select', target: 'Albums', affected: chance.integerRange(2, 50), command: 'SELECT TOP (5) \n[Project1].[AlbumId] AS [AlbumId], \n[Project1].[GenreId] AS [GenreId], \n[Project1].[ArtistId] AS [ArtistId], \n[Project1].[Title] AS [Title], \n[Project1].[Price] AS [Price], \n[Project1].[AlbumArtUrl] AS [AlbumArtUrl]\nFROM ( SELECT \n    [Extent1].[AlbumId] AS [AlbumId], \n    [Extent1].[GenreId] AS [GenreId], \n    [Extent1].[ArtistId] AS [ArtistId], \n    [Extent1].[Title] AS [Title], \n    [Extent1].[Price] AS [Price], \n    [Extent1].[AlbumArtUrl] AS [AlbumArtUrl], \n    (SELECT \n        COUNT(1) AS [A1]\n        FROM [dbo].[OrderDetails] AS [Extent2]\n        WHERE [Extent1].[AlbumId] = [Extent2].[AlbumId]) AS [C1]\n    FROM [dbo].[Albums] AS [Extent1]\n)  AS [Project1]\nORDER BY [Project1].[C1] DESC'  }
@@ -199,7 +200,9 @@ var seedMvcActions = (function() {
                         ],
                         activities: [
                             { access: 'SQL', operation: 'Select', target: 'Carts', affected: 1, command: 'SELECT \n[Extent1].[RecordId] AS [RecordId], \n[Extent1].[CartId] AS [CartId], \n[Extent1].[AlbumId] AS [AlbumId], \n[Extent1].[Count] AS [Count], \n[Extent1].[DateCreated] AS [DateCreated]\nFROM [dbo].[Carts] AS [Extent1]\nWHERE [Extent1].[CartId] = "df0238d4-5bd4-49b5-97f0-9ba2c9957dc1" /* @p__linq__0 */' },
-                            { access: 'SQL', operation: 'Select', target: 'Carts', affected: 1, command: 'SELECT \n[GroupBy1].[A1] AS [C1]\nFROM ( SELECT \n    SUM([Filter1].[A1]) AS [A1]\n    FROM ( SELECT \n         CAST( [Extent1].[Count] AS decimal(19,0)) * [Extent2].[Price] AS [A1]\n        FROM  [dbo].[Carts] AS [Extent1]\n        INNER JOIN [dbo].[Albums] AS [Extent2] ON [Extent1].[AlbumId] = [Extent2].[AlbumId]\n        WHERE [Extent1].[CartId] = "df0238d4-5bd4-49b5-97f0-9ba2c9957dc1" /* @p__linq__0 */\n    )  AS [Filter1]\n)  AS [GroupBy1]' }
+                            { access: 'SQL', operation: 'Select', target: 'Carts', affected: 1, command: 'SELECT \n[GroupBy1].[A1] AS [C1]\nFROM ( SELECT \n    SUM([Filter1].[A1]) AS [A1]\n    FROM ( SELECT \n         CAST( [Extent1].[Count] AS decimal(19,0)) * [Extent2].[Price] AS [A1]\n        FROM  [dbo].[Carts] AS [Extent1]\n        INNER JOIN [dbo].[Albums] AS [Extent2] ON [Extent1].[AlbumId] = [Extent2].[AlbumId]\n        WHERE [Extent1].[CartId] = "df0238d4-5bd4-49b5-97f0-9ba2c9957dc1" /* @p__linq__0 */\n    )  AS [Filter1]\n)  AS [GroupBy1]' },
+                            { access: 'mongo', type: 'data-mongodb-read', operation: 'insertMany', docs: [ { a: '66703d9a-a2b6-475b-b42b-61349728cd98', b: '0', c: '1', _id: '56d5ec35b7ce8b4413938307' }, { a: '952b5a81-a1f0-49a5-9463-33344828d668', b: '1', c: '1', _id: '56d5ec35b7ce8b4413938308' } ], count: 2, insertedIds: ['56d5ec35b7ce8b4413938307', '56d5ec35b7ce8b4413938308' ], startTime: '2016-03-01T11:23:33.615 -0800', options: {}, connectionHost: 'localhost', connectionPort: 27017, database: 'MusicStore', collection: 'AlbumCollection' },
+                            { access: 'mongo', type: 'data-mongodb-insert', operation: 'toArray', query: {}, startTime: '2016-02-29T14:54:39.073 -0800', options: { find: 'MusicStore.AlbumCollection', limit: 0, skip: 0, query: {}, slaveOk: true, readPreference: { mode: 'primary' } }, connectionHost: 'localhost', connectionPort: 27017, database: 'MusicStore', collection: 'AlbumCollection' }
                         ],
                         actions: [
                             generate.instance.childAction.shoppingCart(),
@@ -338,17 +341,20 @@ var generateMvcRequest = (function() {
         };
     };
     MessageGenerator.support = {
+        propName: function(prefix, prop) {
+            return prefix ? prefix + prop : _.camelCase(prop);
+        },
         beforeTimings: function(prefix, payload, startTime) {
-            payload[prefix + 'StartTime'] = startTime; 
+            payload[this.propName(prefix, 'StartTime')] = startTime; 
         },
         afterTimings: function(prefix, payload, duration, startTime) {
-            payload[prefix + 'EndTime'] = null; //startTime + duration
-            payload[prefix + 'Duration'] = duration; 
-            payload[prefix + 'Offset'] = null; //offset; 
+            payload[this.propName(prefix, 'EndTime')] = null; //startTime + duration
+            payload[this.propName(prefix, 'Duration')] = duration; 
+            payload[this.propName(prefix, 'Offset')] = null; //offset; 
         },
         spotTimings: function(prefix, payload) {
-            payload[prefix + 'Time'] = null;  
-            payload[prefix + 'Offset'] = null; //offset; 
+            payload[this.propName(prefix, 'Time')] = null;  
+            payload[this.propName(prefix, 'Offset')] = null; //offset; 
         },
         childTimings: function (events, availableTime) {
             // TODO: Need to calculate offsets
@@ -608,6 +614,15 @@ var generateMvcRequest = (function() {
             
             return message;
         },
+        createMonogoCommand: function(action, query, context) {
+            var message = this.createMessage(query.type, context);
+            
+            message.payload = query;
+            
+            MessageGenerator.support.afterTimings('', query, (parseInt(query.duration * 100)) / 100, null);
+            
+            return message;
+        },
         createBeforeViewComponent: function(action, context) {
             var message = this.createMessage('before-view-component', context);
             
@@ -713,8 +728,13 @@ var generateMvcRequest = (function() {
         processActivities: function(activities, action, context) {
             if (activities) {
                 _.forEach(activities, function(activity) {
-                    this.messages.push(this.createBeforeExecuteCommand(action, activity, context));
-                    this.messages.push(this.createAfterExecuteCommand(action, activity, context));
+                    if (activity.access == 'SQL') {
+                        this.messages.push(this.createBeforeExecuteCommand(action, activity, context));
+                        this.messages.push(this.createAfterExecuteCommand(action, activity, context));
+                    } 
+                    else if (activity.access == 'mongo') {
+                        this.messages.push(this.createMonogoCommand(action, activity, context));
+                    }
                 }, this);
             }
         },
