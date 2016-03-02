@@ -436,7 +436,18 @@ var generateMvcRequest = (function() {
             payload.requestPath = source.path;
             payload.requestQueryString = source.queryString;
             payload.requestUrl = 'http://localhost:5000' + source.path + defaultOrEmpty(source.queryString);
-            
+            payload.requestHeaders = {
+                'Server': 'GitHub.com',
+                'Date': 'Mon, 02 Nov 2015 06:39:26 GMT',
+                'Content-Type': 'text/html; charset=utf-8',
+                'Transfer-Encoding': 'chunked',
+                'Status': '200 OK',
+                'Cache-Control': 'no-cache',
+                'Strict-Transport-Security': 'max-age=31536000; includeSubdomains; preload',
+                'Vary': 'Accept-Encoding',
+                'Content-Encoding': 'gzip'
+            };
+
             MessageGenerator.support.beforeTimings('request', payload, source.dateTime);
             
             return message;
@@ -451,7 +462,16 @@ var generateMvcRequest = (function() {
             payload.requestPath = source.path;
             payload.requestQueryString = source.queryString;
             payload.requestUrl = 'http://localhost:5000' + source.path + defaultOrEmpty(source.queryString);
-             
+            payload.responseHeaders = {
+                'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+                'Accept-Encoding': 'gzip, deflate, sdch',
+                'Accept-Language': 'en-US,en;q=0.8',
+                'Cache-Control': 'no-cache',
+                'Connection': 'keep-alive',
+                'Host': 'github.com',
+                'Pragma': 'no-cache'
+            };
+            
             MessageGenerator.support.afterTimings('response', payload, source.duration, source.dateTime);
             
             return message;

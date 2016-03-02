@@ -50,30 +50,6 @@ var getMessages = (function() {
     }
 })();
 
-var RequestHeaders = React.createClass({
-    render: function() {
-        return (
-            <div>
-                <div className="tab-section">{this.props.title}</div>
-                <div className="tab-section tab-section-execution-headers">
-                    <div className="flex flex-row flex-inherit tab-section-header">
-                        <div className="tab-title col-2">Variable</div>
-                        <div className="tab-title col-8">Value</div>
-                    </div>
-                    <div className="tab-section-boxing tab-section-listing">
-                        {_.map(this.props.headers, function(value, key) {
-                            return (<section className="flex flex-row">
-                                    <div className="col-2">{key}</div>
-                                    <div className="col-8">{value}</div>
-                                </section>);
-                        })}
-                    </div>
-                </div>
-            </div>
-        );
-    }
-});
-
 var MongoCommandMixin = {
     getInitialState: function() {
         return { show: false };
@@ -259,7 +235,7 @@ var CommandList = React.createClass({
             // process action
             if (commandItems.length > 0) {
                 content = (
-                        <div className="tab-section tab-section-execution-command">
+                        <div className="tab-section tab-section-boxed tab-section-execution-command">
                             <div className="flex flex-row flex-inherit tab-section-header">
                                 <div className="tab-title col-9">SQL Query</div>
                             </div>
@@ -288,7 +264,7 @@ var CommandList = React.createClass({
          // process action
          if (mongoOperations.length > 0) {
                 content = (
-                        <div className="tab-section tab-section-execution-command">
+                        <div className="tab-section tab-section-boxed tab-section-execution-command">
                             <div className="flex flex-row flex-inherit tab-section-header">
                                 <div className="tab-title col-9">MongoDB</div>
                             </div>
@@ -422,7 +398,7 @@ module.exports = React.createClass({
                 var routePath = beginRequestPayload ? (<span><span>{beginRequestPayload.requestPath}</span><span>{beginRequestPayload.requestQueryString}</span></span>) : '';
             
                 route = (
-                        <div className="tab-section tab-section-execution-route">
+                        <div className="tab-section tab-section-boxed tab-section-execution-route">
                             <div className="flex flex-row flex-inherit tab-section-header">
                                 <div className="tab-title col-9">Route</div>
                             </div>
@@ -444,7 +420,7 @@ module.exports = React.createClass({
                 }
                 
                 action = (
-                        <div className="tab-section tab-section-execution-action">
+                        <div className="tab-section tab-section-boxed tab-section-execution-action">
                             <div className="flex flex-row flex-inherit tab-section-header">
                                 <div className="tab-title col-9">Action</div>
                             </div>
@@ -475,7 +451,7 @@ module.exports = React.createClass({
                     var componentCommands = <CommandList beforeExecuteCommandMessages={beforeExecuteCommandMessages} afterExecuteCommandMessages={afterExecuteCommandMessages} mongoDBMessages={mongoDBMessages} beginMessage={beforeViewComponetMessage} endMessage={afterViewComponetMessage} />;
                     
                     return (
-                            <div className="tab-section tab-section-execution-component">
+                            <div className="tab-section tab-section-boxed tab-section-execution-component">
                                 <div className="flex flex-row flex-inherit tab-section-header">
                                     <div className="tab-title col-9">View Component</div>
                                 </div>
@@ -500,7 +476,7 @@ module.exports = React.createClass({
                 }
             
                 view = (
-                        <div className="tab-section tab-section-execution-view">
+                        <div className="tab-section tab-section-boxed tab-section-execution-view">
                             <div className="flex flex-row flex-inherit tab-section-header">
                                 <div className="tab-title col-9">View Result</div>
                             </div>
@@ -525,15 +501,6 @@ module.exports = React.createClass({
                 <div>
                     <div className="tab-section text-minor">Execution on Server</div>
                     {preCommands}{route}{action}{view}{postCommands}
-                </div>
-            );
-        }   
-        else if (beginRequestPayload && endRequestPayload) {
-            content = (
-                <div>
-                    <div className="tab-section text-minor">Execution on Server</div>
-                    <RequestHeaders title="Request Headers" headers={beginRequestPayload.requestHeaders} />;
-                    <RequestHeaders title="Response Headers" headers={endRequestPayload.responseHeaders} />;
                 </div>
             );
         }
