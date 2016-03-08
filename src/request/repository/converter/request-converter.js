@@ -150,6 +150,9 @@ var setupIndex = function(request, type, payload) {
         request._requestIsAjax = payload.requestIsAjax;
     }
     if (type == 'end-request') {
+        var contentType = payload.responseHeaders && payload.responseHeaders['Content-Type'];
+        payload.responseContentType = contentType;
+        
         request._responseStatusCode = payload.responseStatusCode; 
         request._responseStatusText = getStatusCodeText(payload.responseStatusCode);
         request._responseContentType = payload.responseContentType;
