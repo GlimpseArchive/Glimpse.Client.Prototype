@@ -439,8 +439,8 @@ var generateMvcRequest = (function() {
             
             var payload = message.payload; 
             payload.requestMethod = source.method;
-            payload.requestPath = source.path;
-            payload.requestQueryString = source.queryString;
+            //payload.requestPath = source.path;
+            //payload.requestQueryString = source.queryString;
             payload.requestUrl = 'http://localhost:5000' + source.path + defaultOrEmpty(source.queryString);
             payload.requestHeaders = {
                 'Server': 'GitHub.com',
@@ -465,8 +465,8 @@ var generateMvcRequest = (function() {
             payload.responseStatusCode = source.statusCode;
             payload.responseStatusText = source.statusText;
             payload.responseContentType = source.contentType;
-            payload.requestPath = source.path;
-            payload.requestQueryString = source.queryString;
+            //payload.requestPath = source.path;
+            //payload.requestQueryString = source.queryString;
             payload.requestUrl = 'http://localhost:5000' + source.path + defaultOrEmpty(source.queryString);
             payload.responseHeaders = {
                 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
@@ -474,6 +474,7 @@ var generateMvcRequest = (function() {
                 'Accept-Language': 'en-US,en;q=0.8',
                 'Cache-Control': 'no-cache',
                 'Connection': 'keep-alive',
+                'Content-Type': source.contentType,
                 'Host': 'github.com',
                 'Pragma': 'no-cache'
             };
@@ -830,6 +831,9 @@ var generateMvcRequest = (function() {
                     
                     var payload = message.payload;
                     if (type == 'begin-request') {
+                        payload.requestPath = source.path;
+                        payload.requestQueryString = source.queryString;
+                        
                         request._requestStartTime = payload.requestStartTime;
                         request._requestMethod = payload.requestMethod;
                         request._requestUrl = (payload.requestPath || '') + (payload.requestQueryString || '');

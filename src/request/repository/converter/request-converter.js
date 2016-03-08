@@ -1,6 +1,7 @@
 'use strict';
 
 var _ = require('lodash');
+var parse = require('url-parse');
 var glimpse = require('glimpse');
 
 var _strategies = []; 
@@ -139,9 +140,13 @@ var getStatusCodeText = (function() {
 })();
 var setupIndex = function(request, type, payload) {
     if (type == 'begin-request') {
+        var url = parse(payload.requestUrl);
+        payload.requestPath = url.pathname;
+        payload.requestQueryString = url.query;
+        
         request._requestStartTime = payload.requestStartTime;
         request._requestMethod = payload.requestMethod;
-        request._requestUrl = (payload.requestPath || '') + (payload.requestQueryString || '');
+        request._requestUrl = payload.requestPath + payload.requestQueryString;
         request._requestIsAjax = payload.requestIsAjax;
     }
     if (type == 'end-request') {
