@@ -439,8 +439,6 @@ var generateMvcRequest = (function() {
             
             var payload = message.payload; 
             payload.requestMethod = source.method;
-            //payload.requestPath = source.path;
-            //payload.requestQueryString = source.queryString;
             payload.requestUrl = 'http://localhost:5000' + source.path + defaultOrEmpty(source.queryString);
             payload.requestHeaders = {
                 'Server': 'GitHub.com',
@@ -464,9 +462,6 @@ var generateMvcRequest = (function() {
             var payload = message.payload;
             payload.responseStatusCode = source.statusCode;
             payload.responseStatusText = source.statusText;
-            //payload.responseContentType = source.contentType;
-            //payload.requestPath = source.path;
-            //payload.requestQueryString = source.queryString;
             payload.requestUrl = 'http://localhost:5000' + source.path + defaultOrEmpty(source.queryString);
             payload.responseHeaders = {
                 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
