@@ -102,7 +102,6 @@ var process = (function() {
 				result.requestUrl = beginRequest.url;
 				result.requestPath = beginRequest.path;
 				result.requestQueryString = beginRequest.query;
-				result.responseContentLength = endRequest.responseContentLength;
 				result.responseContentType = endRequest.contentType;
 				result.responsestatusCode = endRequest.statusCode;
 				result.responseStatusText = endRequest.statusText;
