@@ -98,14 +98,14 @@ var process = (function() {
 				//var browserNavigationTiming = payload.browserNavigationTiming || {};
 				
 				var result = {};
-				result.requestMethod = beginRequest.requestMethod;
-				result.requestUrl = beginRequest.requestUrl;
-				result.requestPath = beginRequest.requestPath;
-				result.requestQueryString = beginRequest.requestQueryString;
+				result.requestMethod = beginRequest.method;
+				result.requestUrl = beginRequest.url;
+				result.requestPath = beginRequest.path;
+				result.requestQueryString = beginRequest.query;
 				result.responseContentLength = endRequest.responseContentLength;
-				result.responseContentType = endRequest.responseContentType;
-				result.responseStatusCode = endRequest.responseStatusCode;
-				result.responseStatusText = endRequest.responseStatusText;
+				result.responseContentType = endRequest.contentType;
+				result.responsestatusCode = endRequest.statusCode;
+				result.responseStatusText = endRequest.statusText;
 				result.responseDuration = endRequest.responseDuration;
 				
 				return result;

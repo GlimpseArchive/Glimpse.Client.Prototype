@@ -400,7 +400,7 @@ module.exports = React.createClass({
             // process route
             var route = null;
             if (routePayload) {
-                var routePath = beginRequestPayload ? (<span><span>{beginRequestPayload.requestPath}</span><span>{beginRequestPayload.requestQueryString}</span></span>) : '';
+                var routePath = beginRequestPayload ? (<span><span>{beginRequestPayload.path}</span><span>{beginRequestPayload.query}</span></span>) : '';
             
                 route = (
                         <div className="tab-section tab-section-boxed tab-section-execution-route">

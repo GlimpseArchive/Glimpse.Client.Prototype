@@ -85,11 +85,11 @@ module.exports = React.createClass({
             <div className={containerClass} onClick={this.onSelect}>
                 <div className="flex flex-row flex-base request-summary-title-section">
                     <div className="flex flex-row flex-base col-8">
-                        <div className="text-focus">{beginRequest.requestPath}{beginRequest.requestQueryString}</div>
+                        <div className="text-focus">{beginRequest.path}{beginRequest.query}</div>
                         <div className="text-minor request-summary-title-detail">
-                            <span>{beginRequest.requestMethod}</span>
-                            <span title={endRequest.responseStatusText}>{endRequest.responseStatusCode}</span>
-                            <span title={endRequest.responseContentType}>{contextTypeOrEmpty(endRequest.responseContentCategory)}</span>
+                            <span>{beginRequest.method}</span>
+                            <span title={endRequest.statusText}>{endRequest.statusCode}</span>
+                            <span title={endRequest.contentType}>{contextTypeOrEmpty(endRequest.contentCategory)}</span>
                         </div>
                     </div>
                     <div className="col-2 text-minor request-summary-metadata">

@@ -72,9 +72,9 @@ module.exports = React.createClass({
             content = (
                 <div>
                     <div className="tab-section text-minor">Web Request/Response</div>
-                    <RequestUrl url={beginRequestPayload.requestUrl} />
-                    <RequestHeaders title="Request Headers" headers={beginRequestPayload.requestHeaders} />
-                    <RequestHeaders title="Response Headers" headers={endRequestPayload.responseHeaders} />
+                    <RequestUrl url={beginRequestPayload.url} />
+                    <RequestHeaders title="Request Headers" headers={beginRequestPayload.headers} />
+                    <RequestHeaders title="Response Headers" headers={endRequestPayload.headers} />
                 </div>
             );
         }

@@ -140,26 +140,26 @@ var getStatusCodeText = (function() {
 })();
 var setupIndex = function(request, type, payload) {
     if (type == 'begin-request') {
-        var url = parse(payload.requestUrl);
-        payload.requestPath = url.pathname;
-        payload.requestQueryString = url.query;
+        var url = parse(payload.url);
+        payload.path = url.pathname;
+        payload.query = url.query;
         
         request._requestStartTime = payload.requestStartTime;
-        request._requestMethod = payload.requestMethod;
-        request._requestUrl = payload.requestPath + payload.requestQueryString;
+        request._requestMethod = payload.method;
+        request._requestUrl = payload.path + payload.query;
         request._requestIsAjax = payload.requestIsAjax;
     }
     if (type == 'end-request') {
-        var contentType = payload.responseHeaders && payload.responseHeaders['Content-Type'];
-        payload.responseContentType = contentType;
+        var contentType = payload.headers && payload.headers['Content-Type'];
+        payload.contentType = contentType;
         
-        request._responseStatusCode = payload.responseStatusCode; 
-        request._responseStatusText = getStatusCodeText(payload.responseStatusCode);
-        request._responseContentType = payload.responseContentType;
-        request._responseContentCategory = getContentTypeCategory(payload.responseContentType);  
+        request._responseStatusCode = payload.statusCode; 
+        request._responseStatusText = getStatusCodeText(payload.statusCode);
+        request._responseContentType = payload.contentType;
+        request._responseContentCategory = getContentTypeCategory(payload.contentType);  
         
-        payload.responseStatusText = request._responseStatusText;  
-        payload.responseContentCategory = request._responseContentCategory;
+        payload.statusText = request._responseStatusText;  
+        payload.contentCategory = request._responseContentCategory;
     }
     if (type == 'user-identification') {
         request._userId = payload.userId;

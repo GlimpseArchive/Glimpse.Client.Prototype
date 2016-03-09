@@ -116,7 +116,7 @@ var seedMvcActions = (function() {
                     
                     return {
                         path: '/Store/Browse',
-                        queryString: '?Genre=' + genre,
+                        query: '?Genre=' + genre,
                         controller: 'Store',
                         action: 'Browse',
                         route: generate.common.route('store', 'browse', null),
@@ -438,9 +438,9 @@ var generateMvcRequest = (function() {
             var message = this.createMessage('begin-request', source.context);
             
             var payload = message.payload; 
-            payload.requestMethod = source.method;
-            payload.requestUrl = 'http://localhost:5000' + source.path + defaultOrEmpty(source.queryString);
-            payload.requestHeaders = {
+            payload.method = source.method;
+            payload.url = 'http://localhost:5000' + source.path + defaultOrEmpty(source.query);
+            payload.headers = {
                 'Server': 'GitHub.com',
                 'Date': 'Mon, 02 Nov 2015 06:39:26 GMT',
                 'Content-Type': 'text/html; charset=utf-8',
@@ -460,10 +460,9 @@ var generateMvcRequest = (function() {
             var message = this.createMessage('end-request', source.context);
             
             var payload = message.payload;
-            payload.responseStatusCode = source.statusCode;
-            payload.responseStatusText = source.statusText;
-            payload.requestUrl = 'http://localhost:5000' + source.path + defaultOrEmpty(source.queryString);
-            payload.responseHeaders = {
+            payload.statusCode = source.statusCode;
+            payload.statusText = source.statusText;
+            payload.headers = {
                 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
                 'Accept-Encoding': 'gzip, deflate, sdch',
                 'Accept-Language': 'en-US,en;q=0.8',
@@ -826,20 +825,20 @@ var generateMvcRequest = (function() {
                     
                     var payload = message.payload;
                     if (type == 'begin-request') {
-                        payload.requestPath = source.path;
-                        payload.requestQueryString = source.queryString;
+                        payload.path = source.path;
+                        payload.query = source.query;
                         
                         request._requestStartTime = payload.requestStartTime;
-                        request._requestMethod = payload.requestMethod;
-                        request._requestUrl = (payload.requestPath || '') + (payload.requestQueryString || '');
+                        request._requestMethod = payload.method;
+                        request._requestUrl = (payload.path || '') + (payload.query || '');
                     }
                     if (type == 'end-request') {
-                        request._responseStatusCode = payload.responseStatusCode; 
+                        request._responseStatusCode = payload.statusCode; 
                         request._responseStatusText = source.statusText;
                         request._responseContentCategory = source.contentCategory;  
                         
-                        payload.responseStatusText = request._responseStatusText;  
-                        payload.responseContentCategory = request._responseContentCategory;
+                        payload.statusText = request._responseStatusText;  
+                        payload.contentCategory = request._responseContentCategory;
                     }
                 }
                 
