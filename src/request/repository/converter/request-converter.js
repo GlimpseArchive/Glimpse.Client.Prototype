@@ -152,14 +152,13 @@ var setupIndex = function(request, type, payload) {
     if (type == 'end-request') {
         var contentType = payload.headers && payload.headers['Content-Type'];
         payload.contentType = contentType;
+        payload.statusText = getStatusCodeText(payload.statusCode);  
+        payload.contentCategory = getContentTypeCategory(payload.contentType);
         
         request._responseStatusCode = payload.statusCode; 
-        request._responseStatusText = getStatusCodeText(payload.statusCode);
+        request._responseStatusText = payload.statusText;
         request._responseContentType = payload.contentType;
-        request._responseContentCategory = getContentTypeCategory(payload.contentType);  
-        
-        payload.statusText = request._responseStatusText;  
-        payload.contentCategory = request._responseContentCategory;
+        request._responseContentCategory = payload.contentCategory;  
     }
     if (type == 'user-identification') {
         request._userId = payload.userId;
