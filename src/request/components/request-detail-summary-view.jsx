@@ -46,8 +46,8 @@ var serverTime = function(endRequest, browserNavigationTiming) {
     if (browserNavigationTiming && browserNavigationTiming.serverTime > 0) {
         total = browserNavigationTiming.serverTime;
     }
-    else if (endRequest && endRequest.responseDuration) {
-        total = endRequest.responseDuration;
+    else if (endRequest && endRequest.duration) {
+        total = endRequest.duration;
     }
     return total;
 }
@@ -56,8 +56,8 @@ var requestTime = function(endRequest, browserNavigationTiming) {
     if (browserNavigationTiming && browserNavigationTiming.total) {
         total = browserNavigationTiming.total;
     }
-    else if (endRequest && endRequest.responseDuration) {
-        total = endRequest.responseDuration;
+    else if (endRequest && endRequest.duration) {
+        total = endRequest.duration;
     }
     
     return total;
@@ -88,7 +88,7 @@ module.exports = React.createClass({
                         </div>
                     </div>
                     <div className="col-2 text-minor request-summary-metadata">
-                        {userIdentification.username} &nbsp; - &nbsp; <Timeago time={beginRequest.requestStartTime} />
+                        {userIdentification.username} &nbsp; - &nbsp; <Timeago time={beginRequest.startTime} />
                     </div>
                 </div>
                 <div className="flex flex-row flex-inherit text-accent-small text-minor">

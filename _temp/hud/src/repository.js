@@ -105,7 +105,7 @@ var process = (function() {
 				result.responseContentType = endRequest.contentType;
 				result.responsestatusCode = endRequest.statusCode;
 				result.responseStatusText = endRequest.statusText;
-				result.responseDuration = endRequest.responseDuration;
+				result.responseDuration = endRequest.duration;
 				
 				return result;
 			},

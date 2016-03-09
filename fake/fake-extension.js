@@ -452,7 +452,7 @@ var generateMvcRequest = (function() {
                 'Content-Encoding': 'gzip'
             };
 
-            MessageGenerator.support.beforeTimings('request', payload, source.dateTime);
+            MessageGenerator.support.beforeTimings('', payload, source.dateTime);
             
             return message;
         },
@@ -473,7 +473,7 @@ var generateMvcRequest = (function() {
                 'Pragma': 'no-cache'
             };
             
-            MessageGenerator.support.afterTimings('response', payload, source.duration, source.dateTime);
+            MessageGenerator.support.afterTimings('', payload, source.duration, source.dateTime);
             
             return message;
         },
@@ -828,7 +828,7 @@ var generateMvcRequest = (function() {
                         payload.path = source.path;
                         payload.query = source.query;
                         
-                        request._requestStartTime = payload.requestStartTime;
+                        request._requestStartTime = payload.startTime;
                         request._requestMethod = payload.method;
                         request._requestUrl = (payload.path || '') + (payload.query || '');
                     }

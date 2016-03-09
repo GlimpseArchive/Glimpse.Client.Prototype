@@ -144,7 +144,7 @@ var setupIndex = function(request, type, payload) {
         payload.path = url.pathname;
         payload.query = url.query;
         
-        request._requestStartTime = payload.requestStartTime;
+        request._requestStartTime = payload.startTime;
         request._requestMethod = payload.method;
         request._requestUrl = payload.path + payload.query;
         request._requestIsAjax = payload.requestIsAjax;
