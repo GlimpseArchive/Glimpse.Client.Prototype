@@ -139,7 +139,7 @@ var getStatusCodeText = (function() {
     };
 })();
 var setupIndex = function(request, type, payload) {
-    if (type == 'begin-request') {
+    if (type == 'web-request') {
         var url = parse(payload.url);
         payload.path = url.pathname;
         payload.query = url.query;
@@ -149,7 +149,7 @@ var setupIndex = function(request, type, payload) {
         request._requestUrl = payload.path + payload.query;
         request._requestIsAjax = payload.requestIsAjax;
     }
-    if (type == 'end-request') {
+    if (type == 'web-response') {
         var contentType = payload.headers && glimpse.util.getPropertyCaseInsensitive(payload.headers, 'Content-Type');;
         payload.contentType = contentType;
         payload.statusText = getStatusCodeText(payload.statusCode);  

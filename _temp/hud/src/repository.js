@@ -26,7 +26,7 @@ var process = (function() {
 		var messageList = messageProcessor.getTypeMessageList;
 		
 		return messageProcessor.getTypeStucture(index, {
-			'begin-request': processItem,
+			'web-request': processItem,
 			'environment': processItem,
 			'user-identification': processItem,
 			//'browser-navigation-timing': processItem,
@@ -35,7 +35,7 @@ var process = (function() {
 			'before-execute-command': messageList,
 			'after-execute-command': messageList,
 			'after-view-component': processList,
-			'end-request': processItem
+			'web-response': processItem
 		});
 	}
 	
@@ -93,19 +93,19 @@ var process = (function() {
 				return result;
 			},
 			request: function(payload) { 
-				var beginRequest = payload.beginRequest || {};
-				var endRequest = payload.endRequest || {};
+				var webRequest = payload.webRequest || {};
+				var webResponse = payload.webResponse || {};
 				//var browserNavigationTiming = payload.browserNavigationTiming || {};
 				
 				var result = {};
-				result.requestMethod = beginRequest.method;
-				result.requestUrl = beginRequest.url;
-				result.requestPath = beginRequest.path;
-				result.requestQueryString = beginRequest.query;
-				result.responseContentType = endRequest.contentType;
-				result.responsestatusCode = endRequest.statusCode;
-				result.responseStatusText = endRequest.statusText;
-				result.responseDuration = endRequest.duration;
+				result.requestMethod = webRequest.method;
+				result.requestUrl = webRequest.url;
+				result.requestPath = webRequest.path;
+				result.requestQueryString = webRequest.query;
+				result.responseContentType = webResponse.contentType;
+				result.responsestatusCode = webResponse.statusCode;
+				result.responseStatusText = webResponse.statusText;
+				result.responseDuration = webResponse.duration;
 				
 				return result;
 			},

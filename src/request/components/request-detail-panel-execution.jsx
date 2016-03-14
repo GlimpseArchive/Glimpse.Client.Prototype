@@ -11,8 +11,8 @@ var getPayloads = (function() {
     var getItem = messageProcessor.getTypePayloadItem;
     
     var options = {
-        'end-request': getItem,
-        'begin-request': getItem,
+        'web-response': getItem,
+        'web-request': getItem,
         'action-content': getItem,
         'action-route': getItem,
         'after-action-invoked': getItem,
@@ -30,8 +30,8 @@ var getMessages = (function() {
     var getList = messageProcessor.getTypeMessageList;
     
     var options = {
-        'end-request': getItem,
-        'begin-request': getItem,
+        'web-response': getItem,
+        'web-request': getItem,
         'before-action-invoked': getItem,
         'after-action-invoked': getItem,
         'before-execute-command': getList,
@@ -252,7 +252,7 @@ var CommandList = React.createClass({
         if (mongoDBMessages ) {
             var mongoOperations = [];
             for (var i = 0; i < mongoDBMessages.length; i++) {
-                // TODO:  figure out why end-request ordinal is greater than mongo ordinal. 
+                // TODO:  figure out why web-response ordinal is greater than mongo ordinal. 
                 if (mongoDBMessages[i].ordinal > beginMessage.ordinal && mongoDBMessages[i].ordinal < endMessage.ordinal) {
                     var commandItem = CreateMongoCommandItem(mongoDBMessages[i]);
                     if ( commandItem ) {
@@ -361,8 +361,8 @@ module.exports = React.createClass({
         
         // get payloads 
         var payload = getPayloads(request);
-        var beginRequestPayload = payload.beginRequest;
-        var endRequestPayload = payload.endRequest;
+        var webRequestPayload = payload.webRequest;
+        var webResponsePayload = payload.webResponse;
         var routePayload = payload.actionRoute;
         var contentPayload = payload.actionContent;
         var afterActionInvokedPayload = payload.afterActionInvoked;
@@ -373,8 +373,8 @@ module.exports = React.createClass({
         if (routePayload || afterActionInvokedPayload || actionViewFoundPayload || afterActionViewInvokedPayload) {
             // get messages 
             var message = getMessages(request);
-            var beginRequestMessage = message.beginRequest;
-            var endRequestMessage = message.endRequest;
+            var webRequestMessage = message.webRequest;
+            var webResponseMessage = message.webResponse;
             var beforeActionInvokedMessage = message.beforeActionInvoked;
             var afterActionInvokedMessage = message.afterActionInvoked;
             var beforeExecuteCommandMessages = message.beforeExecuteCommand;
@@ -393,14 +393,14 @@ module.exports = React.createClass({
             
             //process pre action commands
             var preCommands = null;
-            if (beginRequestMessage && beforeActionInvokedMessage) { 
-                preCommands = <CommandList beforeExecuteCommandMessages={beforeExecuteCommandMessages} afterExecuteCommandMessages={afterExecuteCommandMessages} mongoDBMessages={mongoDBMessages} beginMessage={beginRequestMessage} endMessage={beforeActionInvokedMessage} isRoot={true} />            
+            if (webRequestMessage && beforeActionInvokedMessage) { 
+                preCommands = <CommandList beforeExecuteCommandMessages={beforeExecuteCommandMessages} afterExecuteCommandMessages={afterExecuteCommandMessages} mongoDBMessages={mongoDBMessages} beginMessage={webRequestMessage} endMessage={beforeActionInvokedMessage} isRoot={true} />            
             }
             
             // process route
             var route = null;
             if (routePayload) {
-                var routePath = beginRequestPayload ? (<span><span>{beginRequestPayload.path}</span><span>{beginRequestPayload.query}</span></span>) : '';
+                var routePath = webRequestPayload ? (<span><span>{webRequestPayload.path}</span><span>{webRequestPayload.query}</span></span>) : '';
             
                 route = (
                         <div className="tab-section tab-section-boxed tab-section-execution-route">
@@ -498,8 +498,8 @@ module.exports = React.createClass({
             
             //process post action commands
             var postCommands = null;
-            if (afterActionResultMessage && endRequestMessage) { 
-                postCommands = <CommandList beforeExecuteCommandMessages={beforeExecuteCommandMessages} afterExecuteCommandMessages={afterExecuteCommandMessages} mongoDBMessages={mongoDBMessages} beginMessage={afterActionResultMessage} endMessage={endRequestMessage} isRoot={true} />            
+            if (afterActionResultMessage && webResponseMessage) { 
+                postCommands = <CommandList beforeExecuteCommandMessages={beforeExecuteCommandMessages} afterExecuteCommandMessages={afterExecuteCommandMessages} mongoDBMessages={mongoDBMessages} beginMessage={afterActionResultMessage} endMessage={webResponseMessage} isRoot={true} />            
             }
             
             content = (

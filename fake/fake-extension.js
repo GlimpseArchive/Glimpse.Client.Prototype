@@ -434,8 +434,8 @@ var generateMvcRequest = (function() {
 
             return message;
         },
-        createBeginRequest: function(source) {
-            var message = this.createMessage('begin-request', source.context);
+        createWebRequest: function(source) {
+            var message = this.createMessage('web-request', source.context);
             
             var payload = message.payload; 
             payload.method = source.method;
@@ -456,8 +456,8 @@ var generateMvcRequest = (function() {
             
             return message;
         },
-        createEndRequest: function(source) {
-            var message = this.createMessage('end-request', source.context);
+        createWebResponse: function(source) {
+            var message = this.createMessage('web-response', source.context);
             
             var payload = message.payload;
             payload.statusCode = source.statusCode;
@@ -785,7 +785,7 @@ var generateMvcRequest = (function() {
             this.messages.push(this.createAfterActionViewInvoked(action, action.result, context));
         },
         processRequest: function(source) {
-            this.messages.push(this.createBeginRequest(source));
+            this.messages.push(this.createWebRequest(source));
             
             this.processActivities(source.preActivities, source, source.context);
             
@@ -797,7 +797,7 @@ var generateMvcRequest = (function() {
             
             this.processActivities(source.postActivities, source, source.context);
             
-            this.messages.push(this.createEndRequest(source)); 
+            this.messages.push(this.createWebResponse(source)); 
             this.messages.push(this.createBrowserNavigationTiming(source))
             
             return this.messages;
@@ -824,7 +824,7 @@ var generateMvcRequest = (function() {
                     request.types[type] = [];
                     
                     var payload = message.payload;
-                    if (type == 'begin-request') {
+                    if (type == 'web-request') {
                         payload.path = source.path;
                         payload.query = source.query;
                         
@@ -832,7 +832,7 @@ var generateMvcRequest = (function() {
                         request._requestMethod = payload.method;
                         request._requestUrl = (payload.path || '') + (payload.query || '');
                     }
-                    if (type == 'end-request') {
+                    if (type == 'web-response') {
                         request._responseStatusCode = payload.statusCode; 
                         request._responseStatusText = source.statusText;
                         request._responseContentCategory = source.contentCategory;  
