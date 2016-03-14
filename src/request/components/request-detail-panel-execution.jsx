@@ -338,6 +338,60 @@ var ParamaterList = React.createClass({
     }
 });
 
+var MiddlewareList = React.createClass({
+    render: function() {
+        var middlewareStartMessages = this.props.middlewareStartMessages;
+        var middlewareEndMessages = this.props.middlewareEndMessages;
+        var beforeExecuteCommandMessages = this.props.beforeExecuteCommandMessages;
+        var afterExecuteCommandMessages = this.props.afterExecuteCommandMessages;
+        var mongoDBMessages = this.props.mongoDBMessages;
+        
+        var content = null;
+        
+        if (middlewareStartMessages
+            && middlewareEndMessages
+            && middlewareStartMessages.length >= 0
+            && middlewareEndMessages.length >= 0) {
+        
+            middlewareStartMessages = middlewareStartMessages.sort(function (a,b) { return a.ordinal - b.ordinal; });
+            middlewareEndMessages = _.indexBy(middlewareEndMessages, 'payload.correlationId');
+            
+            var middlewareComponent = _.map(middlewareStartMessages, function (middlewareStartMessage) {
+                var middlewareEndMessage = middlewareEndMessages[middlewareStartMessage.payload.correlationId];
+                var middlewareEndPayload = middlewareEndMessage.payload;
+                
+                var result = middlewareEndPayload.result;
+                
+                switch (result) {
+                    case 'next': result = 'Next'; break;
+                    case 'end': result = 'End'; break;
+                    case 'error': result = 'Error'; break;
+                }
+                
+                return (
+                        <div className="tab-section-boxing">
+                            <section className="flex flex-row flex-inherit flex-base tab-section-item">
+                                <div className="tab-execution-important col-8">{middlewareEndPayload.name} &nbsp; <span className="text-minor">({result})</span></div>
+                                <div className="tab-execution-timing">{middlewareEndPayload.duration} ms</div>
+                            </section>
+                            <CommandList beforeExecuteCommandMessages={beforeExecuteCommandMessages} afterExecuteCommandMessages={afterExecuteCommandMessages} mongoDBMessages={mongoDBMessages} beginMessage={middlewareStartMessage} endMessage={middlewareEndMessage} />
+                        </div>
+                );
+            });
+            
+            content = (
+                    <div className="tab-section tab-section-boxed tab-section-execution-middleware">
+                        <div className="flex flex-row flex-inherit tab-section-header">
+                            <div className="tab-title col-9">Middleware</div>
+                        </div>
+                        {middlewareComponent}
+                    </div>
+                ); 
+        }      
+        
+        return content; 
+    } 
+});
 
 module.exports = React.createClass({
     getInitialState: function () {
@@ -370,13 +424,11 @@ module.exports = React.createClass({
         var afterActionInvokedPayload = payload.afterActionInvoked;
         var actionViewFoundPayload = payload.actionViewFound;
         var afterActionViewInvokedPayload = payload.afterActionViewInvoked;
-
-        // get messages 
-        var message = getMessages(request);
-        var middlewareStartMessages = message.middlewareStart;
         
         var content = null;
-        if (routePayload || afterActionInvokedPayload || actionViewFoundPayload || afterActionViewInvokedPayload || (middlewareStartMessages && middlewareStartMessages.length >= 0)) {
+        if (routePayload || afterActionInvokedPayload || actionViewFoundPayload || afterActionViewInvokedPayload) {
+            // get messages 
+            var message = getMessages(request);
             var beginRequestMessage = message.beginRequest;
             var endRequestMessage = message.endRequest;
             var beforeActionInvokedMessage = message.beforeActionInvoked;
@@ -386,6 +438,7 @@ module.exports = React.createClass({
             var beforeViewComponentMessages = message.beforeViewComponent;
             var afterViewComponentMessages = message.afterViewComponent;
             var afterActionResultMessage = message.afterActionResult;
+            var middlewareStartMessages = message.middlewareStart;
             var middlewareEndMessages = message.middlewareEnd;
                                 
             if (beforeExecuteCommandMessages && afterExecuteCommandMessages) {
@@ -404,42 +457,9 @@ module.exports = React.createClass({
             
             // process middleware
             var middleware = null;
-            if (middlewareStartMessages && middlewareStartMessages.length >= 0) {
-                
-                middlewareStartMessages = middlewareStartMessages.sort(function (a,b) { return a.ordinal - b.ordinal; });
-                middlewareEndMessages = _.indexBy(middlewareEndMessages, 'payload.correlationId');
-                
-                var middlewareComponent = _.map(middlewareStartMessages, function (middlewareStartMessage) {
-                    var middlewareEndMessage = middlewareEndMessages[middlewareStartMessage.payload.correlationId];
-                    var middlewareEndPayload = middlewareEndMessage.payload;
-                    
-                    var result = middlewareEndPayload.result;
-                    
-                    switch (result) {
-                        case 'next': result = 'Next'; break;
-                        case 'end': result = 'End'; break;
-                        case 'error': result = 'Error'; break;
-                    }
-                    
-                    return (
-                            <div className="tab-section-boxing">
-                                <section className="flex flex-row flex-inherit flex-base tab-section-item">
-                                    <div className="tab-execution-important col-8">{middlewareEndPayload.name} &nbsp; <span className="text-minor">({result})</span></div>
-                                    <div className="tab-execution-timing">{middlewareEndPayload.duration} ms</div>
-                                </section>
-                                <CommandList beforeExecuteCommandMessages={beforeExecuteCommandMessages} afterExecuteCommandMessages={afterExecuteCommandMessages} mongoDBMessages={mongoDBMessages} beginMessage={middlewareStartMessage} endMessage={middlewareEndMessage} />
-                            </div>
-                    );
-                });
-                
-                middleware = (
-                        <div className="tab-section tab-section-boxed tab-section-execution-middleware">
-                            <div className="flex flex-row flex-inherit tab-section-header">
-                                <div className="tab-title col-9">Middleware</div>
-                            </div>
-                            {middlewareComponent}
-                        </div>
-                    ); 
+            
+            if (middlewareStartMessages && middlewareEndMessages) {
+                middleware = <MiddlewareList middlewareStartMessages={middlewareStartMessages} middlewareEndMessages={middlewareEndMessages} beforeExecuteCommandMessages={beforeExecuteCommandMessages} afterExecuteCommandMessages={afterExecuteCommandMessages} mongoDBMessages={mongoDBMessages} />
             }
             
             // process route
