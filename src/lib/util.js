@@ -72,5 +72,13 @@ module.exports = {
         }
         
         return null;
-    }
+    },
+    getPropertyCaseInsensitive: function(obj, property) {
+        property = property.toLowerCase();
+        for (var key in obj) {
+            if (obj.hasOwnProperty(key) && key.toLowerCase() == property) {
+                return obj[key]; 
+            }
+        }
+    } 
 };

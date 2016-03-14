@@ -150,7 +150,7 @@ var setupIndex = function(request, type, payload) {
         request._requestIsAjax = payload.requestIsAjax;
     }
     if (type == 'end-request') {
-        var contentType = payload.headers && payload.headers['Content-Type'];
+        var contentType = payload.headers && glimpse.util.getPropertyCaseInsensitive(payload.headers, 'Content-Type');;
         payload.contentType = contentType;
         payload.statusText = getStatusCodeText(payload.statusCode);  
         payload.contentCategory = getContentTypeCategory(payload.contentType);
