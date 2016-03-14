@@ -376,7 +376,7 @@ module.exports = React.createClass({
         var middlewareStartMessages = message.middlewareStart;
         
         var content = null;
-        if (routePayload || afterActionInvokedPayload || actionViewFoundPayload || afterActionViewInvokedPayload || middlewareStartMessages.length >= 0) {
+        if (routePayload || afterActionInvokedPayload || actionViewFoundPayload || afterActionViewInvokedPayload || (middlewareStartMessages && middlewareStartMessages.length >= 0)) {
             var beginRequestMessage = message.beginRequest;
             var endRequestMessage = message.endRequest;
             var beforeActionInvokedMessage = message.beforeActionInvoked;
@@ -404,7 +404,7 @@ module.exports = React.createClass({
             
             // process middleware
             var middleware = null;
-            if (middlewareStartMessages.length >= 0) {
+            if (middlewareStartMessages && middlewareStartMessages.length >= 0) {
                 
                 middlewareStartMessages = middlewareStartMessages.sort(function (a,b) { return a.ordinal - b.ordinal; });
                 middlewareEndMessages = _.indexBy(middlewareEndMessages, 'payload.correlationId');

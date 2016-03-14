@@ -170,9 +170,13 @@ var seedMvcActions = (function() {
                         action: 'Index',
                         route: generate.common.route('home', 'index', null),
                         preActivities: [
-                            { access: 'middleware', correlationId: '123456789', name: 'middleware1', startTime: '2016-02-29T14:54:39.073 -0800', endTime: '2016-02-29T14:54:40.073 -0800', duration: 1000, result: 'next' },
-                            { access: 'middleware', correlationId: '234567891', name: 'middleware2', startTime: '2016-02-29T14:54:40.073 -0800', endTime: '2016-02-29T14:54:41.073 -0800', duration: 1000, result: 'next' },
-                            { access: 'middleware', correlationId: '345678912', name: 'middleware3', startTime: '2016-02-29T14:54:41.073 -0800', endTime: '2016-02-29T14:54:42.073 -0800', duration: 1000, result: 'end' },
+                            { access: 'middleware-start', correlationId: '123456789', name: 'middleware1', startTime: '2016-02-29T14:54:39.073 -0800' },
+                            { access: 'middleware-end', correlationId: '123456789', name: 'middleware1', endTime: '2016-02-29T14:54:40.073 -0800', duration: 1000, result: 'next' },
+                            { access: 'middleware-start', correlationId: '234567891', name: 'middleware2', startTime: '2016-02-29T14:54:40.073 -0800' },
+                            { access: 'mongo', type: 'data-mongodb-read', operation: 'toArray', query: {}, startTime: '2016-02-29T14:54:40.073 -0800', options: { find: 'MusicStore.AlbumCollection', limit: 0, skip: 0, query: {}, slaveOk: true, readPreference: { mode: 'primary' } }, connectionHost: 'localhost', connectionPort: 27017, database: 'MusicStore', collection: 'AlbumCollection' },
+                            { access: 'middleware-end', correlationId: '234567891', name: 'middleware2', endTime: '2016-02-29T14:54:41.073 -0800', duration: 1000, result: 'next' },
+                            { access: 'middleware-start', correlationId: '345678912', name: 'middleware3', startTime: '2016-02-29T14:54:41.073 -0800'},
+                            { access: 'middleware-end', correlationId: '345678912', name: 'middleware3', endTime: '2016-02-29T14:54:42.073 -0800', duration: 1000, result: 'end' },
                             { access: 'SQL', operation: 'Select', target: 'Albums', affected: 1, command: 'SELECT TOP (2) \n[Extent1].[AlbumId] AS [AlbumId], \n[Extent1].[GenreId] AS [GenreId], \n[Extent1].[ArtistId] AS [ArtistId], \n[Extent1].[Title] AS [Title], \n[Extent1].[Price] AS [Price], \n[Extent1].[AlbumArtUrl] AS [AlbumArtUrl]\nFROM [dbo].[Albums] AS [Extent1]\nWHERE [Extent1].[AlbumId] = 1 /* @p0 */' },
                             { access: 'mongo', type: 'data-mongodb-read', operation: 'toArray', query: {}, startTime: '2016-02-29T14:54:39.073 -0800', options: { find: 'MusicStore.AlbumCollection', limit: 0, skip: 0, query: {}, slaveOk: true, readPreference: { mode: 'primary' } }, connectionHost: 'localhost', connectionPort: 27017, database: 'MusicStore', collection: 'AlbumCollection' }
                         ],
@@ -762,8 +766,10 @@ var generateMvcRequest = (function() {
                     else if (activity.access == 'mongo') {
                         this.messages.push(this.createMonogoCommand(action, activity, context));
                     }
-                    else if (activity.access == 'middleware') {
+                    else if (activity.access == 'middleware-start') {
                         this.messages.push(this.createMiddlewareStart(action, activity, context));
+                    }
+                    else if (activity.access == 'middleware-end') {
                         this.messages.push(this.createMiddlewareEnd(action, activity, context));
                     }
                 }, this);
