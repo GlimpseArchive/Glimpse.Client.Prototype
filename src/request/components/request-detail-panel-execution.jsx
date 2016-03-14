@@ -361,17 +361,14 @@ var MiddlewareList = React.createClass({
                 var middlewareEndPayload = middlewareEndMessage.payload;
                 
                 var result = middlewareEndPayload.result;
-                
-                switch (result) {
-                    case 'next': result = 'Next'; break;
-                    case 'end': result = 'End'; break;
-                    case 'error': result = 'Error'; break;
-                }
+
+                // NOTE: This assumes result is human-readible (and English).                
+                result = _.startCase(result);
                 
                 return (
                         <div className="tab-section-boxing">
                             <section className="flex flex-row flex-inherit flex-base tab-section-item">
-                                <div className="tab-execution-important col-8">{middlewareEndPayload.name} &nbsp; <span className="text-minor">({result})</span></div>
+                                <div className="col-8">{middlewareEndPayload.name} &nbsp; <span className="text-minor">({result})</span></div>
                                 <div className="tab-execution-timing">{middlewareEndPayload.duration} ms</div>
                             </section>
                             <CommandList beforeExecuteCommandMessages={beforeExecuteCommandMessages} afterExecuteCommandMessages={afterExecuteCommandMessages} mongoDBMessages={mongoDBMessages} beginMessage={middlewareStartMessage} endMessage={middlewareEndMessage} />
@@ -456,11 +453,7 @@ module.exports = React.createClass({
             }
             
             // process middleware
-            var middleware = null;
-            
-            if (middlewareStartMessages && middlewareEndMessages) {
-                middleware = <MiddlewareList middlewareStartMessages={middlewareStartMessages} middlewareEndMessages={middlewareEndMessages} beforeExecuteCommandMessages={beforeExecuteCommandMessages} afterExecuteCommandMessages={afterExecuteCommandMessages} mongoDBMessages={mongoDBMessages} />
-            }
+            var middleware = <MiddlewareList middlewareStartMessages={middlewareStartMessages} middlewareEndMessages={middlewareEndMessages} beforeExecuteCommandMessages={beforeExecuteCommandMessages} afterExecuteCommandMessages={afterExecuteCommandMessages} mongoDBMessages={mongoDBMessages} />
             
             // process route
             var route = null;
