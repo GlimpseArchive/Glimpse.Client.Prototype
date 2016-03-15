@@ -170,6 +170,15 @@ var seedMvcActions = (function() {
                         action: 'Index',
                         route: generate.common.route('home', 'index', null),
                         preActivities: [
+                            { access: 'middleware-start', correlationId: '123456789', name: 'logger', startTime: '2016-02-29T14:54:39.073 -0800' },
+                            { access: 'middleware-end', correlationId: '123456789', name: 'logger', endTime: '2016-02-29T14:54:40.073 -0800', duration: 1000, result: 'next' },
+                            { access: 'middleware-start', correlationId: '234567891', name: 'queryParser', startTime: '2016-02-29T14:54:40.073 -0800' },
+                            { access: 'mongo', type: 'data-mongodb-read', operation: 'toArray', query: {}, startTime: '2016-02-29T14:54:40.073 -0800', options: { find: 'MusicStore.AlbumCollection', limit: 0, skip: 0, query: {}, slaveOk: true, readPreference: { mode: 'primary' } }, connectionHost: 'localhost', connectionPort: 27017, database: 'MusicStore', collection: 'AlbumCollection' },
+                            { access: 'middleware-end', correlationId: '234567891', name: 'queryParser', endTime: '2016-02-29T14:54:41.073 -0800', duration: 1000, result: 'next' },
+                            { access: 'middleware-start', correlationId: '345678912', name: 'router', startTime: '2016-02-29T14:54:41.073 -0800'},
+                            { access: 'middleware-start', correlationId: '456789123', name: 'bodyParser', startTime: '2016-02-29T14:54:41.073 -0800'},
+                            { access: 'middleware-end', correlationId: '456789123', name: 'bodyParser', endTime: '2016-02-29T14:54:42.073 -0800', duration: 1000, result: 'end' },
+                            { access: 'middleware-end', correlationId: '345678912', name: 'router', endTime: '2016-02-29T14:54:42.073 -0800', duration: 1000, result: 'end' },
                             { access: 'SQL', operation: 'Select', target: 'Albums', affected: 1, command: 'SELECT TOP (2) \n[Extent1].[AlbumId] AS [AlbumId], \n[Extent1].[GenreId] AS [GenreId], \n[Extent1].[ArtistId] AS [ArtistId], \n[Extent1].[Title] AS [Title], \n[Extent1].[Price] AS [Price], \n[Extent1].[AlbumArtUrl] AS [AlbumArtUrl]\nFROM [dbo].[Albums] AS [Extent1]\nWHERE [Extent1].[AlbumId] = 1 /* @p0 */' },
                             { access: 'mongo', type: 'data-mongodb-read', operation: 'toArray', query: {}, startTime: '2016-02-29T14:54:39.073 -0800', options: { find: 'MusicStore.AlbumCollection', limit: 0, skip: 0, query: {}, slaveOk: true, readPreference: { mode: 'primary' } }, connectionHost: 'localhost', connectionPort: 27017, database: 'MusicStore', collection: 'AlbumCollection' }
                         ],
@@ -618,6 +627,30 @@ var generateMvcRequest = (function() {
             
             return message;
         },
+        createMiddlewareStart: function(action, activity, context) {
+            var message = this.createMessage('middleware-start', context);
+            
+            var payload = message.payload;
+            
+            payload.correlationId = activity.correlationId;
+            payload.name = activity.name;
+            payload.startTime = activity.startTime;
+           
+            return message;
+        },
+        createMiddlewareEnd: function(action, activity, context) {
+            var message = this.createMessage('middleware-end', context);
+            
+            var payload = message.payload;
+            
+            payload.correlationId = activity.correlationId;
+            payload.name = activity.name;
+            payload.endTime = activity.endTime;
+            payload.duration = activity.duration;
+            payload.result = activity.result;
+           
+            return message;
+        },
         createBeforeViewComponent: function(action, context) {
             var message = this.createMessage('before-view-component', context);
             
@@ -729,6 +762,12 @@ var generateMvcRequest = (function() {
                     } 
                     else if (activity.access == 'mongo') {
                         this.messages.push(this.createMonogoCommand(action, activity, context));
+                    }
+                    else if (activity.access == 'middleware-start') {
+                        this.messages.push(this.createMiddlewareStart(action, activity, context));
+                    }
+                    else if (activity.access == 'middleware-end') {
+                        this.messages.push(this.createMiddlewareEnd(action, activity, context));
                     }
                 }, this);
             }
