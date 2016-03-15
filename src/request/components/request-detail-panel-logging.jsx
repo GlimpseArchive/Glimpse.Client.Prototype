@@ -25,21 +25,21 @@ var getPayloads = (function() {
  * Return the CSS class name to use for the given message
  */
 function getRowClass(message) {
-    var rowClass = 'request-logs-data-default';
+    var rowClass = 'tab-logs-data-default';
     switch (message.level) {
         case 'Verbose':
         case 'Info':
-            rowClass = 'request-logs-data-default';
+            rowClass = 'tab-logs-data-default';
             break;
         case 'Critical':
         case 'Error':
-            rowClass = 'request-logs-data-error';
+            rowClass = 'tab-logs-data-error';
             break;
         case 'Warning':
-            rowClass = 'request-logs-data-warning';
+            rowClass = 'tab-logs-data-warning';
             break;
         default:
-            rowClass = 'request-logs-data-default';
+            rowClass = 'tab-logs-data-default';
             break;
     }
     return rowClass;
@@ -52,38 +52,29 @@ var LogMessages = React.createClass({
     render: function() {
         return (
             <div>
-                <div>
-                    <div>
-                        <table>
-                            <col width="5%"/>
-                            <col width="10%"/>
-                            <col width="12%"/>
-                            <col width="13%"/>
-                            <col width="60%"/>
-                            <tr className='request-logs-header'>
-                                <td>#</td>
-                                <td>Event</td>
-                                <td>Date</td>
-                                <td>Time</td>
-                                <td>Description</td>
-                            </tr>
-                            {this.props.logWriteMessages.map(function(message) {
-                                var dateString = message.parsedStartTime.format('MMM D, YYYY');
-                                var timeString = message.parsedStartTime.format('HH:mm:ss:SS Z');
-                                var className = getRowClass(message);
+                <table>
+                    <tr className='request-table-header'>
+                        <td width="5%">#</td>
+                        <td width="10%">Event</td>
+                        <td width="12%">Date</td>
+                        <td width="13%">Time</td>
+                        <td width="60%">Description</td>
+                    </tr>
+                    {this.props.logWriteMessages.map(function(message) {
+                        var dateString = message.parsedStartTime.format('MMM D, YYYY');
+                        var timeString = message.parsedStartTime.format('HH:mm:ss:SS Z');
+                        var className = getRowClass(message);
 
-                                return (
-                                    <tr className={className}>
-                                        <td>{message.messageNumber}</td>
-                                        <td>{message.level}</td>
-                                        <td>{dateString}</td>
-                                        <td>{timeString}</td>
-                                        <td>{message.message}</td>
-                                    </tr>);
-                            }) }
-                        </table>
-                    </div>
-                </div>
+                        return (
+                            <tr className={className}>
+                                <td>{message.messageNumber}</td>
+                                <td>{message.level}</td>
+                                <td>{dateString}</td>
+                                <td>{timeString}</td>
+                                <td>{message.message}</td>
+                            </tr>);
+                    }) }
+                </table>
             </div>
         );
     }
@@ -135,8 +126,8 @@ module.exports = React.createClass({
                 content = (
                     <div>
                         <div className="flex flex-row flex-inherit tab-section-header">
-                            <span className="request-logs-title">Server Side</span><nbsp/>
-                            <span className="request-logs-title-count">({logWriteMessages.length}) </span>
+                            <span className="request-title">Server Side</span><nbsp/>
+                            <span className="request-title-count">({logWriteMessages.length}) </span>
                         </div>
                         <LogMessages logWriteMessages={logWriteMessages} />
                     </div>

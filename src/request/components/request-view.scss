@@ -340,18 +340,18 @@ body, html {
     white-space: nowrap;
 }
 
-.request-logs-title {
+.request-title {
     font-size: 140%;
     font-weight: normal;
 }
 
-.request-logs-title-count {
+.request-title-count {
     font-size: 140%;
     font-weight: normal;
     color: #616A6B; // grey
 }
 
-.request-logs-header {
+.request-table-header {
     font-weight: bold;
     font-size: 100%;
     border-top-style: none;
@@ -362,17 +362,17 @@ body, html {
     border-bottom-width: 2px;
 }
 
-.request-logs-data-default {
+.tab-logs-data-default {
     font-weight: normal;
     color: #616A6B; // grey
 }
 
-.request-logs-data-warning {
+.tab-logs-data-warning {
     font-weight: normal;
     color: #D35400; // orange
 }
 
-.request-logs-data-error {
+.tab-logs-data-error {
     font-weight: normal;
     color: #FF0000; // red
 }
