@@ -338,56 +338,84 @@ var ParamaterList = React.createClass({
     }
 });
 
-var MiddlewareList = React.createClass({
+var MiddlewareComponents = React.createClass({
     render: function() {
-        var middlewareStartMessages = this.props.middlewareStartMessages;
-        var middlewareEndMessages = this.props.middlewareEndMessages;
+        var middlewareStartMessages = this.props.middlewareStartMessages || [];
+        var middlewareEndMessages = this.props.middlewareEndMessages || [];
         var beforeExecuteCommandMessages = this.props.beforeExecuteCommandMessages;
         var afterExecuteCommandMessages = this.props.afterExecuteCommandMessages;
         var mongoDBMessages = this.props.mongoDBMessages;
         
-        var content = null;
-        
-        if (middlewareStartMessages
-            && middlewareEndMessages
-            && middlewareStartMessages.length >= 0
-            && middlewareEndMessages.length >= 0) {
-        
-            middlewareStartMessages = middlewareStartMessages.sort(function (a,b) { return a.ordinal - b.ordinal; });
-            middlewareEndMessages = _.indexBy(middlewareEndMessages, 'payload.correlationId');
-            
-            var middlewareComponent = _.map(middlewareStartMessages, function (middlewareStartMessage) {
-                var middlewareEndMessage = middlewareEndMessages[middlewareStartMessage.payload.correlationId];
-                var middlewareEndPayload = middlewareEndMessage.payload;
-                
-                var result = middlewareEndPayload.result;
+        var middlewareMessages = middlewareStartMessages.concat(middlewareEndMessages).sort(function (a,b) { return a.ordinal - b.ordinal; });
 
-                // NOTE: This assumes result is human-readible (and English).                
-                result = _.startCase(result);
+        var content = null;
                 
+        if (middlewareMessages.length >= 2) {
+        
+            var rootPair = {
+                pairs: []
+            };
+                   
+            var pairStack = [rootPair];
+        
+            for (var i = 0; i < middlewareMessages.length; i++) {
+                var message = middlewareMessages[i];
+                
+                if (_.contains(message.types, 'middleware-start')) {
+                    var pair = {
+                        startMessage: message,
+                        pairs: []
+                    };
+                                       
+                    pairStack[pairStack.length - 1].pairs.push(pair);
+                    pairStack.push(pair);                                                            
+                } 
+                else {
+                    var pair = pairStack.pop();
+                    
+                    pair.endMessage = message;
+                }                                                                              
+            }
+            
+            var generateMiddlewareItem = function (pair) {
+                var nestedComponent;
+                
+                if (pair.pairs.length > 0) {
+                    nestedComponent = pair.pairs.map(generateMiddlewareItem);
+                }
+                else {
+                    nestedComponent = <CommandList beforeExecuteCommandMessages={beforeExecuteCommandMessages} afterExecuteCommandMessages={afterExecuteCommandMessages} mongoDBMessages={mongoDBMessages} beginMessage={pair.startMessage} endMessage={pair.endMessage} />
+                }
+                
+                var middlewareEndPayload = pair.endMessage.payload;
+                
+                // NOTE: This assumes result is human-readible (and English).                
+                var result = _.startCase(middlewareEndPayload.result);
+
                 return (
                         <div className="tab-section-boxing">
                             <section className="flex flex-row flex-inherit flex-base tab-section-item">
                                 <div className="col-8">{middlewareEndPayload.name} &nbsp; <span className="text-minor">({result})</span></div>
                                 <div className="tab-execution-timing">{middlewareEndPayload.duration} ms</div>
                             </section>
-                            <CommandList beforeExecuteCommandMessages={beforeExecuteCommandMessages} afterExecuteCommandMessages={afterExecuteCommandMessages} mongoDBMessages={mongoDBMessages} beginMessage={middlewareStartMessage} endMessage={middlewareEndMessage} />
-                        </div>
-                );
-            });
+                            {nestedComponent}
+                        </div>);
+            };
             
+            var middlewareComponents = rootPair.pairs.map(generateMiddlewareItem);
+                                            
             content = (
                     <div className="tab-section tab-section-boxed tab-section-execution-middleware">
                         <div className="flex flex-row flex-inherit tab-section-header">
                             <div className="tab-title col-9">Middleware</div>
                         </div>
-                        {middlewareComponent}
+                        {middlewareComponents}
                     </div>
-                ); 
-        }      
+            );
+        }
         
-        return content; 
-    } 
+        return content;                           
+    }
 });
 
 module.exports = React.createClass({
@@ -437,6 +465,7 @@ module.exports = React.createClass({
             var afterActionResultMessage = message.afterActionResult;
             var middlewareStartMessages = message.middlewareStart;
             var middlewareEndMessages = message.middlewareEnd;
+
                                 
             if (beforeExecuteCommandMessages && afterExecuteCommandMessages) {
                 beforeExecuteCommandMessages = beforeExecuteCommandMessages.sort(function(a, b) { return a.ordinal - b.ordinal; });
@@ -453,7 +482,7 @@ module.exports = React.createClass({
             }
             
             // process middleware
-            var middleware = <MiddlewareList middlewareStartMessages={middlewareStartMessages} middlewareEndMessages={middlewareEndMessages} beforeExecuteCommandMessages={beforeExecuteCommandMessages} afterExecuteCommandMessages={afterExecuteCommandMessages} mongoDBMessages={mongoDBMessages} />
+            var middleware = <MiddlewareComponents middlewareStartMessages={middlewareStartMessages} middlewareEndMessages={middlewareEndMessages} beforeExecuteCommandMessages={beforeExecuteCommandMessages} afterExecuteCommandMessages={afterExecuteCommandMessages} mongoDBMessages={mongoDBMessages} />
             
             // process route
             var route = null;
