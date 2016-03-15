@@ -116,7 +116,7 @@ var seedMvcActions = (function() {
                     
                     return {
                         path: '/Store/Browse',
-                        queryString: '?Genre=' + genre,
+                        query: '?Genre=' + genre,
                         controller: 'Store',
                         action: 'Browse',
                         route: generate.common.route('store', 'browse', null),
@@ -434,15 +434,13 @@ var generateMvcRequest = (function() {
 
             return message;
         },
-        createBeginRequest: function(source) {
-            var message = this.createMessage('begin-request', source.context);
+        createWebRequest: function(source) {
+            var message = this.createMessage('web-request', source.context);
             
             var payload = message.payload; 
-            payload.requestMethod = source.method;
-            payload.requestPath = source.path;
-            payload.requestQueryString = source.queryString;
-            payload.requestUrl = 'http://localhost:5000' + source.path + defaultOrEmpty(source.queryString);
-            payload.requestHeaders = {
+            payload.method = source.method;
+            payload.url = 'http://localhost:5000' + source.path + defaultOrEmpty(source.query);
+            payload.headers = {
                 'Server': 'GitHub.com',
                 'Date': 'Mon, 02 Nov 2015 06:39:26 GMT',
                 'Content-Type': 'text/html; charset=utf-8',
@@ -454,31 +452,28 @@ var generateMvcRequest = (function() {
                 'Content-Encoding': 'gzip'
             };
 
-            MessageGenerator.support.beforeTimings('request', payload, source.dateTime);
+            MessageGenerator.support.beforeTimings('', payload, source.dateTime);
             
             return message;
         },
-        createEndRequest: function(source) {
-            var message = this.createMessage('end-request', source.context);
+        createWebResponse: function(source) {
+            var message = this.createMessage('web-response', source.context);
             
             var payload = message.payload;
-            payload.responseStatusCode = source.statusCode;
-            payload.responseStatusText = source.statusText;
-            payload.responseContentType = source.contentType;
-            payload.requestPath = source.path;
-            payload.requestQueryString = source.queryString;
-            payload.requestUrl = 'http://localhost:5000' + source.path + defaultOrEmpty(source.queryString);
-            payload.responseHeaders = {
+            payload.statusCode = source.statusCode;
+            payload.statusText = source.statusText;
+            payload.headers = {
                 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
                 'Accept-Encoding': 'gzip, deflate, sdch',
                 'Accept-Language': 'en-US,en;q=0.8',
                 'Cache-Control': 'no-cache',
                 'Connection': 'keep-alive',
+                'Content-Type': source.contentType,
                 'Host': 'github.com',
                 'Pragma': 'no-cache'
             };
             
-            MessageGenerator.support.afterTimings('response', payload, source.duration, source.dateTime);
+            MessageGenerator.support.afterTimings('', payload, source.duration, source.dateTime);
             
             return message;
         },
@@ -790,7 +785,7 @@ var generateMvcRequest = (function() {
             this.messages.push(this.createAfterActionViewInvoked(action, action.result, context));
         },
         processRequest: function(source) {
-            this.messages.push(this.createBeginRequest(source));
+            this.messages.push(this.createWebRequest(source));
             
             this.processActivities(source.preActivities, source, source.context);
             
@@ -802,7 +797,7 @@ var generateMvcRequest = (function() {
             
             this.processActivities(source.postActivities, source, source.context);
             
-            this.messages.push(this.createEndRequest(source)); 
+            this.messages.push(this.createWebResponse(source)); 
             this.messages.push(this.createBrowserNavigationTiming(source))
             
             return this.messages;
@@ -829,18 +824,21 @@ var generateMvcRequest = (function() {
                     request.types[type] = [];
                     
                     var payload = message.payload;
-                    if (type == 'begin-request') {
-                        request._requestStartTime = payload.requestStartTime;
-                        request._requestMethod = payload.requestMethod;
-                        request._requestUrl = (payload.requestPath || '') + (payload.requestQueryString || '');
+                    if (type == 'web-request') {
+                        payload.path = source.path;
+                        payload.query = source.query;
+                        
+                        request._requestStartTime = payload.startTime;
+                        request._requestMethod = payload.method;
+                        request._requestUrl = (payload.path || '') + (payload.query || '');
                     }
-                    if (type == 'end-request') {
-                        request._responseStatusCode = payload.responseStatusCode; 
+                    if (type == 'web-response') {
+                        request._responseStatusCode = payload.statusCode; 
                         request._responseStatusText = source.statusText;
                         request._responseContentCategory = source.contentCategory;  
                         
-                        payload.responseStatusText = request._responseStatusText;  
-                        payload.responseContentCategory = request._responseContentCategory;
+                        payload.statusText = request._responseStatusText;  
+                        payload.contentCategory = request._responseContentCategory;
                     }
                 }
                 

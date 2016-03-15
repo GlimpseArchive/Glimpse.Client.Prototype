@@ -9,8 +9,8 @@ module.exports = {
 		
 		return {
 			'user-identification': processItem,
-			'end-request': processItem,
-			'begin-request': processItem,
+			'web-response': processItem,
+			'web-request': processItem,
 			'after-action-invoked': processItem,
 			'after-action-view-invoked': processItem,
 			'after-execute-command': processList,

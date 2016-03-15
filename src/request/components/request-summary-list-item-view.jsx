@@ -42,23 +42,23 @@ var commandOrEmpty = function(commands) {
 var contextTypeOrEmpty = function(contentCategory) {
     return contentCategory ? _.keys(contentCategory).join(', ') : '';
 };
-var serverTime = function(endRequest, browserNavigationTiming) {
+var serverTime = function(webResponse, browserNavigationTiming) {
     var total = 0;
     if (browserNavigationTiming && browserNavigationTiming.serverTime > 0) {
         total = browserNavigationTiming.serverTime;
     }
-    else if (endRequest && endRequest.responseDuration) {
-        total = endRequest.responseDuration;
+    else if (webResponse && webResponse.duration) {
+        total = webResponse.duration;
     }
     return total;
 }
-var requestTime = function(endRequest, browserNavigationTiming) {
+var requestTime = function(webResponse, browserNavigationTiming) {
     var total = null;
     if (browserNavigationTiming && browserNavigationTiming.total) {
         total = browserNavigationTiming.total;
     }
-    else if (endRequest && endRequest.responseDuration) {
-        total = endRequest.responseDuration;
+    else if (webResponse && webResponse.duration) {
+        total = webResponse.duration;
     }
     return total;
 };
@@ -74,8 +74,8 @@ module.exports = React.createClass({
         
         var payload = messageProcessor.getSummaryMessages(request);
         var userIdentification = payload.userIdentification || {};  // TODO: shouldn't need to do this, think of better way
-        var beginRequest = payload.beginRequest || {};
-        var endRequest = payload.endRequest || {};
+        var webRequest = payload.webRequest || {};
+        var webResponse = payload.webResponse || {};
         var afterActionViewInvoked = payload.afterActionViewInvoked || {};
         var afterActionInvoked = payload.afterActionInvoked || {};
         var afterExecuteCommand = payload.afterExecuteCommand || [];
@@ -85,15 +85,15 @@ module.exports = React.createClass({
             <div className={containerClass} onClick={this.onSelect}>
                 <div className="flex flex-row flex-base request-summary-title-section">
                     <div className="flex flex-row flex-base col-8">
-                        <div className="text-focus">{beginRequest.requestPath}{beginRequest.requestQueryString}</div>
+                        <div className="text-focus">{webRequest.path}{webRequest.query}</div>
                         <div className="text-minor request-summary-title-detail">
-                            <span>{beginRequest.requestMethod}</span>
-                            <span title={endRequest.responseStatusText}>{endRequest.responseStatusCode}</span>
-                            <span title={endRequest.responseContentType}>{contextTypeOrEmpty(endRequest.responseContentCategory)}</span>
+                            <span>{webRequest.method}</span>
+                            <span title={webResponse.statusText}>{webResponse.statusCode}</span>
+                            <span title={webResponse.contentType}>{contextTypeOrEmpty(webResponse.contentCategory)}</span>
                         </div>
                     </div>
                     <div className="col-2 text-minor request-summary-metadata">
-                        {userIdentification.username} &nbsp; - &nbsp; <Timeago time={beginRequest.requestStartTime} />
+                        {userIdentification.username} &nbsp; - &nbsp; <Timeago time={webRequest.startTime} />
                     </div>
                 </div>
                 <div className="flex flex-row flex-inherit text-accent-small text-minor">
@@ -107,9 +107,9 @@ module.exports = React.createClass({
                     <div className="col-3">Query/Count</div>
                 </div>
                 <div className="flex flex-row flex-inherit flex-base request-summary-facets">
-                    <div className="col-3 text-focus">{timeOrEmpty(requestTime(endRequest, browserNavigationTiming))}</div>
+                    <div className="col-3 text-focus">{timeOrEmpty(requestTime(webResponse, browserNavigationTiming))}</div>
                     <div className="col-2">{timeOrEmpty(browserNavigationTiming.networkTime)}</div>
-                    <div className="col-2">{timeOrEmpty(serverTime(endRequest, browserNavigationTiming))}</div>
+                    <div className="col-2">{timeOrEmpty(serverTime(webResponse, browserNavigationTiming))}</div>
                     <div className="col-4">{timeOrEmpty(browserNavigationTiming.browserTime)}</div>
                     <div className="col-2">{timeOrEmpty(afterActionInvoked.actionInvokedDuration)}</div>
                     <div className="col-2">{timeOrEmpty(afterActionViewInvoked.viewDuration)}</div>

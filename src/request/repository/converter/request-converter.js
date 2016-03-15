@@ -1,6 +1,7 @@
 'use strict';
 
 var _ = require('lodash');
+var parse = require('url-parse');
 var glimpse = require('glimpse');
 
 var _strategies = []; 
@@ -138,20 +139,26 @@ var getStatusCodeText = (function() {
     };
 })();
 var setupIndex = function(request, type, payload) {
-    if (type == 'begin-request') {
-        request._requestStartTime = payload.requestStartTime;
-        request._requestMethod = payload.requestMethod;
-        request._requestUrl = (payload.requestPath || '') + (payload.requestQueryString || '');
+    if (type == 'web-request') {
+        var url = parse(payload.url);
+        payload.path = url.pathname;
+        payload.query = url.query;
+        
+        request._requestStartTime = payload.startTime;
+        request._requestMethod = payload.method;
+        request._requestUrl = payload.path + payload.query;
         request._requestIsAjax = payload.requestIsAjax;
     }
-    if (type == 'end-request') {
-        request._responseStatusCode = payload.responseStatusCode; 
-        request._responseStatusText = getStatusCodeText(payload.responseStatusCode);
-        request._responseContentType = payload.responseContentType;
-        request._responseContentCategory = getContentTypeCategory(payload.responseContentType);  
+    if (type == 'web-response') {
+        var contentType = payload.headers && glimpse.util.getPropertyCaseInsensitive(payload.headers, 'Content-Type');;
+        payload.contentType = contentType;
+        payload.statusText = getStatusCodeText(payload.statusCode);  
+        payload.contentCategory = getContentTypeCategory(payload.contentType);
         
-        payload.responseStatusText = request._responseStatusText;  
-        payload.responseContentCategory = request._responseContentCategory;
+        request._responseStatusCode = payload.statusCode; 
+        request._responseStatusText = payload.statusText;
+        request._responseContentType = payload.contentType;
+        request._responseContentCategory = payload.contentCategory;  
     }
     if (type == 'user-identification') {
         request._userId = payload.userId;

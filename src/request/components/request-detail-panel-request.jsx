@@ -9,8 +9,8 @@ var getPayloads = (function() {
     var getItem = messageProcessor.getTypePayloadItem;
     
     var options = {
-        'end-request': getItem,
-        'begin-request': getItem
+        'web-response': getItem,
+        'web-request': getItem
     };
 		
     return function(request) {
@@ -64,17 +64,17 @@ module.exports = React.createClass({
         
         // get payloads 
         var payload = getPayloads(request);
-        var beginRequestPayload = payload.beginRequest;
-        var endRequestPayload = payload.endRequest;
+        var webRequestPayload = payload.webRequest;
+        var webResponsePayload = payload.webResponse;
         
         var content = null;
-        if (beginRequestPayload && endRequestPayload) {
+        if (webRequestPayload && webResponsePayload) {
             content = (
                 <div>
                     <div className="tab-section text-minor">Web Request/Response</div>
-                    <RequestUrl url={beginRequestPayload.requestUrl} />
-                    <RequestHeaders title="Request Headers" headers={beginRequestPayload.requestHeaders} />
-                    <RequestHeaders title="Response Headers" headers={endRequestPayload.responseHeaders} />
+                    <RequestUrl url={webRequestPayload.url} />
+                    <RequestHeaders title="Request Headers" headers={webRequestPayload.headers} />
+                    <RequestHeaders title="Response Headers" headers={webResponsePayload.headers} />
                 </div>
             );
         }

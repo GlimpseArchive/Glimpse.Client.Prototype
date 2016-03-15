@@ -40,7 +40,8 @@
     "react-highlight": "^0.5.1",
     "store": "1.3.17",
     "superagent": "1.3.0",
-    "uri-templates": "0.1.9"
+    "uri-templates": "0.1.9",
+    "url-parse": "^1.0.5"
   },
   "devDependencies": {
     "amd-define-factory-patcher-loader": "1.0.0",

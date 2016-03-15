@@ -87,8 +87,8 @@ var requestProcessor = {
                 _.forEach(request.messages, function(message) {  
                     // TODO: Need different logic here to targe which requests we should be sending down
                     if (!_.isEmpty(message.indices) || !_.isEmpty(message.abstract) 
-                        || message.types[0] == 'user-identification' || message.types[0] == 'end-request' 
-                        || message.types[0] == 'begin-request' || message.types[0] == 'after-action-invoked'
+                        || message.types[0] == 'user-identification' || message.types[0] == 'web-response' 
+                        || message.types[0] == 'web-request' || message.types[0] == 'after-action-invoked'
                         || message.types[0] == 'after-action-view-invoked' || message.types[0] == 'after-execute-command'
                         || message.types[0] == 'browser-navigation-timing') { 
                         messages.push(message);
