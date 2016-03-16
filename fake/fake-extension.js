@@ -631,10 +631,12 @@ var generateMvcRequest = (function() {
             var message = this.createMessage('middleware-start', context);
             
             var payload = message.payload;
-            
             payload.correlationId = activity.correlationId;
             payload.name = activity.name;
-            payload.startTime = activity.startTime;
+            payload.startTime = activity.startTime;  // TODO: this shouldn't be a part of the activity
+             
+            // TODO: Bring in timing data when we have it
+            //MessageGenerator.support.beforeTimings('command', payload, null);
            
             return message;
         },
@@ -642,12 +644,14 @@ var generateMvcRequest = (function() {
             var message = this.createMessage('middleware-end', context);
             
             var payload = message.payload;
-            
             payload.correlationId = activity.correlationId;
             payload.name = activity.name;
             payload.endTime = activity.endTime;
-            payload.duration = activity.duration;
             payload.result = activity.result;
+            payload.duration = activity.duration;  // TODO: this shouldn't be a part of the activity, the below should be used
+            
+            // TODO: Bring in timing data when we have it
+            //MessageGenerator.support.afterTimings('command', payload, (parseInt(query.duration * 100)) / 100, null);
            
             return message;
         },
