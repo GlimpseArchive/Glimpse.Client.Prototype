@@ -170,17 +170,17 @@ var seedMvcActions = (function() {
                         action: 'Index',
                         route: generate.common.route('home', 'index', null),
                         preActivities: [
-                            { access: 'middleware-start', correlationId: '123456789', name: 'logger', startTime: '2016-02-29T14:54:39.073 -0800' },
-                            { access: 'middleware-end', correlationId: '123456789', name: 'logger', endTime: '2016-02-29T14:54:40.073 -0800', duration: 1000, result: 'next' },
-                            { access: 'middleware-start', correlationId: '234567891', name: 'queryParser', startTime: '2016-02-29T14:54:40.073 -0800' },
-                            { access: 'mongo', type: 'data-mongodb-read', operation: 'toArray', query: {}, startTime: '2016-02-29T14:54:40.073 -0800', options: { find: 'MusicStore.AlbumCollection', limit: 0, skip: 0, query: {}, slaveOk: true, readPreference: { mode: 'primary' } }, connectionHost: 'localhost', connectionPort: 27017, database: 'MusicStore', collection: 'AlbumCollection' },
-                            { access: 'middleware-end', correlationId: '234567891', name: 'queryParser', endTime: '2016-02-29T14:54:41.073 -0800', duration: 1000, result: 'next' },
-                            { access: 'middleware-start', correlationId: '345678912', name: 'router', startTime: '2016-02-29T14:54:41.073 -0800'},
-                            { access: 'middleware-start', correlationId: '456789123', name: 'bodyParser', startTime: '2016-02-29T14:54:41.073 -0800'},
-                            { access: 'middleware-end', correlationId: '456789123', name: 'bodyParser', endTime: '2016-02-29T14:54:42.073 -0800', duration: 1000, result: 'end' },
-                            { access: 'middleware-end', correlationId: '345678912', name: 'router', endTime: '2016-02-29T14:54:42.073 -0800', duration: 1000, result: 'end' },
+                            { access: 'middleware-start', correlationId: '123456789', name: 'logger' },
+                            { access: 'middleware-end', correlationId: '123456789', name: 'logger', result: 'next' },
+                            { access: 'middleware-start', correlationId: '234567891', name: 'queryParser' },
+                            { access: 'mongo', type: 'data-mongodb-read', operation: 'toArray', query: {}, options: { find: 'MusicStore.AlbumCollection', limit: 0, skip: 0, query: {}, slaveOk: true, readPreference: { mode: 'primary' } }, connectionHost: 'localhost', connectionPort: 27017, database: 'MusicStore', collection: 'AlbumCollection' },
+                            { access: 'middleware-end', correlationId: '234567891', name: 'queryParser', result: 'next' },
+                            { access: 'middleware-start', correlationId: '345678912s', name: 'router' },
+                            { access: 'middleware-start', correlationId: '456789123', name: 'bodyParser' },
+                            { access: 'middleware-end', correlationId: '456789123', name: 'bodyParser', result: 'end' },
+                            { access: 'middleware-end', correlationId: '345678912', name: 'router', result: 'end' },
                             { access: 'SQL', operation: 'Select', target: 'Albums', affected: 1, command: 'SELECT TOP (2) \n[Extent1].[AlbumId] AS [AlbumId], \n[Extent1].[GenreId] AS [GenreId], \n[Extent1].[ArtistId] AS [ArtistId], \n[Extent1].[Title] AS [Title], \n[Extent1].[Price] AS [Price], \n[Extent1].[AlbumArtUrl] AS [AlbumArtUrl]\nFROM [dbo].[Albums] AS [Extent1]\nWHERE [Extent1].[AlbumId] = 1 /* @p0 */' },
-                            { access: 'mongo', type: 'data-mongodb-read', operation: 'toArray', query: {}, startTime: '2016-02-29T14:54:39.073 -0800', options: { find: 'MusicStore.AlbumCollection', limit: 0, skip: 0, query: {}, slaveOk: true, readPreference: { mode: 'primary' } }, connectionHost: 'localhost', connectionPort: 27017, database: 'MusicStore', collection: 'AlbumCollection' }
+                            { access: 'mongo', type: 'data-mongodb-read', operation: 'toArray', query: {}, options: { find: 'MusicStore.AlbumCollection', limit: 0, skip: 0, query: {}, slaveOk: true, readPreference: { mode: 'primary' } }, connectionHost: 'localhost', connectionPort: 27017, database: 'MusicStore', collection: 'AlbumCollection' }
                         ],
                         activities: [
                             { access: 'SQL', operation: 'Select', target: 'Albums', affected: chance.integerRange(2, 50), command: 'SELECT TOP (5) \n[Project1].[AlbumId] AS [AlbumId], \n[Project1].[GenreId] AS [GenreId], \n[Project1].[ArtistId] AS [ArtistId], \n[Project1].[Title] AS [Title], \n[Project1].[Price] AS [Price], \n[Project1].[AlbumArtUrl] AS [AlbumArtUrl]\nFROM ( SELECT \n    [Extent1].[AlbumId] AS [AlbumId], \n    [Extent1].[GenreId] AS [GenreId], \n    [Extent1].[ArtistId] AS [ArtistId], \n    [Extent1].[Title] AS [Title], \n    [Extent1].[Price] AS [Price], \n    [Extent1].[AlbumArtUrl] AS [AlbumArtUrl], \n    (SELECT \n        COUNT(1) AS [A1]\n        FROM [dbo].[OrderDetails] AS [Extent2]\n        WHERE [Extent1].[AlbumId] = [Extent2].[AlbumId]) AS [C1]\n    FROM [dbo].[Albums] AS [Extent1]\n)  AS [Project1]\nORDER BY [Project1].[C1] DESC'  }
@@ -210,8 +210,8 @@ var seedMvcActions = (function() {
                         activities: [
                             { access: 'SQL', operation: 'Select', target: 'Carts', affected: 1, command: 'SELECT \n[Extent1].[RecordId] AS [RecordId], \n[Extent1].[CartId] AS [CartId], \n[Extent1].[AlbumId] AS [AlbumId], \n[Extent1].[Count] AS [Count], \n[Extent1].[DateCreated] AS [DateCreated]\nFROM [dbo].[Carts] AS [Extent1]\nWHERE [Extent1].[CartId] = "df0238d4-5bd4-49b5-97f0-9ba2c9957dc1" /* @p__linq__0 */' },
                             { access: 'SQL', operation: 'Select', target: 'Carts', affected: 1, command: 'SELECT \n[GroupBy1].[A1] AS [C1]\nFROM ( SELECT \n    SUM([Filter1].[A1]) AS [A1]\n    FROM ( SELECT \n         CAST( [Extent1].[Count] AS decimal(19,0)) * [Extent2].[Price] AS [A1]\n        FROM  [dbo].[Carts] AS [Extent1]\n        INNER JOIN [dbo].[Albums] AS [Extent2] ON [Extent1].[AlbumId] = [Extent2].[AlbumId]\n        WHERE [Extent1].[CartId] = "df0238d4-5bd4-49b5-97f0-9ba2c9957dc1" /* @p__linq__0 */\n    )  AS [Filter1]\n)  AS [GroupBy1]' },
-                            { access: 'mongo', type: 'data-mongodb-read', operation: 'insertMany', docs: [ { a: '66703d9a-a2b6-475b-b42b-61349728cd98', b: '0', c: '1', _id: '56d5ec35b7ce8b4413938307' }, { a: '952b5a81-a1f0-49a5-9463-33344828d668', b: '1', c: '1', _id: '56d5ec35b7ce8b4413938308' } ], count: 2, insertedIds: ['56d5ec35b7ce8b4413938307', '56d5ec35b7ce8b4413938308' ], startTime: '2016-03-01T11:23:33.615 -0800', options: {}, connectionHost: 'localhost', connectionPort: 27017, database: 'MusicStore', collection: 'AlbumCollection' },
-                            { access: 'mongo', type: 'data-mongodb-insert', operation: 'toArray', query: {}, startTime: '2016-02-29T14:54:39.073 -0800', options: { find: 'MusicStore.AlbumCollection', limit: 0, skip: 0, query: {}, slaveOk: true, readPreference: { mode: 'primary' } }, connectionHost: 'localhost', connectionPort: 27017, database: 'MusicStore', collection: 'AlbumCollection' }
+                            { access: 'mongo', type: 'data-mongodb-read', operation: 'insertMany', docs: [ { a: '66703d9a-a2b6-475b-b42b-61349728cd98', b: '0', c: '1', _id: '56d5ec35b7ce8b4413938307' }, { a: '952b5a81-a1f0-49a5-9463-33344828d668', b: '1', c: '1', _id: '56d5ec35b7ce8b4413938308' } ], count: 2, insertedIds: ['56d5ec35b7ce8b4413938307', '56d5ec35b7ce8b4413938308' ], options: {}, connectionHost: 'localhost', connectionPort: 27017, database: 'MusicStore', collection: 'AlbumCollection' },
+                            { access: 'mongo', type: 'data-mongodb-insert', operation: 'toArray', query: {}, options: { find: 'MusicStore.AlbumCollection', limit: 0, skip: 0, query: {}, slaveOk: true, readPreference: { mode: 'primary' } }, connectionHost: 'localhost', connectionPort: 27017, database: 'MusicStore', collection: 'AlbumCollection' },
                         ],
                         actions: [
                             generate.instance.childAction.shoppingCart(),
@@ -830,6 +830,7 @@ var generateMvcRequest = (function() {
         processRequest: function(source) {
             this.messages.push(this.createWebRequest(source));
             
+            // TODO: need to process timing data of these preActivities, in the mean time we will get some NaNs
             this.processActivities(source.preActivities, source, source.context);
             
             this.messages.push(this.createUserIdentification(source));
@@ -838,6 +839,7 @@ var generateMvcRequest = (function() {
             
             this.processAction(source, source, source.context);
             
+            // TODO: need to process timing data of these postActivities, in the mean time we will get some NaNs
             this.processActivities(source.postActivities, source, source.context);
             
             this.messages.push(this.createWebResponse(source)); 
