@@ -633,7 +633,6 @@ var generateMvcRequest = (function() {
             var payload = message.payload;
             payload.correlationId = activity.correlationId;
             payload.name = activity.name;
-            payload.startTime = activity.startTime;  // TODO: this shouldn't be a part of the activity
              
             // TODO: Bring in timing data when we have it
             //MessageGenerator.support.beforeTimings('command', payload, null);
@@ -646,9 +645,7 @@ var generateMvcRequest = (function() {
             var payload = message.payload;
             payload.correlationId = activity.correlationId;
             payload.name = activity.name;
-            payload.endTime = activity.endTime;
             payload.result = activity.result;
-            payload.duration = activity.duration;  // TODO: this shouldn't be a part of the activity, the below should be used
             
             // TODO: Bring in timing data when we have it
             //MessageGenerator.support.afterTimings('command', payload, (parseInt(query.duration * 100)) / 100, null);
