@@ -239,7 +239,7 @@ var HttpRequestItem = React.createClass({
         var content = (
                 <div className="tab-section-execution-command-item">
                     <div className="tab-section-execution-command-item-detail">
-                        <div className="col-8">{httpRequest.payload.path}{httpRequest.payload.query}<span className="tab-section-execution-command-open" onClick={this.onClick}>[{showText}]</span></div>
+                        <div className="col-8">{httpRequest.payload.path}{httpRequest.payload.query} <span className="tab-section-execution-command-accent text-minor" title="Is Async">{httpResponse.payload.statusCode} - {httpResponse.payload.statusText}</span><span className="tab-section-execution-command-open" onClick={this.onClick}>[{showText}]</span></div>
                         <div className="tab-execution-timing col-2">{httpResponse.payload.duration} ms{nesting}</div>
                     </div>
                     <div className={containerClass} onClick={this.onClick}> 
@@ -282,7 +282,7 @@ var CommandItem = React.createClass({
         var content = (
                 <div className="tab-section-execution-command-item">
                     <div className="tab-section-execution-command-item-detail">
-                        <div className="col-8">{beforeCommand.payload.commandMethod} <span className="tab-section-execution-command-isAsync text-minor" title="Is Async">{(beforeCommand.payload.commandIsAsync ? 'async' : '')}</span><span className="tab-section-execution-command-open" onClick={this.onClick}>[{showText}]</span></div>
+                        <div className="col-8">{beforeCommand.payload.commandMethod} <span className="tab-section-execution-command-accent text-minor" title="Is Async">{(beforeCommand.payload.commandIsAsync ? 'async' : '')}</span><span className="tab-section-execution-command-open" onClick={this.onClick}>[{showText}]</span></div>
                         <div className="tab-execution-timing col-2">{afterCommand.payload.commandDuration} ms{nesting}</div>
                     </div>
                     <div className={containerClass} onClick={this.onClick}>

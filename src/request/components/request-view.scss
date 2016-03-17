@@ -574,8 +574,10 @@ body, html {
     .tab-section-execution-command-item-detail {
         display: flex;
     }
-    .tab-section-execution-command-isAsync {
+    .tab-section-execution-command-accent {
         font-style: italic;
+        padding-left: 5px; 
+        font-size: 90%;
     }
     .tab-section-execution-command-open {
         color: #737373;
