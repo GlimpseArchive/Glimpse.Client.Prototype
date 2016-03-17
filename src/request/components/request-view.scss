@@ -537,6 +537,21 @@ body, html {
 .tab-section-item {
     width: 100%;
     
+    .tab-section-details {
+        font-size: 85%;
+        margin-top: 8px;
+    }
+    .tab-section-details-item {
+        overflow: hidden;
+    }
+    .tab-section-details-key {
+        font-style: italic;
+        min-width: 0;
+    }
+    .tab-section-details-value {
+        min-width: 0;
+    }
+    
     .tab-execution-important {
         font-size: 120%;
     }
@@ -559,8 +574,10 @@ body, html {
     .tab-section-execution-command-item-detail {
         display: flex;
     }
-    .tab-section-execution-command-isAsync {
+    .tab-section-execution-command-accent {
         font-style: italic;
+        padding-left: 5px; 
+        font-size: 90%;
     }
     .tab-section-execution-command-open {
         color: #737373;
@@ -571,9 +588,9 @@ body, html {
     }
     .tab-section-execution-command-text {
         margin-right: 10%;
-        font-family: monospace;
-        font-size: 120%;
+        font-family: monospace; 
         padding-top: 5px;
+        font-size: 85%;
         
         > pre {
             margin: 0;
