@@ -80,6 +80,31 @@ var seedMvcActions = (function() {
                         { tag: 'id', match: id, default: null, required: false }
                     ]
                 };
+            },
+            headers: function(host, contentType) {
+                return {
+                        request: {
+                            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+                            'Accept-Encoding': 'gzip, deflate, sdch',
+                            'Accept-Language': 'en-US,en;q=0.8',
+                            'Cache-Control': 'no-cache',
+                            'Connection': 'keep-alive',
+                            'Content-Type': contentType,
+                            'Host': host,
+                            'Pragma': 'no-cache'
+                        },
+                        response: {
+                            'Server': host,
+                            'Date': 'Mon, 02 Nov 2015 06:39:26 GMT',
+                            'Content-Type': contentType,
+                            'Transfer-Encoding': 'chunked',
+                            'Status': '200 OK',
+                            'Cache-Control': 'no-cache',
+                            'Strict-Transport-Security': 'max-age=31536000; includeSubdomains; preload',
+                            'Vary': 'Accept-Encoding',
+                            'Content-Encoding': 'gzip'
+                        }
+                    };
             }
         },
         instance: {
@@ -115,6 +140,7 @@ var seedMvcActions = (function() {
                     var genre = chance.word();
                     
                     return {
+                        headers: generate.common.headers('localhost:3000', 'text/html'),
                         path: '/Store/Browse',
                         query: '?Genre=' + genre,
                         controller: 'Store',
@@ -140,6 +166,7 @@ var seedMvcActions = (function() {
                     var id = chance.integerRange(1000, 2000);
             
                     return { 
+                        headers: generate.common.headers('localhost:3000', 'text/html'),
                         path: '/Store/Details/' + id, 
                         controller: 'Store', 
                         action: 'Details',
@@ -165,6 +192,7 @@ var seedMvcActions = (function() {
                 },
                 home: function() {
                     return { 
+                        headers: generate.common.headers('localhost:3000', 'text/html'),
                         path: '/', 
                         controller: 'Home', 
                         action: 'Index',
@@ -200,6 +228,7 @@ var seedMvcActions = (function() {
                 },
                 cart: function() {
                     return { 
+                        headers: generate.common.headers('localhost:3000', 'text/html'),
                         path: '/ShoppingCart/', 
                         controller: 'ShoppingCart', 
                         action: 'Index',
@@ -212,6 +241,8 @@ var seedMvcActions = (function() {
                             { access: 'SQL', operation: 'Select', target: 'Carts', affected: 1, command: 'SELECT \n[GroupBy1].[A1] AS [C1]\nFROM ( SELECT \n    SUM([Filter1].[A1]) AS [A1]\n    FROM ( SELECT \n         CAST( [Extent1].[Count] AS decimal(19,0)) * [Extent2].[Price] AS [A1]\n        FROM  [dbo].[Carts] AS [Extent1]\n        INNER JOIN [dbo].[Albums] AS [Extent2] ON [Extent1].[AlbumId] = [Extent2].[AlbumId]\n        WHERE [Extent1].[CartId] = "df0238d4-5bd4-49b5-97f0-9ba2c9957dc1" /* @p__linq__0 */\n    )  AS [Filter1]\n)  AS [GroupBy1]' },
                             { access: 'mongo', type: 'data-mongodb-read', operation: 'insertMany', docs: [ { a: '66703d9a-a2b6-475b-b42b-61349728cd98', b: '0', c: '1', _id: '56d5ec35b7ce8b4413938307' }, { a: '952b5a81-a1f0-49a5-9463-33344828d668', b: '1', c: '1', _id: '56d5ec35b7ce8b4413938308' } ], count: 2, insertedIds: ['56d5ec35b7ce8b4413938307', '56d5ec35b7ce8b4413938308' ], options: {}, connectionHost: 'localhost', connectionPort: 27017, database: 'MusicStore', collection: 'AlbumCollection' },
                             { access: 'mongo', type: 'data-mongodb-insert', operation: 'toArray', query: {}, options: { find: 'MusicStore.AlbumCollection', limit: 0, skip: 0, query: {}, slaveOk: true, readPreference: { mode: 'primary' } }, connectionHost: 'localhost', connectionPort: 27017, database: 'MusicStore', collection: 'AlbumCollection' },
+                            { access: 'client', url: '/Api/Inventory/Products/User?id=12314', method: 'get', headers: generate.common.headers('inventory.internal.com', 'text/html') },
+                            { access: 'client', url: '/Api/Wearhouse/Location?id=QN8573', method: 'get', headers: generate.common.headers('wearhouse.internal.com', 'application/json') }
                         ],
                         actions: [
                             generate.instance.childAction.shoppingCart(),
@@ -226,6 +257,7 @@ var seedMvcActions = (function() {
                 },
                 store: function() {
                     return { 
+                        headers: generate.common.headers('localhost:3000', 'text/html'),
                         path: '/Store/', 
                         controller: 'Store', 
                         action: 'Index',
@@ -245,6 +277,7 @@ var seedMvcActions = (function() {
                 },
                 login: function() {
                     return { 
+                        headers: generate.common.headers('localhost:3000', 'text/html'),
                         path: '/Account/LogIn/', 
                         controller: 'Account', 
                         action: 'LogIn',
@@ -396,31 +429,14 @@ var generateMvcRequest = (function() {
                 ordinal: this.counter++
             };
         }, 
-        createTab: function(context) {
+        createTab: function(source, context) {
             var message = this.createMessage('tab', context);
+            
             message.payload =  {
                     name: 'Headers',
                     data: {
-                        'Response': {
-                            'Server': 'GitHub.com',
-                            'Date': 'Mon, 02 Nov 2015 06:39:26 GMT',
-                            'Content-Type': 'text/html; charset=utf-8',
-                            'Transfer-Encoding': 'chunked',
-                            'Status': '200 OK',
-                            'Cache-Control': 'no-cache',
-                            'Strict-Transport-Security': 'max-age=31536000; includeSubdomains; preload',
-                            'Vary': 'Accept-Encoding',
-                            'Content-Encoding': 'gzip'
-                        },
-                        'Request': {
-                            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
-                            'Accept-Encoding': 'gzip, deflate, sdch',
-                            'Accept-Language': 'en-US,en;q=0.8',
-                            'Cache-Control': 'no-cache',
-                            'Connection': 'keep-alive',
-                            'Host': 'github.com',
-                            'Pragma': 'no-cache'
-                        }
+                        'Request': source.headers.request,
+                        'Response': source.headers.response
                     }  
                 };
             
@@ -447,19 +463,9 @@ var generateMvcRequest = (function() {
             var message = this.createMessage('web-request', source.context);
             
             var payload = message.payload; 
-            payload.method = source.method;
             payload.url = 'http://localhost:5000' + source.path + defaultOrEmpty(source.query);
-            payload.headers = {
-                'Server': 'GitHub.com',
-                'Date': 'Mon, 02 Nov 2015 06:39:26 GMT',
-                'Content-Type': 'text/html; charset=utf-8',
-                'Transfer-Encoding': 'chunked',
-                'Status': '200 OK',
-                'Cache-Control': 'no-cache',
-                'Strict-Transport-Security': 'max-age=31536000; includeSubdomains; preload',
-                'Vary': 'Accept-Encoding',
-                'Content-Encoding': 'gzip'
-            };
+            payload.method = source.method;
+            payload.headers = source.headers.request;
 
             MessageGenerator.support.beforeTimings('', payload, source.dateTime);
             
@@ -469,18 +475,10 @@ var generateMvcRequest = (function() {
             var message = this.createMessage('web-response', source.context);
             
             var payload = message.payload;
+            payload.url = 'http://localhost:5000' + source.path + defaultOrEmpty(source.query);
             payload.statusCode = source.statusCode;
             payload.statusText = source.statusText;
-            payload.headers = {
-                'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
-                'Accept-Encoding': 'gzip, deflate, sdch',
-                'Accept-Language': 'en-US,en;q=0.8',
-                'Cache-Control': 'no-cache',
-                'Connection': 'keep-alive',
-                'Content-Type': source.contentType,
-                'Host': 'github.com',
-                'Pragma': 'no-cache'
-            };
+            payload.headers = source.headers.response;
             
             MessageGenerator.support.afterTimings('', payload, source.duration, source.dateTime);
             
@@ -652,6 +650,33 @@ var generateMvcRequest = (function() {
            
             return message;
         },
+        createClientRequest: function(action, activity, context) {
+            var message = this.createMessage('data-http-request', context);
+            
+            var payload = message.payload;
+            payload.url = activity.url;
+            payload.method = activity.method;
+            payload.headers = activity.headers.request;;
+             
+            // TODO: Bring in timing data when we have it
+            //MessageGenerator.support.beforeTimings('', payload, null);
+           
+            return message;
+        },
+        createClientResponse: function(action, activity, context) {
+            var httpStatus = chance.httpStatus();
+            
+            var message = this.createMessage('data-http-response', context);
+            
+            var payload = message.payload;
+            payload.url = activity.url;
+            payload.statusCode = httpStatus.code;
+            payload.headers = activity.headers.response;
+           
+            MessageGenerator.support.afterTimings('', payload, (parseInt(activity.duration * 100)) / 100, null);
+            
+            return message;
+        },
         createBeforeViewComponent: function(action, context) {
             var message = this.createMessage('before-view-component', context);
             
@@ -770,6 +795,10 @@ var generateMvcRequest = (function() {
                     else if (activity.access == 'middleware-end') {
                         this.messages.push(this.createMiddlewareEnd(action, activity, context));
                     }
+                    else if (activity.access == 'client') {
+                        this.messages.push(this.createClientRequest(action, activity, context));
+                        this.messages.push(this.createClientResponse(action, activity, context));
+                    } 
                 }, this);
             }
         },
@@ -832,7 +861,7 @@ var generateMvcRequest = (function() {
             
             this.messages.push(this.createUserIdentification(source));
             this.messages.push(this.createEnvironment(source));
-            this.messages.push(this.createTab(source.context))
+            this.messages.push(this.createTab(source, source.context))
             
             this.processAction(source, source, source.context);
             
@@ -874,13 +903,13 @@ var generateMvcRequest = (function() {
                         request._requestMethod = payload.method;
                         request._requestUrl = (payload.path || '') + (payload.query || '');
                     }
-                    if (type == 'web-response') {
-                        request._responseStatusCode = payload.statusCode; 
-                        request._responseStatusText = source.statusText;
-                        request._responseContentCategory = source.contentCategory;  
+                    else if (type == 'web-response') {
+                        payload.statusText = source.statusText;  
+                        payload.contentCategory = source.contentCategory;
                         
-                        payload.statusText = request._responseStatusText;  
-                        payload.contentCategory = request._responseContentCategory;
+                        request._responseStatusCode = payload.statusCode; 
+                        request._responseStatusText = payload.statusText;
+                        request._responseContentCategory = payload.contentCategory;  
                     }
                 }
                 

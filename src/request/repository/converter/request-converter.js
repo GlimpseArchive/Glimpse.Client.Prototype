@@ -138,32 +138,43 @@ var getStatusCodeText = (function() {
         return listing[statusCode];
     };
 })();
-var setupIndex = function(request, type, payload) {
-    if (type == 'web-request') {
-        var url = parse(payload.url);
-        payload.path = url.pathname;
-        payload.query = url.query;
-        
-        request._requestStartTime = payload.startTime;
-        request._requestMethod = payload.method;
-        request._requestUrl = payload.path + payload.query;
-        request._requestIsAjax = payload.requestIsAjax;
-    }
-    if (type == 'web-response') {
-        var contentType = payload.headers && glimpse.util.getPropertyCaseInsensitive(payload.headers, 'Content-Type');;
-        payload.contentType = contentType;
-        payload.statusText = getStatusCodeText(payload.statusCode);  
-        payload.contentCategory = getContentTypeCategory(payload.contentType);
-        
-        request._responseStatusCode = payload.statusCode; 
-        request._responseStatusText = payload.statusText;
-        request._responseContentType = payload.contentType;
-        request._responseContentCategory = payload.contentCategory;  
-    }
-    if (type == 'user-identification') {
-        request._userId = payload.userId;
-    }
-}
+var modifyPayload = (function() {
+    // TODO: need to work out what we are doing with derived data, etc...
+    //       should this be a message strategy or should we support message vs type
+    //       strategies. Do i need to promote these index strategies above others..
+    return {
+        deriveProperties: function(request, type, payload) {
+            if (type == 'web-request' || type == 'data-http-request') {
+                var url = parse(payload.url);
+                payload.path = url.pathname;
+                payload.query = url.query;
+            }
+            else if (type == 'web-response' || type == 'data-http-response') {
+                var contentType = payload.headers && glimpse.util.getPropertyCaseInsensitive(payload.headers, 'Content-Type');;
+                payload.contentType = contentType;
+                payload.statusText = getStatusCodeText(payload.statusCode);  
+                payload.contentCategory = getContentTypeCategory(payload.contentType);
+            }
+        },
+        setupIndex: function(request, type, payload) {
+            if (type == 'web-request') {
+                request._requestStartTime = payload.startTime;
+                request._requestMethod = payload.method;
+                request._requestUrl = payload.path + payload.query;
+                request._requestIsAjax = payload.requestIsAjax;
+            }
+            else if (type == 'web-response') {
+                request._responseStatusCode = payload.statusCode; 
+                request._responseStatusText = payload.statusText;
+                request._responseContentType = payload.contentType;
+                request._responseContentCategory = payload.contentCategory;  
+            }
+            else if (type == 'web-response') {
+                request._userId = payload.userId;
+            }
+        }
+    };
+})();
 
 module.exports = { 
     registerStrategy: function(strategy) {
@@ -192,13 +203,16 @@ module.exports = {
                 
                 // copy across the messages into the type index
                 _.forEach(message.types, function(type) {
+                    // TODO: hack, find better way to do this
+                    modifyPayload.deriveProperties(request, type, message.payload);
+                        
                     if (!request.types[type]) {
                         request.types[type] = [];
                         
-                        // hack because we commonly use datatime in sorting and its expensive to get
-                        setupIndex(request, type, message.payload);
+                        // TODO: hack, find better way to do this
+                        modifyPayload.setupIndex(request, type, message.payload);
                     }
-                    
+                        
                     request.types[type].push(message.id);
                 });
 
