@@ -506,16 +506,85 @@ var MiddlewareComponents = React.createClass({
                 }
                 
                 var middlewareEndPayload = pair.endMessage.payload;
+                                                              
+                var method = null;
                 
-                // NOTE: This assumes result is human-readible (and English).                
-                var result = _.startCase(middlewareEndPayload.result);
+                if (middlewareEndPayload.method) {
+                    method = (
+                        <span className="text-minor">{middlewareEndPayload.method.toUpperCase()} &nbsp;</span>
+                    );
+                }
+
+                // NOTE: Since middleware is often attached to the "relative root" (i.e. '/') of any given route, 
+                //       we ignore paths === ['/'] to reduce the noise in the display and to emphasize non-root paths.
+
+                var paths = null;
+                
+                if (middlewareEndPayload.paths 
+                    && (middlewareEndPayload.paths.length > 1 || (middlewareEndPayload.paths.length == 1 && middlewareEndPayload.paths[0] != '/'))) {
+                    var pathsString;
+                    
+                    if (middlewareEndPayload.paths.length == 1) {
+                        pathsString = middlewareEndPayload.paths[0];
+                    }
+                    else {
+                        pathsString = '[' + middlewareEndPayload.paths.join(', ') + ']';
+                    }
+                    
+                    paths = (
+                        <span className="text-minor">{pathsString}</span>
+                    );
+                }
+                
+                var route = null;
+
+                if (method || paths) {
+                    route = (
+                        <section className="flex flex-row flex-inherit flex-base tab-section-item">
+                            <div className="col-8">{method}{paths}</div>
+                        </section>
+                    );
+                }
+
+                var params = null;
+                
+                if (middlewareEndPayload.params && middlewareEndPayload.name != 'router') {
+                    var paramComponents = _.map(middlewareEndPayload.params, function (value, key) {
+                        return (
+                            <div className="tab-section-details-item col-5">
+                                <div className="tab-section-details-key col-2"><div className="truncate">{key}:</div></div>
+                                <div className="tab-section-details-value col-8"><div className="truncate">{value}</div></div>
+                            </div>
+                        );
+                    });
+                    
+                    if (paramComponents.length > 0) {                        
+                        params = (
+                            <section className="flex flex-row flex-inherit flex-base tab-section-item">
+                                <div className="tab-section-details col-5">
+                                    {paramComponents}
+                                </div>
+                            </section>
+                        );
+                    }
+                }
+
+                var result = null;
+                
+                switch (middlewareEndPayload.result) {
+                    case 'next': result = /* Rightwards Arrow U+2192 */ String.fromCharCode(8594); break;
+                    case 'end': result = /* Rightwards Arrow to Bar U+21E5 */ String.fromCharCode(8677); break;                    
+                    case 'error': result = /* Exlamation Mark U+0021 */ String.fromCharCode(33); break;
+                }
 
                 return (
                         <div className="tab-section-boxing">
                             <section className="flex flex-row flex-inherit flex-base tab-section-item">
-                                <div className="col-8">{middlewareEndPayload.name} &nbsp; <span className="text-minor">({result})</span></div>
+                                <div className="col-8">{middlewareEndPayload.name} &nbsp; <span className="text-minor">{result}</span></div>
                                 <div className="tab-execution-timing">{middlewareEndPayload.duration} ms</div>
                             </section>
+                            {route}
+                            {params}
                             {nestedComponent}
                         </div>);
             };

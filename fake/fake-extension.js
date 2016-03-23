@@ -198,15 +198,27 @@ var seedMvcActions = (function() {
                         action: 'Index',
                         route: generate.common.route('home', 'index', null),
                         preActivities: [
-                            { access: 'middleware-start', correlationId: '123456789', name: 'logger' },
-                            { access: 'middleware-end', correlationId: '123456789', name: 'logger', result: 'next' },
-                            { access: 'middleware-start', correlationId: '234567891', name: 'queryParser' },
+                            { access: 'middleware-start', name: 'query', paths: ['/'] },
+                            { access: 'middleware-end', name: 'query', paths: ['/'], result: 'next' },
+                            { access: 'middleware-start', name: 'expressInit', paths: ['/'] },
+                            { access: 'middleware-end', name: 'expressInit', paths: ['/'], result: 'next' },
+                            { access: 'middleware-start', name: 'logger', paths: ['/'] },
+                            { access: 'middleware-end', name: 'logger', paths: ['/'], result: 'next' },
+                            { access: 'middleware-start', name: 'jsonParser', paths: ['/'] },
+                            { access: 'middleware-end', name: 'jsonParser', paths: ['/'], result: 'next' },
+                            { access: 'middleware-start', name: 'urlencodedParser', paths: ['/'] },
+                            { access: 'middleware-end', name: 'urlencodedParser', paths: ['/'], result: 'next' },
+                            { access: 'middleware-start', name: 'cookieParser', paths: ['/'] },
+                            { access: 'middleware-end', name: 'cookieParser', paths: ['/'], result: 'next' },
+                            { access: 'middleware-start', name: 'serveStatic', paths: ['/'] },
+                            { access: 'middleware-end', name: 'serveStatic', paths: ['/'], result: 'next' },
+                            { access: 'middleware-start', name: 'router', paths: ['/'] },
+                            { access: 'middleware-end', name: 'router', paths: ['/'], result: 'error' },
+                            { access: 'middleware-start', name: 'router', paths: ['/users'] },
+                            { access: 'middleware-start', name: '<anonymous>', paths: ['/:id'], method: 'GET', params: { id: '1' } },
                             { access: 'mongo', type: 'data-mongodb-read', operation: 'toArray', query: {}, options: { find: 'MusicStore.AlbumCollection', limit: 0, skip: 0, query: {}, slaveOk: true, readPreference: { mode: 'primary' } }, connectionHost: 'localhost', connectionPort: 27017, database: 'MusicStore', collection: 'AlbumCollection' },
-                            { access: 'middleware-end', correlationId: '234567891', name: 'queryParser', result: 'next' },
-                            { access: 'middleware-start', correlationId: '345678912s', name: 'router' },
-                            { access: 'middleware-start', correlationId: '456789123', name: 'bodyParser' },
-                            { access: 'middleware-end', correlationId: '456789123', name: 'bodyParser', result: 'end' },
-                            { access: 'middleware-end', correlationId: '345678912', name: 'router', result: 'end' },
+                            { access: 'middleware-end', name: '<anonymous>', paths: ['/:id'], method: 'GET', params: { id: '1' }, result: 'end' },
+                            { access: 'middleware-end', name: 'router', paths: ['/users'], result: 'end' },
                             { access: 'SQL', operation: 'Select', target: 'Albums', affected: 1, command: 'SELECT TOP (2) \n[Extent1].[AlbumId] AS [AlbumId], \n[Extent1].[GenreId] AS [GenreId], \n[Extent1].[ArtistId] AS [ArtistId], \n[Extent1].[Title] AS [Title], \n[Extent1].[Price] AS [Price], \n[Extent1].[AlbumArtUrl] AS [AlbumArtUrl]\nFROM [dbo].[Albums] AS [Extent1]\nWHERE [Extent1].[AlbumId] = 1 /* @p0 */' },
                             { access: 'mongo', type: 'data-mongodb-read', operation: 'toArray', query: {}, options: { find: 'MusicStore.AlbumCollection', limit: 0, skip: 0, query: {}, slaveOk: true, readPreference: { mode: 'primary' } }, connectionHost: 'localhost', connectionPort: 27017, database: 'MusicStore', collection: 'AlbumCollection' }
                         ],
@@ -629,8 +641,10 @@ var generateMvcRequest = (function() {
             var message = this.createMessage('middleware-start', context);
             
             var payload = message.payload;
-            payload.correlationId = activity.correlationId;
             payload.name = activity.name;
+            payload.paths = activity.paths;
+            payload.method = activity.method;
+            payload.params = activity.params;
              
             // TODO: Bring in timing data when we have it
             //MessageGenerator.support.beforeTimings('command', payload, null);
@@ -641,8 +655,10 @@ var generateMvcRequest = (function() {
             var message = this.createMessage('middleware-end', context);
             
             var payload = message.payload;
-            payload.correlationId = activity.correlationId;
             payload.name = activity.name;
+            payload.paths = activity.paths;
+            payload.method = activity.method;
+            payload.params = activity.params;
             payload.result = activity.result;
             
             // TODO: Bring in timing data when we have it
