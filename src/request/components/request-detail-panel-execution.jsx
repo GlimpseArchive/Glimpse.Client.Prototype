@@ -577,10 +577,20 @@ var MiddlewareComponents = React.createClass({
                     case 'error': result = /* Exlamation Mark U+0021 */ String.fromCharCode(33); break;
                 }
 
+                var name = middlewareEndPayload.displayName || middlewareEndPayload.name || '<anonymous>';
+
+                var packageLink = null;
+                
+                if (middlewareEndPayload.packageName) {
+                    var href = 'https://www.npmjs.com/package/' + middlewareEndPayload.packageName;
+                    
+                    packageLink = <a href={href} target="_blank">({middlewareEndPayload.packageName})</a>;
+                }
+
                 return (
                         <div className="tab-section-boxing">
                             <section className="flex flex-row flex-inherit flex-base tab-section-item">
-                                <div className="col-8">{middlewareEndPayload.name} &nbsp; <span className="text-minor">{result}</span></div>
+                                <div className="col-8">{name} &nbsp; {packageLink} &nbsp; <span className="text-minor">{result}</span></div>
                                 <div className="tab-execution-timing">{middlewareEndPayload.duration} ms</div>
                             </section>
                             {route}
