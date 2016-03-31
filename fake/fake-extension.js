@@ -202,16 +202,16 @@ var seedMvcActions = (function() {
                             { access: 'middleware-end', name: 'query', paths: ['/'], result: 'next' },
                             { access: 'middleware-start', name: 'expressInit', paths: ['/'] },
                             { access: 'middleware-end', name: 'expressInit', paths: ['/'], result: 'next' },
-                            { access: 'middleware-start', name: 'logger', paths: ['/'] },
-                            { access: 'middleware-end', name: 'logger', paths: ['/'], result: 'next' },
-                            { access: 'middleware-start', name: 'jsonParser', paths: ['/'] },
-                            { access: 'middleware-end', name: 'jsonParser', paths: ['/'], result: 'next' },
-                            { access: 'middleware-start', name: 'urlencodedParser', paths: ['/'] },
-                            { access: 'middleware-end', name: 'urlencodedParser', paths: ['/'], result: 'next' },
-                            { access: 'middleware-start', name: 'cookieParser', paths: ['/'] },
-                            { access: 'middleware-end', name: 'cookieParser', paths: ['/'], result: 'next' },
-                            { access: 'middleware-start', name: 'serveStatic', paths: ['/'] },
-                            { access: 'middleware-end', name: 'serveStatic', paths: ['/'], result: 'next' },
+                            { access: 'middleware-start', name: 'logger', displayName: 'Morgan Logger', packageName: 'morgan', paths: ['/'] },
+                            { access: 'middleware-end', name: 'logger', displayName: 'Morgan Logger', packageName: 'morgan', paths: ['/'], result: 'next' },
+                            { access: 'middleware-start', name: 'jsonParser', displayName: 'JSON Body Parser', packageName: 'body-parser', paths: ['/'] },
+                            { access: 'middleware-end', name: 'jsonParser', displayName: 'JSON Body Parser', packageName: 'body-parser', paths: ['/'], result: 'next' },
+                            { access: 'middleware-start', name: 'urlencodedParser', displayName: 'URL-Encoded Body Parser', packageName: 'body-parser', paths: ['/'] },
+                            { access: 'middleware-end', name: 'urlencodedParser', displayName: 'URL-Encoded Body Parser', packageName: 'body-parser', paths: ['/'], result: 'next' },
+                            { access: 'middleware-start', name: 'cookieParser', displayName: 'Cookie Parser', packageName: 'cookie-parser', paths: ['/'] },
+                            { access: 'middleware-end', name: 'cookieParser', displayName: 'Cookie Parser', packageName: 'cookie-parser', paths: ['/'], result: 'next' },
+                            { access: 'middleware-start', name: 'serveStatic', displayName: 'Express Static File Server', packageName: 'express', paths: ['/'] },
+                            { access: 'middleware-end', name: 'serveStatic', displayName: 'Express Static File Server', packageName: 'express', paths: ['/'], result: 'next' },
                             { access: 'middleware-start', name: 'router', paths: ['/'] },
                             { access: 'middleware-end', name: 'router', paths: ['/'], result: 'error' },
                             { access: 'middleware-start', name: 'router', paths: ['/users'] },
@@ -642,6 +642,8 @@ var generateMvcRequest = (function() {
             
             var payload = message.payload;
             payload.name = activity.name;
+            payload.displayName = activity.displayName;
+            payload.packageName = activity.packageName;
             payload.paths = activity.paths;
             payload.method = activity.method;
             payload.params = activity.params;
@@ -656,6 +658,8 @@ var generateMvcRequest = (function() {
             
             var payload = message.payload;
             payload.name = activity.name;
+            payload.displayName = activity.displayName;
+            payload.packageName = activity.packageName;
             payload.paths = activity.paths;
             payload.method = activity.method;
             payload.params = activity.params;
