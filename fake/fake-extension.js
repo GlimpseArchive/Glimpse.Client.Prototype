@@ -201,7 +201,7 @@ var seedMvcActions = (function() {
                             { access: 'middleware-start', name: 'query', paths: ['/'] },
                             { access: 'middleware-end', name: 'query', paths: ['/'], result: 'next' },
                             { access: 'middleware-start', name: 'expressInit', paths: ['/'] },
-                            { access: 'middleware-end', name: 'expressInit', paths: ['/'], result: 'next' },
+                            { access: 'middleware-end', name: 'expressInit', paths: ['/'], headers: [{ op: 'set', name: 'x-powered-by', value: 'Express' }], result: 'next' },
                             { access: 'middleware-start', name: 'logger', displayName: 'Morgan Logger', packageName: 'morgan', paths: ['/'] },
                             { access: 'middleware-end', name: 'logger', displayName: 'Morgan Logger', packageName: 'morgan', paths: ['/'], result: 'next' },
                             { access: 'middleware-start', name: 'jsonParser', displayName: 'JSON Body Parser', packageName: 'body-parser', paths: ['/'] },
@@ -217,8 +217,8 @@ var seedMvcActions = (function() {
                             { access: 'middleware-start', name: 'router', paths: ['/users'] },
                             { access: 'middleware-start', name: '<anonymous>', paths: ['/:id'], method: 'GET', params: { id: '1' } },
                             { access: 'mongo', type: 'data-mongodb-read', operation: 'toArray', query: {}, options: { find: 'MusicStore.AlbumCollection', limit: 0, skip: 0, query: {}, slaveOk: true, readPreference: { mode: 'primary' } }, connectionHost: 'localhost', connectionPort: 27017, database: 'MusicStore', collection: 'AlbumCollection' },
-                            { access: 'middleware-end', name: '<anonymous>', paths: ['/:id'], method: 'GET', params: { id: '1' }, result: 'end' },
-                            { access: 'middleware-end', name: 'router', paths: ['/users'], result: 'end' },
+                            { access: 'middleware-end', name: '<anonymous>', paths: ['/:id'], method: 'GET', params: { id: '1' }, headers: [{ op: 'set', name: 'content-type', value: 'text/html; charset=utf-8'}, { op: 'set', name: 'content-length', value: '1478'}, { op: 'set', name: 'etag', value: 'W/"5c6-KfLI6FEDrv9C6HycXY0IbA"'}], result: 'end' },
+                            { access: 'middleware-end', name: 'router', paths: ['/users'], headers: [{ op: 'set', name: 'content-type', value: 'text/html; charset=utf-8'}, { op: 'set', name: 'content-length', value: '1478'}, { op: 'set', name: 'etag', value: 'W/"5c6-KfLI6FEDrv9C6HycXY0IbA"'}], result: 'end' },
                             { access: 'SQL', operation: 'Select', target: 'Albums', affected: 1, command: 'SELECT TOP (2) \n[Extent1].[AlbumId] AS [AlbumId], \n[Extent1].[GenreId] AS [GenreId], \n[Extent1].[ArtistId] AS [ArtistId], \n[Extent1].[Title] AS [Title], \n[Extent1].[Price] AS [Price], \n[Extent1].[AlbumArtUrl] AS [AlbumArtUrl]\nFROM [dbo].[Albums] AS [Extent1]\nWHERE [Extent1].[AlbumId] = 1 /* @p0 */' },
                             { access: 'mongo', type: 'data-mongodb-read', operation: 'toArray', query: {}, options: { find: 'MusicStore.AlbumCollection', limit: 0, skip: 0, query: {}, slaveOk: true, readPreference: { mode: 'primary' } }, connectionHost: 'localhost', connectionPort: 27017, database: 'MusicStore', collection: 'AlbumCollection' }
                         ],
@@ -663,6 +663,7 @@ var generateMvcRequest = (function() {
             payload.paths = activity.paths;
             payload.method = activity.method;
             payload.params = activity.params;
+            payload.headers = activity.headers;
             payload.result = activity.result;
             
             // TODO: Bring in timing data when we have it

@@ -454,6 +454,159 @@ var ParamaterList = React.createClass({
     }
 });
 
+var MiddlewareParameters = React.createClass({
+    render: function() {
+        var params = this.props.params;
+        
+        var paramComponents = _.map(params, function (value, key) {
+            return (
+                <div className="flex tab-section-details-item">
+                    <div className="tab-section-details-key col-2"><div className="truncate">{key}:</div></div>
+                    <div className="tab-section-details-value col-8"><div className="truncate">{value}</div></div>
+                </div>
+            );
+        });
+        
+        return (
+            <div>
+                <div className="flex flex-row flex-inherit tab-section-header">
+                    <div className="tab-title col-9">Parameters</div>
+                </div>
+                {paramComponents}
+            </div>
+        );
+    }
+});
+
+var MiddlewareHeaders = React.createClass({
+    render: function() {
+        var headers = this.props.headers;
+               
+        var headerComponents = _.map(headers, function (value) {
+            return (
+                <div className="flex tab-section-details-item">
+                    <div className="tab-section-details-key col-2"><div className="truncate">{value.name}:</div></div>
+                    <div className="tab-section-details-value col-8"><div className="truncate">{value.value}</div></div>
+                </div>
+            );
+        });
+                    
+        return (
+            <div>
+                <div className="flex flex-row flex-inherit tab-section-header">
+                    <div className="tab-title col-9">Headers</div>
+                </div>
+                {headerComponents}
+            </div>
+        );
+    }
+});
+
+var MiddlewareItem = React.createClass({
+    render: function() {
+        var pair = this.props.messagePair;
+        var beforeExecuteCommandMessages = this.props.beforeExecuteCommandMessages;
+        var afterExecuteCommandMessages = this.props.afterExecuteCommandMessages;
+        var mongoDBMessages = this.props.mongoDBMessages;
+        var dataHttpRequestMessages = this.props.dataHttpRequestMessages;
+        var dataHttpResponseMessages = this.props.dataHttpResponseMessages;
+        
+        var nestedComponent;
+        
+        if (pair.pairs.length > 0) {
+            nestedComponent = pair.pairs.map(function (nestedPair){
+                return <MiddlewareItem messagePair={nestedPair} beforeExecuteCommandMessages={beforeExecuteCommandMessages} afterExecuteCommandMessages={afterExecuteCommandMessages} mongoDBMessages={mongoDBMessages} dataHttpRequestMessages={dataHttpRequestMessages} dataHttpResponseMessages={dataHttpResponseMessages} />;
+            });
+        }
+        else {
+            nestedComponent = <CommandList beforeExecuteCommandMessages={beforeExecuteCommandMessages} afterExecuteCommandMessages={afterExecuteCommandMessages} mongoDBMessages={mongoDBMessages} dataHttpRequestMessages={dataHttpRequestMessages} dataHttpResponseMessages={dataHttpResponseMessages} beginMessage={pair.startMessage} endMessage={pair.endMessage} />
+        }
+        
+        var middlewareEndPayload = pair.endMessage.payload;
+                                                        
+        var method = null;
+        
+        if (middlewareEndPayload.method) {
+            method = (
+                <span className="text-minor">{middlewareEndPayload.method.toUpperCase()} &nbsp;</span>
+            );
+        }
+
+        // NOTE: Since middleware is often attached to the "relative root" (i.e. '/') of any given route, 
+        //       we ignore paths === ['/'] to reduce the noise in the display and to emphasize non-root paths.
+
+        var paths = null;
+        
+        if (middlewareEndPayload.paths 
+            && (middlewareEndPayload.paths.length > 1 || (middlewareEndPayload.paths.length == 1 && middlewareEndPayload.paths[0] != '/'))) {
+            var pathsString;
+            
+            if (middlewareEndPayload.paths.length == 1) {
+                pathsString = middlewareEndPayload.paths[0];
+            }
+            else {
+                pathsString = '[' + middlewareEndPayload.paths.join(', ') + ']';
+            }
+            
+            paths = (
+                <span className="text-minor">{pathsString}</span>
+            );
+        }
+        
+        var route = null;
+
+        if (method || paths) {
+            route = (
+                <section className="flex flex-row flex-inherit flex-base tab-section-item">
+                    <div className="col-8">{method}{paths}</div>
+                </section>
+            );
+        }
+
+        var params = null;
+        
+        if (middlewareEndPayload.params && middlewareEndPayload.name != 'router') {
+            params = <MiddlewareParameters params={middlewareEndPayload.params} />;
+        }
+
+        var headers = null;
+        
+        if (middlewareEndPayload.headers && middlewareEndPayload.name != 'router') {
+            headers = <MiddlewareHeaders headers={middlewareEndPayload.headers} />;
+        }
+
+        var result = null;
+        
+        switch (middlewareEndPayload.result) {
+            case 'next': result = /* Rightwards Arrow U+2192 */ String.fromCharCode(8594); break;
+            case 'end': result = /* Rightwards Arrow to Bar U+21E5 */ String.fromCharCode(8677); break;                    
+            case 'error': result = /* Exlamation Mark U+0021 */ String.fromCharCode(33); break;
+        }
+
+        var name = middlewareEndPayload.displayName || middlewareEndPayload.name || '<anonymous>';
+
+        var packageLink = null;
+        
+        if (middlewareEndPayload.packageName) {
+            var href = 'https://www.npmjs.com/package/' + middlewareEndPayload.packageName;
+            
+            packageLink = <a href={href} target="_blank">({middlewareEndPayload.packageName})</a>;
+        }
+
+        return (
+                <div className="tab-section-boxing">
+                    <section className="flex flex-row flex-inherit flex-base tab-section-item">
+                        <div className="col-8">{name} &nbsp; {packageLink} &nbsp; <span className="text-minor">{result}</span></div>
+                        <div className="tab-execution-timing">{middlewareEndPayload.duration} ms</div>
+                    </section>
+                    {route}
+                    {params}
+                    {headers}
+                    {nestedComponent}
+                </div>);
+    }
+});
+
 var MiddlewareComponents = React.createClass({
     render: function() {
         var middlewareStartMessages = this.props.middlewareStartMessages || [];
@@ -496,107 +649,7 @@ var MiddlewareComponents = React.createClass({
             }
             
             var generateMiddlewareItem = function (pair) {
-                var nestedComponent;
-                
-                if (pair.pairs.length > 0) {
-                    nestedComponent = pair.pairs.map(generateMiddlewareItem);
-                }
-                else {
-                    nestedComponent = <CommandList beforeExecuteCommandMessages={beforeExecuteCommandMessages} afterExecuteCommandMessages={afterExecuteCommandMessages} mongoDBMessages={mongoDBMessages} dataHttpRequestMessages={dataHttpRequestMessages} dataHttpResponseMessages={dataHttpResponseMessages} beginMessage={pair.startMessage} endMessage={pair.endMessage} />
-                }
-                
-                var middlewareEndPayload = pair.endMessage.payload;
-                                                              
-                var method = null;
-                
-                if (middlewareEndPayload.method) {
-                    method = (
-                        <span className="text-minor">{middlewareEndPayload.method.toUpperCase()} &nbsp;</span>
-                    );
-                }
-
-                // NOTE: Since middleware is often attached to the "relative root" (i.e. '/') of any given route, 
-                //       we ignore paths === ['/'] to reduce the noise in the display and to emphasize non-root paths.
-
-                var paths = null;
-                
-                if (middlewareEndPayload.paths 
-                    && (middlewareEndPayload.paths.length > 1 || (middlewareEndPayload.paths.length == 1 && middlewareEndPayload.paths[0] != '/'))) {
-                    var pathsString;
-                    
-                    if (middlewareEndPayload.paths.length == 1) {
-                        pathsString = middlewareEndPayload.paths[0];
-                    }
-                    else {
-                        pathsString = '[' + middlewareEndPayload.paths.join(', ') + ']';
-                    }
-                    
-                    paths = (
-                        <span className="text-minor">{pathsString}</span>
-                    );
-                }
-                
-                var route = null;
-
-                if (method || paths) {
-                    route = (
-                        <section className="flex flex-row flex-inherit flex-base tab-section-item">
-                            <div className="col-8">{method}{paths}</div>
-                        </section>
-                    );
-                }
-
-                var params = null;
-                
-                if (middlewareEndPayload.params && middlewareEndPayload.name != 'router') {
-                    var paramComponents = _.map(middlewareEndPayload.params, function (value, key) {
-                        return (
-                            <div className="tab-section-details-item col-5">
-                                <div className="tab-section-details-key col-2"><div className="truncate">{key}:</div></div>
-                                <div className="tab-section-details-value col-8"><div className="truncate">{value}</div></div>
-                            </div>
-                        );
-                    });
-                    
-                    if (paramComponents.length > 0) {                        
-                        params = (
-                            <section className="flex flex-row flex-inherit flex-base tab-section-item">
-                                <div className="tab-section-details col-5">
-                                    {paramComponents}
-                                </div>
-                            </section>
-                        );
-                    }
-                }
-
-                var result = null;
-                
-                switch (middlewareEndPayload.result) {
-                    case 'next': result = /* Rightwards Arrow U+2192 */ String.fromCharCode(8594); break;
-                    case 'end': result = /* Rightwards Arrow to Bar U+21E5 */ String.fromCharCode(8677); break;                    
-                    case 'error': result = /* Exlamation Mark U+0021 */ String.fromCharCode(33); break;
-                }
-
-                var name = middlewareEndPayload.displayName || middlewareEndPayload.name || '<anonymous>';
-
-                var packageLink = null;
-                
-                if (middlewareEndPayload.packageName) {
-                    var href = 'https://www.npmjs.com/package/' + middlewareEndPayload.packageName;
-                    
-                    packageLink = <a href={href} target="_blank">({middlewareEndPayload.packageName})</a>;
-                }
-
-                return (
-                        <div className="tab-section-boxing">
-                            <section className="flex flex-row flex-inherit flex-base tab-section-item">
-                                <div className="col-8">{name} &nbsp; {packageLink} &nbsp; <span className="text-minor">{result}</span></div>
-                                <div className="tab-execution-timing">{middlewareEndPayload.duration} ms</div>
-                            </section>
-                            {route}
-                            {params}
-                            {nestedComponent}
-                        </div>);
+                return <MiddlewareItem messagePair={pair} beforeExecuteCommandMessages={beforeExecuteCommandMessages} afterExecuteCommandMessages={afterExecuteCommandMessages} mongoDBMessages={mongoDBMessages} dataHttpRequestMessages={dataHttpRequestMessages} dataHttpResponseMessages={dataHttpResponseMessages} />; 
             };
             
             var middlewareComponents = rootPair.pairs.map(generateMiddlewareItem);
