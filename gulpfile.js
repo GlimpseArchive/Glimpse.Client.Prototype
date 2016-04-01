@@ -123,4 +123,6 @@ gulp.task('prod', function (cb) {
     runSequence('build-prod', 'server', cb);
 });
 
+gulp.task('ci', ['build-dev'])
+
 gulp.task('default', ['dev']);
