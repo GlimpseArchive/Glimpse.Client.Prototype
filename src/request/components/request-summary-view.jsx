@@ -7,9 +7,9 @@ var React = require('react');
 var SummaryList = require('./request-summary-list-view');
 var EmitterMixin = require('lib/components/emitter-mixin');
 
-function getState(allRequets) {
+function getState(allRequest) {
     return {
-        allRequets: allRequets || []
+        allRequest: allRequest || []
     };
 }
 
@@ -25,11 +25,11 @@ module.exports = React.createClass({
         return (
             <div>
                 <div className="application-section-header application-section-header-boxed">Requests</div>
-                <SummaryList allRequets={this.state.allRequets} />
+                <SummaryList allRequest={this.state.allRequest} />
             </div>
         );
     },
-    _summaryChanged: function (allRequets) {
-        this.setState(getState(allRequets));
+    _summaryChanged: function (allRequest) {
+        this.setState(getState(allRequest));
     }
 });
