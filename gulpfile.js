@@ -1,6 +1,7 @@
 'use strict';
 
 var _ = require('lodash');
+var del = require('del');
 var gulp = require('gulp');
 var argv = require('minimist')(process.argv.slice(2));
 var webpack = require('webpack');
@@ -89,6 +90,10 @@ gulp.task('assets', function () {
         .pipe(gif(WATCH, browserSync.reload({ stream: true })));
 });
 
+gulp.task('clean', function () {
+    return del(settings.server + '/**');
+});
+
 // NOTE: was running in parallel but don't like the output
 //gulp.task('build', ['pages', 'bundle']);
 gulp.task('build', function (cb) {
@@ -103,6 +108,12 @@ gulp.task('build-dev', function (cb) {
 
 gulp.task('build-prod', function (cb) {
     RELEASE = true;
+    
+    runSequence('build', cb);
+});
+
+gulp.task('build-ci', ['clean'], function (cb) {
+    RELEASE = false;
     
     runSequence('build', cb);
 });
@@ -129,7 +140,7 @@ gulp.task('prod', function (cb) {
     runSequence('build-prod', 'server', cb);
 });
 
-gulp.task('ci', ['build-dev'], function () {
+gulp.task('ci', ['build-ci'], function () {
     return gulp.src(['dist/**', '!dist/client.zip'])
         .pipe(zip('client.zip'))
         .pipe(gulp.dest('dist'));
