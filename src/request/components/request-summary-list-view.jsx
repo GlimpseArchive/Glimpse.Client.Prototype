@@ -8,11 +8,11 @@ var SummaryItem = require('./request-summary-list-item-view');
 
 module.exports = React.createClass({
     render: function () {
-        var allRequets = this.props.allRequets;
+        var allRequest = this.props.allRequest;
 
 /*
                 <ReactCSSTransitionGroup component="div" transitionName="request-summary-group-item" transitionLeave={false}>
-                    {allRequets.map(function(request) {
+                    {allRequest.map(function(request) {
                         return <SummaryItem key={request.id} request={request} />;
                     })}
                 </ReactCSSTransitionGroup>
@@ -20,10 +20,10 @@ module.exports = React.createClass({
 
         return (
             <div className="request-summary-list-holder">
-                {allRequets.map(function(request) {
+                {allRequest.map(function(request) {
                     return <SummaryItem key={request.id} request={request} />;
                 })}
-                {glimpse.util.isEmpty(allRequets) ? <Loading message="No requests found yet." mandatory={false} /> : null}
+                {glimpse.util.isEmpty(allRequest) ? <Loading message="No requests found yet." mandatory={false} /> : null}
             </div>
         );
     }
