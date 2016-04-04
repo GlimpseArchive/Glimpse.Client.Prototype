@@ -1,5 +1,7 @@
 # Glimpse Client
 
+[![Build Status](https://travis-ci.org/Glimpse/Glimpse.Client.Prototype.svg?branch=master)](https://travis-ci.org/Glimpse/Glimpse.Client.Prototype)
+
 Glimpse provides real time diagnostics & insights to the fingertips of
 hundreds of thousands of developers daily. This is the client which runs in the
 browser, which the user interacts with and reports back to the server.
