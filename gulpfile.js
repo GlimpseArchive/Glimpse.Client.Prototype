@@ -10,6 +10,7 @@ var gutil = require('gulp-util');
 var gif = require('gulp-if');
 // var filelog = require('gulp-filelog');  // NOTE: Used for debug
 var runSequence = require('run-sequence');
+var zip = require('gulp-zip');
 
 var settings = {
     index: __dirname + '/src/index.html',
@@ -74,12 +75,14 @@ gulp.task('bundle', function (cb) {
     }
 
 });
+
 gulp.task('pages', function () {
     return gulp.src(settings.index)
         .pipe(gif(RELEASE, htmlcompress()))
         .pipe(gulp.dest(settings.output))
         .pipe(gif(WATCH, browserSync.reload({ stream: true })));
 });
+
 gulp.task('assets', function () {
     return gulp.src(settings.assets)
         .pipe(gulp.dest(settings.output + '/assets'))
@@ -91,11 +94,13 @@ gulp.task('assets', function () {
 gulp.task('build', function (cb) {
     runSequence('pages', 'assets', 'bundle', cb);
 });
+
 gulp.task('build-dev', function (cb) {
     RELEASE = false;
     
     runSequence('build', cb);
 });
+
 gulp.task('build-prod', function (cb) {
     RELEASE = true;
     
@@ -117,10 +122,17 @@ gulp.task('dev', function (cb) {
 
     runSequence('build-dev', 'server', cb);
 });
+
 gulp.task('prod', function (cb) {
     WATCH = true;
 
     runSequence('build-prod', 'server', cb);
+});
+
+gulp.task('ci', ['build-dev'], function () {
+    return gulp.src(['dist/**', '!dist/client.zip'])
+        .pipe(zip('client.zip'))
+        .pipe(gulp.dest('dist'));
 });
 
 gulp.task('default', ['dev']);
