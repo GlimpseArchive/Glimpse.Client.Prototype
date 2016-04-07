@@ -2,13 +2,18 @@ language: node_js
 node_js:
 - 5.6
 install:
+- npm install -g gulp
 - npm install
+- cd _temp/hud && npm install && cd ../..
 script:
 - gulp ci
+- cd _temp/hud && gulp ci && cd ../..
 deploy:
   provider: releases
   api_key:
     secure: p0DliyK4lDpmS26BGzvpxVh1UtEexDMSMZlokUyJvI+LqBfI8US3pCQDeo8kjAXhMTRJMlqJxm7oll8eyq6VMOt37t8juuBAfNh1WCcJBfojhpbcRPJ7PIhAn8djpJQgPRBYPhBXVU0HAyiryyab6AZdBXxRvEzFPonPwayvWEtJeJdjgBsMdL4TMDd3BkrWZhwCXlIGvRY5pJMb3QiNwLQlxHJ8s8K3emXn4IcPyKbg0jJy6uLTo4kDXFL/MOwB7etYpJKxNlQBcjaa7P8+Zf/xdmhwW3kYgKAO2JGZGF0lF6oQ5EZAbWlCERlOZg4cJmRjM0QovO/L3NXkWj4RzKy+9/5A6vitu3R4GkbRq7sOO7obPXXozSFZHdRzcswsEvI2IlM4KNwRnLQw170FfsgpvaP15nvNVnzIgXP9B/J/rAfyM/4FCPUixs9gEtt4SnhTyoo/Ty6jaCTjPNBvCQbed0Qgb0LjxTfwzTKNl/ScGN1VVp5wieZFrFrqCHj4/GjDEr4ywgApRucqGi7W+0IZO5UbFnG5ksqnwmg+V5tmv3/2AtQytOXqsE7QeMneflM3/L3y3+O18Q30Ocqlbx6R1R+hSjYzZ2vmau3SyI4Lx7cP2VgD2NR68Wz8GdaLyOX1yYEZa7BQ+uuJ3miPPvYc7b+iM0PQthgvlloVd5I=
-  file: dist/client.zip
+  file: 
+  - dist/client.zip
+  - _temp/hud/dist/hud.zip
   on:
     tags: true
