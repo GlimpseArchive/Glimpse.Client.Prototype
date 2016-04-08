@@ -119,7 +119,7 @@ var seedMvcActions = (function() {
                         ],
                         result: { name: 'CartSummary' },
                         trace: [
-                            { message: 'Cart has items in that the user has added.' }
+                            { message: 'Cart has items in that the user has added.', level: 'info' }
                         ]
                     };
                 },
@@ -158,7 +158,11 @@ var seedMvcActions = (function() {
                         ],
                         result: { name: 'Browse' },
                         trace: [
-                            { template: { mask: 'Currently genre {0} selected', values: { '0': genre } } }
+                            { 
+                                message: 'Currently genre Jester selected',
+                                replacedRegions: [ { name: 'category', start: 16, end: 22 } ], 
+                                level: 'debug'
+                            }
                         ]
                     };
                 },
@@ -186,7 +190,11 @@ var seedMvcActions = (function() {
                         ],
                         result: { name: 'Details' },
                         trace: [
-                            { template: { mask: 'Currently item/detail {0} selected', values: { '0': id } } }
+                            { 
+                                message: 'Currently item/detail 123 selected',
+                                replacedRegions: [ { name: 'id', start: 22, end: 25 } ],
+                                level: 'debug'
+                            }
                         ]
                     };
                 },
@@ -234,7 +242,7 @@ var seedMvcActions = (function() {
                         ],
                         result: { name: 'Index' },
                         trace: [
-                            { message: 'Initial page loaded.' }
+                            { message: 'Initial page loaded.', level: 'debug' }
                         ] 
                     };
                 },
@@ -262,8 +270,12 @@ var seedMvcActions = (function() {
                         ],
                         result: { name: 'Index' },
                         trace: [
-                            { message: 'Cart applied tax rates correctly.' },
-                            { template: { mask: 'Cart tax rates processed in {0}ms', values: { '0': chance.durationRange(0, 1) } } }
+                            { message: 'Cart applied tax rates correctly.', level: 'debug' },
+                            {
+                                message: 'Cart tax rates processed in 10ms',
+                                replacedRegions: [ { name: 'title', start: 28, end: 30 } ], 
+                                level: 'info'
+                            }
                         ] 
                     };
                 },
@@ -283,7 +295,7 @@ var seedMvcActions = (function() {
                         ],
                         result: { name: 'Index' },
                         trace: [
-                            { message: 'Processing menu options for selection.' }
+                            { message: 'Processing menu options for selection.', level: 'debug' }
                         ] 
                     };
                 },
@@ -300,7 +312,11 @@ var seedMvcActions = (function() {
                         ],
                         result: { name: 'Login' },
                         trace: [
-                            { template: { mask: 'User from {0} is attempting to login', values: { '0': chance.ip() } } }
+                            { 
+                                message: 'User from John is attempting to login',
+                                replacedRegions: [ { name: 'title', start: 10, end: 14 } ], 
+                                level: 'warn'
+                            }
                         ] 
                     };
                 }
@@ -769,14 +785,14 @@ var generateMvcRequest = (function() {
             
             return message;
         },
-        // createLog: function(log, context) { 
-        //     var message = this.createMessage('request-framework-log', context);
-        //     mapProperties(log, message.payload, [ 'template', 'message' ]);
-        //     
-        //     MessageGenerator.support.applyTiming('log', message.payload,  null, null); // TODO: need to fix offset timings
-        //     
-        //     return message;
-        // },
+        createLog: function(log, context) { 
+            var message = this.createMessage('log-write', context);
+            mapProperties(log, message.payload, [ 'replacedRegions', 'message', 'level' ]);
+            
+            //MessageGenerator.support.applyTiming('log', message.payload,  null, null); // TODO: need to fix offset timings
+            
+            return message;
+        },
         // createFilter: function(action, targetMethod, filterType, category, origin, context) {
         //     var message = this.createMessage('request-framework-filter', context);
         //     
@@ -838,7 +854,12 @@ var generateMvcRequest = (function() {
             
             // filter
             // this.messages.push(this.createFilter(action, 'OnAuthorization', 'Authorization', 'Authorization', null, context));
-            // this.messages.push(this.createLog({ template: { mask: 'User {0} authorized to execute this action', values: { '0': request.user.name } } }, context));
+            this.messages.push(this.createLog({ 
+                message: 'User Anthony authorized to execute this action',
+                replacedRegions: [ { name: 'user', start: 5, end: 12 } ],
+                level: 'info'
+            }, context));
+                
             // this.messages.push(this.createFilter(action, 'OnActionExecuting', 'Action', 'Executing', null, context));
             
             // action
@@ -847,11 +868,11 @@ var generateMvcRequest = (function() {
             }
             this.messages.push(this.createBeforeActionInvoked(action, context, action == request));
             this.processActivities(action.activities, action, context);
-            // if (action.trace) {
-            //     _.forEach(action.trace, function(log) {
-            //         this.messages.push(this.createLog(log, context));
-            //     }, this);
-            // }
+            if (action.trace) {
+                _.forEach(action.trace, function(log) {
+                    this.messages.push(this.createLog(log, context));
+                }, this);
+            }
             this.messages.push(this.createAfterActionInvoked(action, context));
             
             // filter

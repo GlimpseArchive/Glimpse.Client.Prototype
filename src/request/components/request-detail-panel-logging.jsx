@@ -7,17 +7,17 @@ var _ = require('lodash');
 var React = require('react');
 
 /**
- * Return the log-write messages for the current request.
+ * Return the messages to be used by the view.
  */
-var getPayloads = (function() {
-    var getItem = messageProcessor.getTypePayloadList;
-
+var getMessages = (function() {
+    var getList = messageProcessor.getTypeMessageList;
+    
     var options = {
-        'log-write': getItem,
+        'log-write': getList
     };
-
+		
     return function(request) {
-        return messageProcessor.getTypeStucture(request, options);
+		return messageProcessor.getTypeStucture(request, options); 
     }
 })();
 
@@ -51,31 +51,33 @@ function getRowClass(message) {
 var LogMessages = React.createClass({
     render: function() {
         return (
-            <div>
-                <table>
-                    <tr className='request-table-header'>
-                        <td width="5%">#</td>
-                        <td width="10%">Event</td>
-                        <td width="12%">Date</td>
-                        <td width="13%">Time</td>
-                        <td width="60%">Description</td>
+            <table className="table table-bordered table-striped tab-content-item">
+                <thead>
+                    <tr className="table-col-title-group">
+                        <th width="5%"><span className="table-col-title">#</span></th>
+                        <th width="10%"><span className="table-col-title">Level</span></th>
+                        <th><span className="table-col-title">Message</span></th>
+                        <th width="10%"><span className="table-col-title">From Start</span></th>
+                        <th width="10%"><span className="table-col-title">Duration</span></th>
                     </tr>
-                    {this.props.logWriteMessages.map(function(message) {
-                        var dateString = message.parsedStartTime.format('MMM D, YYYY');
-                        var timeString = message.parsedStartTime.format('HH:mm:ss:SS Z');
-                        var className = getRowClass(message);
+                </thead>
+                {this.props.logWriteMessages.map(function(message) {
+                    var payload = message.payload;
+                    var className = getRowClass(message);
 
-                        return (
-                            <tr className={className}>
-                                <td>{message.messageNumber}</td>
-                                <td>{message.level}</td>
-                                <td>{dateString}</td>
-                                <td>{timeString}</td>
-                                <td>{message.message}</td>
-                            </tr>);
-                    }) }
-                </table>
-            </div>
+                    return (
+                        <tr className={className}>
+                            <td>{payload.index}</td>
+                            <td>{payload.level}</td>
+                            <td>{payload.message}</td>
+                            <td>-</td>
+                            <td>-</td>
+                        </tr>);
+                }) }
+                <tfoot>
+                    <tr className="table-body-padding table-col-title-group"><th colSpan="5"></th></tr>
+                </tfoot>
+            </table>
         );
     }
 });
@@ -90,49 +92,27 @@ module.exports = React.createClass({
     render: function() {
         var request = this.props.request;
 
-        // get payloads 
-        var payload = getPayloads(request);
-        var logWriteMessages = payload.logWrite;
+        // get messages 
+        var payload = getMessages(request);
+        var logWriteMessages = payload.logWrite; 
 
-        if (!logWriteMessages || logWriteMessages.length <= 0) {
-            content = <div className="tab-section text-minor">Could not find any data.</div>;
+        var content = null;
+        if (!_.isEmpty(logWriteMessages)) {
+            // intial processing of messages
+            logWriteMessages = _.sortBy(logWriteMessages, 'ordinal');
+            for (var i = 0; i < logWriteMessages.length; i++) {
+                logWriteMessages[i].payload.index = i + 1;
+            }            
+            
+            content = (
+                <div className="tab-content">
+                    <h3>{logWriteMessages.length} Logs</h3>
+                    <LogMessages logWriteMessages={logWriteMessages} />
+                </div>
+            );
         }
         else {
-            // add a parsed moment to each message
-            for (var i = 0; i < logWriteMessages.length; i++) {
-                logWriteMessages[i].parsedStartTime = moment(logWriteMessages[i].startTime);
-            }
-
-            // sort messages descending by startTime
-            logWriteMessages.sort(function(a, b) {
-                if (a.parsedStartTime.isAfter(b.parsedStartTime)) {
-                    return -1;
-                }
-                else if (a.parsedStartTime.isBefore(b.parsedStartTime)) {
-                    return 1;
-                }
-                else {
-                    return 0;
-                }
-            });
-
-            // add ordinal numbers to the log messages
-            for (var i = 0; i < logWriteMessages.length; i++) {
-                logWriteMessages[i].messageNumber = i + 1;
-            }
-
-            var content = null;
-            if (logWriteMessages && logWriteMessages.length > 0) {
-                content = (
-                    <div>
-                        <div className="flex flex-row flex-inherit tab-section-header">
-                            <span className="request-title">Server Side</span><nbsp/>
-                            <span className="request-title-count">({logWriteMessages.length}) </span>
-                        </div>
-                        <LogMessages logWriteMessages={logWriteMessages} />
-                    </div>
-                );
-            }
+            content = <div className="tab-section text-minor">Could not find any data.</div>;
         }
 
         return content;
@@ -146,7 +126,7 @@ module.exports = React.createClass({
 
     requestTabController.registerTab({
         key: 'tab.logging',
-        title: 'Events',
+        title: 'Trace',
         component: module.exports
     });
 })();

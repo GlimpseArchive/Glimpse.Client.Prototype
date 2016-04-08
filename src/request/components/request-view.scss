@@ -8,61 +8,7 @@
     border-bottom: 1px solid black;
     padding-bottom: 20px;
 }
-
-//****** GENERAL *******
-// TODO: should probably be in shell 
-@font-face {
-    font-family: 'Selawik';
-    src: url('~/assets/selawk.woff2') format('woff2'),
-         url('~/assets/selawk.woff') format('woff');
-}
-@font-face {
-    font-family: 'Selawik Light';
-    src: url('~/assets/selawkl.woff2') format('woff2'),
-         url('~/assets/selawkl.woff') format('woff');
-}
-
-body, html {
-    margin: 0;
-    height: 100%;
-    color: #111;
-    font-family: 'Segoe UI', 'Selawik', Tahoma, Geneva, Verdana, sans-serif;
-}
-
-.flex {
-    display: flex;
-    
-    .col-1 { flex: 1; }
-    .col-2 { flex: 2; }
-    .col-3 { flex: 3; }
-    .col-4 { flex: 4; }
-    .col-5 { flex: 5; }
-    .col-6 { flex: 6; }
-    .col-7 { flex: 7; }
-    .col-8 { flex: 8; }
-    .col-9 { flex: 9; }
-}
-.truncate-outer {
-    width: 50px;
-}
-.truncate { 
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis; 
-}
-.flex-inherit {
-    > div { flex: 1; }
-}
-.flex-base {
-    align-items: baseline;
-}
-.flex-column {
-    flex-direction: column;
-}
-.flex-row {
-    flex-direction: row;
-}
-
+ 
 //****** SHELL *******
 .glimpse-main {
     min-width: 1100px;
