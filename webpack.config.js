@@ -63,7 +63,8 @@ module.exports = {
             { test: /\.css$/, loader: 'style!css!autoprefixer?browsers=last 2 version' },
             { test: /\.scss$/, loader: 'style!css!autoprefixer?browsers=last 2 version!sass?includePaths[]=' + (path.resolve(__dirname, './node_modules/bootstrap-sass/assets/stylesheets/')) },
             { test: /\.jsx$/, loader: 'jsx-loader?insertPragma=React.DOM' },
-            { test: /event-source/, loader: 'imports?this=>window!exports?EventSource=EventSource'}
+            { test: /event-source/, loader: 'imports?this=>window!exports?EventSource=EventSource'},
+            { test: /\.woff|\.woff2$/, loader: 'file-loader'}
         ]
     },
     plugins: [
