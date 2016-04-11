@@ -65,7 +65,8 @@ module.exports = {
             { test: /\.jsx$/, loader: 'jsx-loader?insertPragma=React.DOM' },
             { test: /event-source/, loader: 'imports?this=>window!exports?EventSource=EventSource'},
             { test: /\.tsx|.ts$/, loader: 'ts'},
-            { test: /\.woff|\.woff2$/, loader: 'file-loader'}
+            { test: /\.woff(2)?(\?v=[0-9]\.[0-9]\.[0-9])?$/, loader: 'url-loader?limit=10000&mimetype=application/font-woff'},
+            { test: /\.(ttf|eot|svg)(\?v=[0-9]\.[0-9]\.[0-9])?$/, loader: 'file-loader'}
         ]
     },
     plugins: [

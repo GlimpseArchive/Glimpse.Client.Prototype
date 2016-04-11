@@ -5,6 +5,7 @@ var messageProcessor = require('../util/request-message-processor');
 var moment = require('moment');
 var _ = require('lodash');
 var React = require('react');
+var Icon = require('react-fa');
 
 /**
  * Return the messages to be used by the view.
@@ -45,6 +46,30 @@ function getRowClass(message) {
     return rowClass;
 }
 
+function getDisplayText(level) {
+    return _.startCase(level);
+}
+
+function getIconName(level) {
+    switch (level.toLowerCase()) {
+        case 'critical':
+        case 'error':
+            return 'times-circle';
+
+        case 'warning':
+            return 'exclamation-triangle';
+
+        case 'verbose':
+        case 'information':
+        default:
+            return '';
+    }
+}
+
+function getMessagesDisplayText(messages) {
+    return messages.length + ((messages.length === 1) ? ' Message' : ' Messages');
+}
+
 /**
  * React class to display console messages
  */
@@ -55,7 +80,7 @@ var LogMessages = React.createClass({
                 <thead>
                     <tr className="table-col-title-group">
                         <th width="5%"><span className="table-col-title">#</span></th>
-                        <th width="10%"><span className="table-col-title">Level</span></th>
+                        <th width="15%"><span className="table-col-title"><Icon fixedWidth="true" /> Level</span></th>
                         <th><span className="table-col-title">Message</span></th>
                         <th width="10%"><span className="table-col-title">From Start</span></th>
                         <th width="10%"><span className="table-col-title">Duration</span></th>
@@ -68,7 +93,7 @@ var LogMessages = React.createClass({
                     return (
                         <tr className={className}>
                             <td>{payload.index}</td>
-                            <td>{payload.level}</td>
+                            <td><Icon name={getIconName(payload.level)} fixedWidth="true" /> {getDisplayText(payload.level)}</td>
                             <td>{payload.message}</td>
                             <td>-</td>
                             <td>-</td>
@@ -106,7 +131,7 @@ module.exports = React.createClass({
             
             content = (
                 <div className="tab-content">
-                    <h3>{logWriteMessages.length} Logs</h3>
+                    <h3>{getMessagesDisplayText(logWriteMessages)}</h3>
                     <LogMessages logWriteMessages={logWriteMessages} />
                 </div>
             );
