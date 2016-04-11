@@ -82,8 +82,8 @@ var LogMessages = React.createClass({
                         <th width="5%"><span className="table-col-title">#</span></th>
                         <th width="15%"><span className="table-col-title"><Icon fixedWidth="true" /> Level</span></th>
                         <th><span className="table-col-title">Message</span></th>
-                        <th width="10%"><span className="table-col-title">From Start</span></th>
-                        <th width="10%"><span className="table-col-title">Duration</span></th>
+                        <th width="15%"><span className="table-col-title">From Start (ms)</span></th>
+                        <th width="15%"><span className="table-col-title">Duration (ms)</span></th>
                     </tr>
                 </thead>
                 {this.props.logWriteMessages.map(function(message) {
@@ -95,7 +95,7 @@ var LogMessages = React.createClass({
                             <td>{payload.index}</td>
                             <td><Icon name={getIconName(payload.level)} fixedWidth="true" /> {getDisplayText(payload.level)}</td>
                             <td>{payload.message}</td>
-                            <td>-</td>
+                            <td>{message.context.offset}</td>
                             <td>-</td>
                         </tr>);
                 }) }

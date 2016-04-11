@@ -119,7 +119,7 @@ var seedMvcActions = (function() {
                         ],
                         result: { name: 'CartSummary' },
                         trace: [
-                            { message: 'Cart has items in that the user has added.', level: 'information' }
+                            { message: 'Cart has items in that the user has added.', level: 'information', offset: 4.6 }
                         ]
                     };
                 },
@@ -161,7 +161,8 @@ var seedMvcActions = (function() {
                             { 
                                 message: 'Currently genre Jester selected',
                                 replacedRegions: [ { name: 'category', start: 16, end: 22 } ], 
-                                level: 'debug'
+                                level: 'debug',
+                                offset: 4.6
                             }
                         ]
                     };
@@ -193,7 +194,8 @@ var seedMvcActions = (function() {
                             { 
                                 message: 'Currently item/detail 123 selected',
                                 replacedRegions: [ { name: 'id', start: 22, end: 25 } ],
-                                level: 'debug'
+                                level: 'debug',
+                                offset: 4.6
                             }
                         ]
                     };
@@ -242,7 +244,7 @@ var seedMvcActions = (function() {
                         ],
                         result: { name: 'Index' },
                         trace: [
-                            { message: 'Initial page loaded.', level: 'debug' }
+                            { message: 'Initial page loaded.', level: 'debug', offset: 4.6 }
                         ] 
                     };
                 },
@@ -270,11 +272,12 @@ var seedMvcActions = (function() {
                         ],
                         result: { name: 'Index' },
                         trace: [
-                            { message: 'Cart applied tax rates correctly.', level: 'debug' },
+                            { message: 'Cart applied tax rates correctly.', level: 'debug', offset: 4.6 },
                             {
                                 message: 'Cart tax rates processed in 10ms',
                                 replacedRegions: [ { name: 'title', start: 28, end: 30 } ], 
-                                level: 'information'
+                                level: 'information',
+                                offset: 6.7
                             }
                         ] 
                     };
@@ -295,7 +298,7 @@ var seedMvcActions = (function() {
                         ],
                         result: { name: 'Index' },
                         trace: [
-                            { message: 'Processing menu options for selection.', level: 'debug' }
+                            { message: 'Processing menu options for selection.', level: 'debug', offset: 4.6 }
                         ] 
                     };
                 },
@@ -315,7 +318,8 @@ var seedMvcActions = (function() {
                             { 
                                 message: 'User from John is attempting to login',
                                 replacedRegions: [ { name: 'title', start: 10, end: 14 } ], 
-                                level: 'warning'
+                                level: 'warning',
+                                offset: 4.6
                             }
                         ] 
                     };
@@ -451,7 +455,10 @@ var generateMvcRequest = (function() {
         createMessage: function(type, context) {
             return {
                 types:  [ type ],
-                context: context,
+                context: {
+                    id: context.id,
+                    type: context.type
+                },
                 id: chance.guid(),
                 payload: {},
                 ordinal: this.counter++
@@ -789,6 +796,8 @@ var generateMvcRequest = (function() {
             var message = this.createMessage('log-write', context);
             mapProperties(log, message.payload, [ 'replacedRegions', 'message', 'level' ]);
             
+            message.context.offset = log.offset;
+            
             //MessageGenerator.support.applyTiming('log', message.payload,  null, null); // TODO: need to fix offset timings
             
             return message;
@@ -857,7 +866,8 @@ var generateMvcRequest = (function() {
             this.messages.push(this.createLog({ 
                 message: 'User Anthony authorized to execute this action',
                 replacedRegions: [ { name: 'user', start: 5, end: 12 } ],
-                level: 'information'
+                level: 'information',
+                offset: 2.3
             }, context));
                 
             // this.messages.push(this.createFilter(action, 'OnActionExecuting', 'Action', 'Executing', null, context));
