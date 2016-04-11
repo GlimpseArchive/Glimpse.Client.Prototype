@@ -33,7 +33,13 @@ module.exports = {
 
 // TODO: Need to come up with a better self registration process
 require('./components/request-detail-panel-execution');
-require('./components/request-detail-panel-request');
+var request = require('./components/request-detail-panel-request');
 require('./components/request-detail-panel-logging');
 //require('./components/request-detail-panel-trace');
 require('./components/request-detail-panel-messages');
+
+module.exports.registerTab({
+    key: 'tab.request',
+    title: 'Request',
+    component: request.Request
+});

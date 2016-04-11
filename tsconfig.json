@@ -1,0 +1,12 @@
+{
+    "compilerOptions": {
+        "target": "es5",
+        "jsx": "react"
+    },
+    "exclude": [
+        "_temp",
+        "node_modules",
+        "typings/main",
+        "typings/main.d.ts"
+    ]
+}
