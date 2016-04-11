@@ -119,7 +119,7 @@ var seedMvcActions = (function() {
                         ],
                         result: { name: 'CartSummary' },
                         trace: [
-                            { message: 'Cart has items in that the user has added.', level: 'info' }
+                            { message: 'Cart has items in that the user has added.', level: 'information' }
                         ]
                     };
                 },
@@ -274,7 +274,7 @@ var seedMvcActions = (function() {
                             {
                                 message: 'Cart tax rates processed in 10ms',
                                 replacedRegions: [ { name: 'title', start: 28, end: 30 } ], 
-                                level: 'info'
+                                level: 'information'
                             }
                         ] 
                     };
@@ -315,7 +315,7 @@ var seedMvcActions = (function() {
                             { 
                                 message: 'User from John is attempting to login',
                                 replacedRegions: [ { name: 'title', start: 10, end: 14 } ], 
-                                level: 'warn'
+                                level: 'warning'
                             }
                         ] 
                     };
@@ -857,7 +857,7 @@ var generateMvcRequest = (function() {
             this.messages.push(this.createLog({ 
                 message: 'User Anthony authorized to execute this action',
                 replacedRegions: [ { name: 'user', start: 5, end: 12 } ],
-                level: 'info'
+                level: 'information'
             }, context));
                 
             // this.messages.push(this.createFilter(action, 'OnActionExecuting', 'Action', 'Executing', null, context));

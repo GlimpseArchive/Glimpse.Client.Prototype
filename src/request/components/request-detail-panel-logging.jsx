@@ -26,16 +26,16 @@ var getMessages = (function() {
  */
 function getRowClass(message) {
     var rowClass = 'tab-logs-data-default';
-    switch (message.level) {
-        case 'Verbose':
-        case 'Info':
+    switch (message.level.toLowerCase()) {
+        case 'verbose':
+        case 'information':
             rowClass = 'tab-logs-data-default';
             break;
-        case 'Critical':
-        case 'Error':
+        case 'critical':
+        case 'error':
             rowClass = 'tab-logs-data-error';
             break;
-        case 'Warning':
+        case 'warning':
             rowClass = 'tab-logs-data-warning';
             break;
         default:
@@ -63,7 +63,7 @@ var LogMessages = React.createClass({
                 </thead>
                 {this.props.logWriteMessages.map(function(message) {
                     var payload = message.payload;
-                    var className = getRowClass(message);
+                    var className = getRowClass(payload);
 
                     return (
                         <tr className={className}>
