@@ -27,7 +27,7 @@ var getMessages = (function() {
  */
 function getRowClass(message) {
     var rowClass = 'tab-logs-data-default';
-    switch (message.level.toLowerCase()) {
+    switch (message.level) {
         case 'verbose':
         case 'information':
             rowClass = 'tab-logs-data-default';
@@ -51,7 +51,7 @@ function getDisplayText(level) {
 }
 
 function getIconName(level) {
-    switch (level.toLowerCase()) {
+    switch (level) {
         case 'critical':
         case 'error':
             return 'times-circle';
@@ -66,10 +66,6 @@ function getIconName(level) {
     }
 }
 
-function getMessagesDisplayText(messages) {
-    return messages.length + ((messages.length === 1) ? ' Message' : ' Messages');
-}
-
 /**
  * React class to display console messages
  */
@@ -82,8 +78,8 @@ var LogMessages = React.createClass({
                         <th width="5%"><span className="table-col-title">#</span></th>
                         <th width="15%"><span className="table-col-title"><Icon fixedWidth="true" /> Level</span></th>
                         <th><span className="table-col-title">Message</span></th>
-                        <th width="15%"><span className="table-col-title">From Start (ms)</span></th>
-                        <th width="15%"><span className="table-col-title">Duration (ms)</span></th>
+                        <th width="15%"><span className="table-col-title">From Start</span></th>
+                        <th width="15%"><span className="table-col-title">Duration</span></th>
                     </tr>
                 </thead>
                 {this.props.logWriteMessages.map(function(message) {
@@ -95,7 +91,7 @@ var LogMessages = React.createClass({
                             <td>{payload.index}</td>
                             <td><Icon name={getIconName(payload.level)} fixedWidth="true" /> {getDisplayText(payload.level)}</td>
                             <td>{payload.message}</td>
-                            <td>{message.context.offset}</td>
+                            <td>{message.context.offset ? message.context.offset + ' ms' : '-'}</td>
                             <td>-</td>
                         </tr>);
                 }) }
@@ -126,12 +122,14 @@ module.exports = React.createClass({
             // intial processing of messages
             logWriteMessages = _.sortBy(logWriteMessages, 'ordinal');
             for (var i = 0; i < logWriteMessages.length; i++) {
-                logWriteMessages[i].payload.index = i + 1;
+                var logWriteMessage = logWriteMessages[i];
+                logWriteMessage.payload.index = i + 1;
+                logWriteMessage.payload.level = logWriteMessage.payload.level.toLowerCase();
             }            
             
             content = (
                 <div className="tab-content">
-                    <h3>{getMessagesDisplayText(logWriteMessages)}</h3>
+                    <h3>{logWriteMessages.length + ((logWriteMessages.length === 1) ? ' Message' : ' Messages')}</h3>
                     <LogMessages logWriteMessages={logWriteMessages} />
                 </div>
             );
