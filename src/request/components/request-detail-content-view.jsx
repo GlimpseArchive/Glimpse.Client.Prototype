@@ -35,15 +35,13 @@ module.exports = React.createClass({
             }
     
             return (
-                <div>
+                <div className="request-detail-group-item">
                     <div className="nav-bar nav-bar-center">
                         <ul className="nav nav-tabs">
                             {navigation}
                         </ul>
-                    </div>
-                    <div className="tab-content">
-                        {panel}
-                    </div>
+                    </div> 
+                    {panel}
                 </div>
             );
         }

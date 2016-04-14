@@ -25,11 +25,9 @@ module.exports = React.createClass({
                     <div className="request-holder-content">
                         <div className="button button--link button--close" onClick={this.onClose}>x</div>
                         {!model.request ?
-                            <Loading /> :
-                            <div>
-                                <Summary request={model.request} />
-                                <Content request={model.request} tabs={model.tabs} />
-                            </div>
+                            <Loading /> : [
+                            <Summary key={1} request={model.request} />,
+                            <Content key={2} request={model.request} tabs={model.tabs} /> ]
                         }
                     </div>
                 </div>

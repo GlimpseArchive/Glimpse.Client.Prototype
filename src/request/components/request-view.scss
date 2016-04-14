@@ -1,5 +1,5 @@
 // TO BE MOVED
-.tab-pane > table {
+.tab-content-holder > table {
     border-spacing: 10px;
     border-collapse: separate;
 }
@@ -114,7 +114,10 @@
         border-radius: 3px 3px 0 0;
         
         .request-holder-content {
-            margin: 5px 4px 0 5px;
+            margin: 5px 5px 0 5px;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
         }
         > div {
             min-width: 65vw;
@@ -146,7 +149,6 @@
     
     .request-holder-content {
         flex: 1 1 auto;
-        height: 100px;
         overflow-y: auto;
         overflow-x: hidden;
     }
@@ -285,6 +287,22 @@
 .request-summary-facets {
     white-space: nowrap;
 }
+.request-detail-group-item {
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    
+    .tab-content-holder {
+        overflow-y: auto;
+        flex: 1;
+        display: flex;
+    }
+        
+    .tab-content {
+        flex: 1;
+    }
+}
 
 .request-title {
     font-size: 140%;
@@ -374,7 +392,8 @@
     width: 25px;
     height: 25px;
     text-align: center;
-    float: right;
+    position: absolute;
+    right: 5px;
 }
 
 //******* Forms *******

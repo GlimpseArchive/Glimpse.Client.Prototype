@@ -11,7 +11,7 @@ module.exports = React.createClass({
         var name = tab.key;
         
         var containerClass = classNames({
-            'tab-pane': true,
+            'tab-content-holder': true,
             'active': this.props.isActive
         });
         

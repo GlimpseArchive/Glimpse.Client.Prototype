@@ -86,7 +86,7 @@ export class Request extends React.Component<IRequestProps, {}> {
         let content;
         if (webRequestPayload && webResponsePayload) {
             content = (
-                <div>
+                <div className='tab-content'>
                     <div className='tab-section text-minor'>Web Request/Response</div>
                     <RequestUrl url={webRequestPayload.url} />
                     <RequestHeaders title='Request Headers' headers={webRequestPayload.headers} />

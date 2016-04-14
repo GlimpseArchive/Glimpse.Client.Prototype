@@ -829,14 +829,14 @@ module.exports = React.createClass({
             }
             
             content = (
-                <div>
+                <div className="tab-content">
                     <div className="tab-section text-minor">Execution on Server</div>
                     {preCommands}{middleware}{route}{action}{view}{postCommands}
                 </div>
             );
         }
         else {
-            content = <div className="tab-section text-minor">Could not find any data.</div>;
+            content = <div className="tab-content tab-section text-minor">Could not find any data.</div>;
         }
         
         return content;
