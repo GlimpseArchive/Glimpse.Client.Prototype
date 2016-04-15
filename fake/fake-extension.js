@@ -119,7 +119,7 @@ var seedMvcActions = (function() {
                         ],
                         result: { name: 'CartSummary' },
                         trace: [
-                            { message: 'Cart has items in that the user has added.', level: 'info' }
+                            { message: 'Cart has items in that the user has added.', level: 'Information' }
                         ]
                     };
                 },
@@ -161,7 +161,7 @@ var seedMvcActions = (function() {
                             { 
                                 message: 'Currently genre Jester selected',
                                 replacedRegions: [ { name: 'category', start: 16, end: 22 } ], 
-                                level: 'debug'
+                                level: 'Debug'
                             }
                         ]
                     };
@@ -193,7 +193,7 @@ var seedMvcActions = (function() {
                             { 
                                 message: 'Currently item/detail 123 selected',
                                 replacedRegions: [ { name: 'id', start: 22, end: 25 } ],
-                                level: 'debug'
+                                level: 'Debug'
                             }
                         ]
                     };
@@ -242,7 +242,7 @@ var seedMvcActions = (function() {
                         ],
                         result: { name: 'Index' },
                         trace: [
-                            { message: 'Initial page loaded.', level: 'debug' }
+                            { message: 'Initial page loaded.', level: 'Debug' }
                         ] 
                     };
                 },
@@ -270,11 +270,11 @@ var seedMvcActions = (function() {
                         ],
                         result: { name: 'Index' },
                         trace: [
-                            { message: 'Cart applied tax rates correctly.', level: 'debug' },
+                            { message: 'Cart applied tax rates correctly.', level: 'Debug' },
                             {
                                 message: 'Cart tax rates processed in 10ms',
                                 replacedRegions: [ { name: 'title', start: 28, end: 30 } ], 
-                                level: 'info'
+                                level: 'Information'
                             }
                         ] 
                     };
@@ -295,7 +295,7 @@ var seedMvcActions = (function() {
                         ],
                         result: { name: 'Index' },
                         trace: [
-                            { message: 'Processing menu options for selection.', level: 'debug' }
+                            { message: 'Processing menu options for selection.', level: 'Debug' }
                         ] 
                     };
                 },
@@ -315,7 +315,7 @@ var seedMvcActions = (function() {
                             { 
                                 message: 'User from John is attempting to login',
                                 replacedRegions: [ { name: 'title', start: 10, end: 14 } ], 
-                                level: 'warn'
+                                level: 'Warning'
                             }
                         ] 
                     };
@@ -857,7 +857,7 @@ var generateMvcRequest = (function() {
             this.messages.push(this.createLog({ 
                 message: 'User Anthony authorized to execute this action',
                 replacedRegions: [ { name: 'user', start: 5, end: 12 } ],
-                level: 'info'
+                level: 'Information'
             }, context));
                 
             // this.messages.push(this.createFilter(action, 'OnActionExecuting', 'Action', 'Executing', null, context));
