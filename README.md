@@ -38,14 +38,20 @@ git clone https://github.com/Glimpse/Glimpse.Client.Prototype.git
 
 ### Getting Running
 
-Open a command prompt in the Glimpse.Client directory.
+Open a command prompt in the Glimpse.Client.Prototype directory.
 
 **Install dependencies**
 
-To install or update dependencies executing:
+To install or update dependencies, run:
 
 ```sh
 npm install
+```
+
+To install TypeScript type definitions, run:
+
+```sh
+typings install
 ```
 
 **Compile the Client**
@@ -71,6 +77,8 @@ npm start
 This does everything that `npm run build` does, but also sets starts up a dev
 server, starts watchers which will recompile the Client as changes are made and
 live reload those changes into the test app.
+
+If you want to see the client in action with a "fake server", you can modify the `FAKE_SERVER` setting  to `true` in the `webpack.config.js` file.
 
 ### Test Running
 
