@@ -151,7 +151,7 @@ gulp.task('build-test', function buildTest(cb) {
 });
 
 gulp.task('test', ['clean-test', 'build-test'], function test() {
-    return gulp.src(['./' + testSettings.output + '/**/*.js'])
+    return gulp.src([testSettings.output + '/**/*.js'])
         .pipe(mocha())
 });
 

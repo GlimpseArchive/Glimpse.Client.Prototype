@@ -6,10 +6,8 @@ const should = chai.should();
 describe('Dummy', () => {
     describe('#hashObject', () => {
         it('should return a string', () => {
-            const result = 1;
-
+            const result = '1';
             result.should.be.a('String');
-            result.should.have.length.greaterThan(0);
         });
     });
 });
