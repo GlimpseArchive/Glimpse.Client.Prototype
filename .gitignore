@@ -1,4 +1,5 @@
 /dist
+/dist-test
 /build
 /node_modules
 /_temp/hud/dist

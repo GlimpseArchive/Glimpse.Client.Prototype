@@ -12,6 +12,8 @@ var gif = require('gulp-if');
 // var filelog = require('gulp-filelog');  // NOTE: Used for debug
 var runSequence = require('run-sequence');
 var zip = require('gulp-zip');
+var mocha = require('gulp-mocha');
+var path = require('path');
 
 var settings = {
     index: __dirname + '/src/index.html',
@@ -19,6 +21,10 @@ var settings = {
     output: __dirname + '/dist',
     server: __dirname + '/dist',
     assets: __dirname + '/assets/**/*'
+};
+
+var testSettings = {
+    output: __dirname + '/dist-test'
 };
 
 var WATCH = !!argv.watch;
@@ -94,6 +100,10 @@ gulp.task('clean', function () {
     return del(settings.server + '/**');
 });
 
+gulp.task('clean-test', function () {
+    return del(testSettings.output+ '/**');
+});
+
 // NOTE: was running in parallel but don't like the output
 //gulp.task('build', ['pages', 'bundle']);
 gulp.task('build', function (cb) {
@@ -116,6 +126,33 @@ gulp.task('build-ci', ['clean'], function (cb) {
     RELEASE = false;
     
     runSequence('build', cb);
+});
+
+gulp.task('build-test', function buildTest(cb) {
+    var config = _.defaultsDeep({}, require('./webpack.config'));
+
+    config.entry = {};
+    config.entry[path.join('request', 'repository', 'request-repository-cache')] = './test/request/repository/request-repository-cache.spec.ts';
+
+    config.output.path = testSettings.output;
+
+    var started = false;
+    function processResult(err, stats) {
+        gutil.log('Webpack\n' + stats.toString(config.log));
+
+        if (!started) {
+            started = true;
+            cb();
+        }
+    }
+
+    var compiler = webpack(config);
+    compiler.run(processResult);
+});
+
+gulp.task('test', ['clean-test', 'build-test'], function test() {
+    return gulp.src(['./' + testSettings.output + '/**/*.js'])
+        .pipe(mocha())
 });
 
 gulp.task('server', function (cb) {
