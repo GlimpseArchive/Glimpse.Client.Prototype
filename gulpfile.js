@@ -132,6 +132,7 @@ gulp.task('build-test', function buildTest(cb) {
     var config = _.defaultsDeep({}, require('./webpack.config'));
 
     config.entry = {};
+    // the key in the entry, formed by path.join, determines the target folder structure of the test file
     config.entry[path.join('request', 'repository', 'request-repository-cache')] = './test/request/repository/request-repository-cache.spec.ts';
 
     config.output.path = testSettings.output;
