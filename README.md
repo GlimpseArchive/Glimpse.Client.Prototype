@@ -82,7 +82,11 @@ If you want to see the client in action with a "fake server", you can modify the
 
 ### Test Running
 
-*To be completed*
+To run tests:
+
+```sh
+npm run test
+```
 
 ## Components
 
