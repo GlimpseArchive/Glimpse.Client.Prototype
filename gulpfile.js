@@ -134,6 +134,7 @@ gulp.task('build-test', function buildTest(cb) {
     config.entry = {};
     // the key in the entry, formed by path.join, determines the target folder structure of the test file
     config.entry[path.join('request', 'repository', 'request-repository-cache')] = './test/request/repository/request-repository-cache.spec.ts';
+    config.entry[path.join('request', 'stores', 'request-user-store')] = './test/request/stores/request-user-store.spec.ts';
 
     config.output.path = testSettings.output;
 
