@@ -14,6 +14,7 @@ var runSequence = require('run-sequence');
 var zip = require('gulp-zip');
 var mocha = require('gulp-mocha');
 var path = require('path');
+var walk = require('walk');
 
 var settings = {
     index: __dirname + '/src/index.html',
@@ -26,7 +27,7 @@ var settings = {
 var testSettings = {
     input: path.join(__dirname, 'test'),
     output: path.join(__dirname, 'dist-test'),
-    testSuffix: '.spec.ts'
+    testSuffix: '/\.spec\.ts$/'
 };
 
 var WATCH = !!argv.watch;
@@ -61,7 +62,6 @@ function getBundleConfig() {
 }
 
 function getTests(cb) {
-    var walk = require('walk');
     var files = [];
     var walker = walk.walk(testSettings.input, { followLinks: false });
 
@@ -148,12 +148,15 @@ gulp.task('build-ci', ['clean'], function (cb) {
 gulp.task('build-test', function buildTest(cb) {
     getTests(function collectAllTests(tests) {
         var config = _.defaultsDeep({}, require('./webpack.config'));
-        var pathPrefix = path.join(testSettings.input, '/');
-        var re = new RegExp(testSettings.testSuffix + '$');
+        var pathPrefix = path.join(testSettings.input, path.sep);
+        var re = new RegExp(testSettings.testSuffix);
 
         config.entry = {};
         tests.forEach(function collectTest(test) {
+            // strip out the prefix from the full path name
             var pathName = test.replace(pathPrefix, '');
+            
+            // strip out the suffix of the file name
             pathName = pathName.replace(re, '');
             
             // the key in the entry determines the target folder structure of the test file
