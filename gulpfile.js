@@ -146,14 +146,12 @@ gulp.task('build-ci', ['clean'], function (cb) {
 });
 
 gulp.task('build-test', function buildTest(cb) {
-    var config = _.defaultsDeep({}, require('./webpack.config'));
-
-    var pathPrefix = path.join(testSettings.input, '/');
-    var re = new RegExp(testSettings.testSuffix + '$');
-
     getTests(function collectAllTests(tests) {
-        config.entry = {};
+        var config = _.defaultsDeep({}, require('./webpack.config'));
+        var pathPrefix = path.join(testSettings.input, '/');
+        var re = new RegExp(testSettings.testSuffix + '$');
 
+        config.entry = {};
         tests.forEach(function collectTest(test) {
             var pathName = test.replace(pathPrefix, '');
             pathName = pathName.replace(re, '');
