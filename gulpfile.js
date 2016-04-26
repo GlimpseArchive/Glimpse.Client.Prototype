@@ -27,7 +27,7 @@ var settings = {
 var testSettings = {
     input: path.join(__dirname, 'test'),
     output: path.join(__dirname, 'dist-test'),
-    testSuffix: '/\.spec\.ts$/'
+    testSuffix: /\.spec\.ts$/
 };
 
 var WATCH = !!argv.watch;
@@ -66,7 +66,9 @@ function getTests(cb) {
     var walker = walk.walk(testSettings.input, { followLinks: false });
 
     walker.on('file', function(root, stat, next) {
-        files.push(path.join(root, stat.name));
+        if (stat.name.match(testSettings.testSuffix)) {
+            files.push(path.join(root, stat.name));
+        }
         next();
     });
 
@@ -149,7 +151,6 @@ gulp.task('build-test', function buildTest(cb) {
     getTests(function collectAllTests(tests) {
         var config = _.defaultsDeep({}, require('./webpack.config'));
         var pathPrefix = path.join(testSettings.input, path.sep);
-        var re = new RegExp(testSettings.testSuffix);
 
         config.entry = {};
         tests.forEach(function collectTest(test) {
@@ -157,7 +158,7 @@ gulp.task('build-test', function buildTest(cb) {
             var pathName = test.replace(pathPrefix, '');
             
             // strip out the suffix of the file name
-            pathName = pathName.replace(re, '');
+            pathName = pathName.replace(testSettings.testSuffix, '');
             
             // the key in the entry determines the target folder structure of the test file
             config.entry[pathName] = test;
