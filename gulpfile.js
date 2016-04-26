@@ -14,6 +14,7 @@ var runSequence = require('run-sequence');
 var zip = require('gulp-zip');
 var mocha = require('gulp-mocha');
 var path = require('path');
+var walk = require('walk');
 
 var settings = {
     index: __dirname + '/src/index.html',
@@ -24,7 +25,9 @@ var settings = {
 };
 
 var testSettings = {
-    output: __dirname + '/dist-test'
+    input: path.join(__dirname, 'test'),
+    output: path.join(__dirname, 'dist-test'),
+    testSuffix: /\.spec\.ts$/
 };
 
 var WATCH = !!argv.watch;
@@ -56,6 +59,22 @@ function getBundleConfig() {
     }
 
     return config;
+}
+
+function getTests(cb) {
+    var files = [];
+    var walker = walk.walk(testSettings.input, { followLinks: false });
+
+    walker.on('file', function(root, stat, next) {
+        if (stat.name.match(testSettings.testSuffix)) {
+            files.push(path.join(root, stat.name));
+        }
+        next();
+    });
+
+    walker.on('end', function() {
+        cb(files);
+    });
 }
 
 gulp.task('bundle', function (cb) {
@@ -129,26 +148,37 @@ gulp.task('build-ci', ['clean'], function (cb) {
 });
 
 gulp.task('build-test', function buildTest(cb) {
-    var config = _.defaultsDeep({}, require('./webpack.config'));
+    getTests(function collectAllTests(tests) {
+        var config = _.defaultsDeep({}, require('./webpack.config'));
+        var pathPrefix = path.join(testSettings.input, path.sep);
 
-    config.entry = {};
-    // the key in the entry, formed by path.join, determines the target folder structure of the test file
-    config.entry[path.join('request', 'repository', 'request-repository-cache')] = './test/request/repository/request-repository-cache.spec.ts';
+        config.entry = {};
+        tests.forEach(function collectTest(test) {
+            // strip out the prefix from the full path name
+            var pathName = test.replace(pathPrefix, '');
+            
+            // strip out the suffix of the file name
+            pathName = pathName.replace(testSettings.testSuffix, '');
+            
+            // the key in the entry determines the target folder structure of the test file
+            config.entry[pathName] = test;
+        });
 
-    config.output.path = testSettings.output;
+        config.output.path = testSettings.output;
 
-    var started = false;
-    function processResult(err, stats) {
-        gutil.log('Webpack\n' + stats.toString(config.log));
+        var started = false;
+        function processResult(err, stats) {
+            gutil.log('Webpack\n' + stats.toString(config.log));
 
-        if (!started) {
-            started = true;
-            cb();
+            if (!started) {
+                started = true;
+                cb();
+            }
         }
-    }
 
-    var compiler = webpack(config);
-    compiler.run(processResult);
+        var compiler = webpack(config);
+        compiler.run(processResult);
+    });
 });
 
 gulp.task('test', ['clean-test', 'build-test'], function test() {
