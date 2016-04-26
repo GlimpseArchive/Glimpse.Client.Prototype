@@ -24,8 +24,8 @@ var settings = {
 };
 
 var testSettings = {
-    input: __dirname + '/test',
-    output: __dirname + '/dist-test',
+    input: path.join(__dirname, 'test'),
+    output: path.join(__dirname, 'dist-test'),
     testSuffix: '.spec.ts'
 };
 
@@ -66,7 +66,7 @@ function getTests(cb) {
     var walker = walk.walk(testSettings.input, { followLinks: false });
 
     walker.on('file', function(root, stat, next) {
-        files.push(root + '/' + stat.name);
+        files.push(path.join(root, stat.name));
         next();
     });
 
