@@ -155,8 +155,6 @@ gulp.task('build-test', function buildTest(cb) {
         config.entry = {};
 
         tests.forEach(function collectTest(test) {
-            var fileName = path.basename(test, testSettings.testSuffix);
-            var fileNameWithSuffix = path.basename(test);
             var pathName = test.replace(pathPrefix, '');
             pathName = pathName.replace(re, '');
             
