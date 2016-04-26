@@ -24,7 +24,9 @@ var settings = {
 };
 
 var testSettings = {
-    output: __dirname + '/dist-test'
+    input: __dirname + '/test',
+    output: __dirname + '/dist-test',
+    testSuffix: '.spec.ts'
 };
 
 var WATCH = !!argv.watch;
@@ -56,6 +58,21 @@ function getBundleConfig() {
     }
 
     return config;
+}
+
+function getTests(cb) {
+    var walk = require('walk');
+    var files = [];
+    var walker = walk.walk(testSettings.input, { followLinks: false });
+
+    walker.on('file', function(root, stat, next) {
+        files.push(root + '/' + stat.name);
+        next();
+    });
+
+    walker.on('end', function() {
+        cb(files);
+    });
 }
 
 gulp.task('bundle', function (cb) {
@@ -131,25 +148,37 @@ gulp.task('build-ci', ['clean'], function (cb) {
 gulp.task('build-test', function buildTest(cb) {
     var config = _.defaultsDeep({}, require('./webpack.config'));
 
-    config.entry = {};
-    // the key in the entry, formed by path.join, determines the target folder structure of the test file
-    config.entry[path.join('request', 'repository', 'request-repository-cache')] = './test/request/repository/request-repository-cache.spec.ts';
-    config.entry[path.join('request', 'stores', 'request-user-store')] = './test/request/stores/request-user-store.spec.ts';
+    var pathPrefix = path.join(testSettings.input, '/');
+    var re = new RegExp(testSettings.testSuffix + '$');
 
-    config.output.path = testSettings.output;
+    getTests(function collectAllTests(tests) {
+        config.entry = {};
 
-    var started = false;
-    function processResult(err, stats) {
-        gutil.log('Webpack\n' + stats.toString(config.log));
+        tests.forEach(function collectTest(test) {
+            var fileName = path.basename(test, testSettings.testSuffix);
+            var fileNameWithSuffix = path.basename(test);
+            var pathName = test.replace(pathPrefix, '');
+            pathName = pathName.replace(re, '');
+            
+            // the key in the entry determines the target folder structure of the test file
+            config.entry[pathName] = test;
+        });
 
-        if (!started) {
-            started = true;
-            cb();
+        config.output.path = testSettings.output;
+
+        var started = false;
+        function processResult(err, stats) {
+            gutil.log('Webpack\n' + stats.toString(config.log));
+
+            if (!started) {
+                started = true;
+                cb();
+            }
         }
-    }
 
-    var compiler = webpack(config);
-    compiler.run(processResult);
+        var compiler = webpack(config);
+        compiler.run(processResult);
+    });
 });
 
 gulp.task('test', ['clean-test', 'build-test'], function test() {
