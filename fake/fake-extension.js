@@ -787,7 +787,7 @@ var generateMvcRequest = (function() {
         },
         createLog: function(log, context) { 
             var message = this.createMessage('log-write', context);
-            mapProperties(log, message.payload, [ 'replacedRegions', 'message', 'level' ]);
+            mapProperties(log, message.payload, [ 'replacedRegions', 'message', 'level', 'offset' ]);
             
             //MessageGenerator.support.applyTiming('log', message.payload,  null, null); // TODO: need to fix offset timings
             
@@ -857,7 +857,8 @@ var generateMvcRequest = (function() {
             this.messages.push(this.createLog({ 
                 message: 'User Anthony authorized to execute this action',
                 replacedRegions: [ { name: 'user', start: 5, end: 12 } ],
-                level: 'Information'
+                level: 'Information',
+                offset: 2048.36
             }, context));
                 
             // this.messages.push(this.createFilter(action, 'OnActionExecuting', 'Action', 'Executing', null, context));

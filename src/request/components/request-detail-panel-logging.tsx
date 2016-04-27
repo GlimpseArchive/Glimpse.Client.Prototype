@@ -25,7 +25,7 @@ export class Logging extends React.Component<ILoggingProps, {}> {
                                 <th width='5%'><span className='table-col-title'>#</span></th>
                                 <th width='10%'><span className='table-col-title'>Level</span></th>
                                 <th><span className='table-col-title'>Message</span></th>
-                                <th width='10%'><span className='table-col-title'>From Start</span></th>
+                                <th width='15%'><span className='table-col-title'>From Start</span></th>
                                 <th width='10%'><span className='table-col-title'>Duration</span></th>
                             </tr>
                         </thead>
@@ -37,7 +37,7 @@ export class Logging extends React.Component<ILoggingProps, {}> {
                                     <td>{index + 1}</td>
                                     <td>{message.level}</td>
                                     <td>{message.message}</td>
-                                    <td>-</td>
+                                    <td>{message.offset ? message.offset + ' ms' : '-'}</td>
                                     <td>-</td>
                                 </tr>);
                         }) }

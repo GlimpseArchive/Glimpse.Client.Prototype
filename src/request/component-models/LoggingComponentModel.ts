@@ -4,8 +4,7 @@
 const messageProcessor = require('../util/request-message-processor');
 /*tslint:enable:no-var-requires */
 
-import { ILoggingComponentModel } from './ILoggingComponentModel';
-import { ILogMessage } from '../messages/ILogMessage';
+import { ILoggingComponentMessage, ILoggingComponentModel } from './ILoggingComponentModel';
 import { IMessageEnvelope } from '../messages/IMessageEnvelope';
 
 import _ = require('lodash');
@@ -17,7 +16,7 @@ export class LoggingComponentModel implements ILoggingComponentModel {
         'log-write': LoggingComponentModel.getList
     };
 
-    private _messages: ILogMessage[];
+    private _messages: ILoggingComponentMessage[];
 
     public get messages() {
         return this._messages;
@@ -28,7 +27,7 @@ export class LoggingComponentModel implements ILoggingComponentModel {
 
         if (allMessages) {
             this._messages = _(allMessages.logWrite)
-                .sortBy<IMessageEnvelope<ILogMessage>>('ordinal')
+                .sortBy<IMessageEnvelope<ILoggingComponentMessage>>('ordinal')
                 .map(message => message.payload)
                 .value();
         }
