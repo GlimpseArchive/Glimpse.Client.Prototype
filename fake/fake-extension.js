@@ -27,22 +27,22 @@ chance.mixin({
         return newTime;
     },
     'mvcAction': function() {
-        return _.clone(chance.pick(mvcActions), true); 
+        return _.cloneDeep(chance.pickone(mvcActions));
     },
     'mvcRequest': function(dateTime) {
         return generateMvcRequest(dateTime);
     },
     'mvcUser': function() {
-        return _.clone(chance.pick(currentUsers), true);  
+        return _.cloneDeep(chance.pickone(currentUsers));
     },
     'httpPath': function() {
-        return chance.pick(mvcActions).url;
+        return chance.pickone(mvcActions).url;
     },
     'httpMethod': function() {
-        return chance.pick(methods);
+        return chance.pickone(methods);
     },
     'httpStatus': function() {
-        var code = chance.pick(statuses);
+        var code = chance.pickone(statuses);
         return {
             code: code,
             text: statusText[code]
@@ -56,17 +56,17 @@ chance.mixin({
 
 
 var mapProperties = function(source, target, properties) {
-    _.forEach(properties, function(property) { 
+    _.forEach(properties, function(property) {
         target[property] = source[property];
     });
-    
+
     return target;
 };
 var defaultOrEmpty = function(value) {
     return value === undefined || value === null ? '' : value;
 }
 
-// TODO: Should be brought into a different file/module 
+// TODO: Should be brought into a different file/module
 var seedMvcActions = (function() {
     var generate = {
         common: {
@@ -138,7 +138,7 @@ var seedMvcActions = (function() {
             rootActions: {
                 storeBrowse: function() {
                     var genre = chance.word();
-                    
+
                     return {
                         headers: generate.common.headers('localhost:3000', 'text/html'),
                         path: '/Store/Browse',
@@ -158,21 +158,21 @@ var seedMvcActions = (function() {
                         ],
                         result: { name: 'Browse' },
                         trace: [
-                            { 
+                            {
                                 message: 'Currently genre Jester selected',
-                                replacedRegions: [ { name: 'category', start: 16, end: 22 } ], 
+                                replacedRegions: [ { name: 'category', start: 16, end: 22 } ],
                                 level: 'Debug'
                             }
                         ]
                     };
                 },
-                storeDetail: function() { 
+                storeDetail: function() {
                     var id = chance.integerRange(1000, 2000);
-            
-                    return { 
+
+                    return {
                         headers: generate.common.headers('localhost:3000', 'text/html'),
-                        path: '/Store/Details/' + id, 
-                        controller: 'Store', 
+                        path: '/Store/Details/' + id,
+                        controller: 'Store',
                         action: 'Details',
                         route: generate.common.route('store', 'details', id),
                         binding: [
@@ -190,7 +190,7 @@ var seedMvcActions = (function() {
                         ],
                         result: { name: 'Details' },
                         trace: [
-                            { 
+                            {
                                 message: 'Currently item/detail 123 selected',
                                 replacedRegions: [ { name: 'id', start: 22, end: 25 } ],
                                 level: 'Debug'
@@ -199,10 +199,10 @@ var seedMvcActions = (function() {
                     };
                 },
                 home: function() {
-                    return { 
+                    return {
                         headers: generate.common.headers('localhost:3000', 'text/html'),
-                        path: '/', 
-                        controller: 'Home', 
+                        path: '/',
+                        controller: 'Home',
                         action: 'Index',
                         route: generate.common.route('home', 'index', null),
                         preActivities: [
@@ -243,14 +243,14 @@ var seedMvcActions = (function() {
                         result: { name: 'Index' },
                         trace: [
                             { message: 'Initial page loaded.', level: 'Debug' }
-                        ] 
+                        ]
                     };
                 },
                 cart: function() {
-                    return { 
+                    return {
                         headers: generate.common.headers('localhost:3000', 'text/html'),
-                        path: '/ShoppingCart/', 
-                        controller: 'ShoppingCart', 
+                        path: '/ShoppingCart/',
+                        controller: 'ShoppingCart',
                         action: 'Index',
                         route: generate.common.route('shoppingcart', 'index', null),
                         binding: [
@@ -273,17 +273,17 @@ var seedMvcActions = (function() {
                             { message: 'Cart applied tax rates correctly.', level: 'Debug' },
                             {
                                 message: 'Cart tax rates processed in 10ms',
-                                replacedRegions: [ { name: 'title', start: 28, end: 30 } ], 
+                                replacedRegions: [ { name: 'title', start: 28, end: 30 } ],
                                 level: 'Information'
                             }
-                        ] 
+                        ]
                     };
                 },
                 store: function() {
-                    return { 
+                    return {
                         headers: generate.common.headers('localhost:3000', 'text/html'),
-                        path: '/Store/', 
-                        controller: 'Store', 
+                        path: '/Store/',
+                        controller: 'Store',
                         action: 'Index',
                         route: generate.common.route('store', 'index', null),
                         activities: [
@@ -296,14 +296,14 @@ var seedMvcActions = (function() {
                         result: { name: 'Index' },
                         trace: [
                             { message: 'Processing menu options for selection.', level: 'Debug' }
-                        ] 
+                        ]
                     };
                 },
                 login: function() {
-                    return { 
+                    return {
                         headers: generate.common.headers('localhost:3000', 'text/html'),
-                        path: '/Account/LogIn/', 
-                        controller: 'Account', 
+                        path: '/Account/LogIn/',
+                        controller: 'Account',
                         action: 'LogIn',
                         route: generate.common.route('account', 'login', null),
                         actions: [
@@ -312,12 +312,12 @@ var seedMvcActions = (function() {
                         ],
                         result: { name: 'Login' },
                         trace: [
-                            { 
+                            {
                                 message: 'User from John is attempting to login',
-                                replacedRegions: [ { name: 'title', start: 10, end: 14 } ], 
+                                replacedRegions: [ { name: 'title', start: 10, end: 14 } ],
                                 level: 'Warning'
                             }
-                        ] 
+                        ]
                     };
                 }
             }
@@ -325,30 +325,30 @@ var seedMvcActions = (function() {
         meta: {
             stardardActions: [ 'home', 'cart', 'store', 'login' ]
         }
-    }; 
-    
+    };
+
     var executeSequence = function(store, instances, action) {
         for (var i = 0; i < instances; i++) {
             store.push(action());
         }
     };
-     
+
     return function() {
         var actions = [];
-        
+
         // go generate random actions weighting
         executeSequence(actions, chance.integerRange(5, 10), generate.instance.rootActions.storeBrowse);
         executeSequence(actions, chance.integerRange(10, 15), generate.instance.rootActions.storeDetail);
         executeSequence(actions, chance.integerRange(15, 20), function() {
                 var targetName = generate.meta.stardardActions[chance.integerRange(0, generate.meta.stardardActions.length - 1)];
                 return generate.instance.rootActions[targetName]();
-            }); 
-        
+            });
+
         return actions;
     };
-})(); 
+})();
 
-// TODO: Should be brought into a different file/module 
+// TODO: Should be brought into a different file/module
 var seedUsers = function() {
     return [
         { userId: chance.guid(), username: 'Anthony', image: 'https://avatars.githubusercontent.com/u/585619' },
@@ -366,20 +366,20 @@ var seedUsers = function() {
 
 
 // TODO: Should be brought into a different file/module
-var generateMvcRequest = (function() {    
+var generateMvcRequest = (function() {
     // generate source
-    var SourceGenerator = function() { 
+    var SourceGenerator = function() {
     };
-    SourceGenerator.prototype.processRequest = function(dateTime) { 
+    SourceGenerator.prototype.processRequest = function(dateTime) {
         var source = chance.mvcAction();
-        
-        // NOTE: now that we have cloned the this request source, need to go through 
-        //       and setup the request for this instance 
+
+        // NOTE: now that we have cloned the this request source, need to go through
+        //       and setup the request for this instance
         var serverLowerTime = chance.integerRange(5, 10);
         var serverUpperTime = chance.integerRange(60, 100);
         var httpStatus = chance.httpStatus();
         var contentType = chance.httpContentType();
-        
+
         source.id = chance.guid();
         source.dateTime = dateTime || moment().utc().toISOString();
         source.networkTime = chance.integerRange(0, 15);
@@ -394,13 +394,13 @@ var generateMvcRequest = (function() {
         source.contentType = contentType.type;
         source.contentCategory = contentType.category;
         source.duration = source.clientTime + source.serverTime + source.networkTime;
-        source.statusCode = httpStatus.code;   
+        source.statusCode = httpStatus.code;
         source.statusText = httpStatus.text;
         source.context = { type: 'Request', id: source.id };
-        
-        return source;  
+
+        return source;
     };
-    
+
     // generate messages
     var MessageGenerator = function() {
         this.messages = [];
@@ -415,39 +415,39 @@ var generateMvcRequest = (function() {
             return prefix ? prefix + prop : _.camelCase(prop);
         },
         beforeTimings: function(prefix, payload, startTime) {
-            payload[this.propName(prefix, 'StartTime')] = startTime; 
+            payload[this.propName(prefix, 'StartTime')] = startTime;
         },
         afterTimings: function(prefix, payload, duration, startTime) {
             payload[this.propName(prefix, 'EndTime')] = null; //startTime + duration
-            payload[this.propName(prefix, 'Duration')] = duration; 
-            payload[this.propName(prefix, 'Offset')] = null; //offset; 
+            payload[this.propName(prefix, 'Duration')] = duration;
+            payload[this.propName(prefix, 'Offset')] = null; //offset;
         },
         spotTimings: function(prefix, payload) {
-            payload[this.propName(prefix, 'Time')] = null;  
-            payload[this.propName(prefix, 'Offset')] = null; //offset; 
+            payload[this.propName(prefix, 'Time')] = null;
+            payload[this.propName(prefix, 'Offset')] = null; //offset;
         },
         childTimings: function (events, availableTime) {
             // TODO: Need to calculate offsets
             var usedTime = 0;
-    
+
             if (events) {
                 var timeParts = availableTime / (events.length * 100 * 2.5);
                 var upperParts = events.length * 100;
                 var lowerParts = upperParts * 0.5;
-    
+
                 for (var i = 0; i < events.length; i++) {
                     var newActivityTime = timeParts * chance.integerRange(lowerParts, upperParts);
-    
+
                     events[i].duration = newActivityTime;
-    
+
                     usedTime += newActivityTime;
                 }
             }
-    
+
             return usedTime;
         }
     };
-    MessageGenerator.prototype = { 
+    MessageGenerator.prototype = {
         createMessage: function(type, context) {
             return {
                 types:  [ type ],
@@ -456,30 +456,30 @@ var generateMvcRequest = (function() {
                 payload: {},
                 ordinal: this.counter++
             };
-        }, 
+        },
         createTab: function(source, context) {
             var message = this.createMessage('tab', context);
-            
+
             message.payload =  {
                     name: 'Headers',
                     data: {
                         'Request': source.headers.request,
                         'Response': source.headers.response
-                    }  
+                    }
                 };
-            
+
             return message;
         },
         createUserIdentification: function(source) {
             var message = this.createMessage('user-identification', source.context);
             message.payload = source.user;
-            
+
             return message;
         },
         createEnvironment: function(source) {
             var message = this.createMessage('environment', source.context);
-            
-            var payload = message.payload; 
+
+            var payload = message.payload;
             payload.serverName = 'DESKTOP-EH3D8UD';
             payload.serverTime = '2015-10-23T09:43:40.172';
             payload.serverTimezoneOffset = '-07:00';
@@ -489,173 +489,173 @@ var generateMvcRequest = (function() {
         },
         createWebRequest: function(source) {
             var message = this.createMessage('web-request', source.context);
-            
-            var payload = message.payload; 
+
+            var payload = message.payload;
             payload.url = 'http://localhost:5000' + source.path + defaultOrEmpty(source.query);
             payload.method = source.method;
             payload.headers = source.headers.request;
 
             MessageGenerator.support.beforeTimings('', payload, source.dateTime);
-            
+
             return message;
         },
         createWebResponse: function(source) {
             var message = this.createMessage('web-response', source.context);
-            
+
             var payload = message.payload;
             payload.url = 'http://localhost:5000' + source.path + defaultOrEmpty(source.query);
             payload.statusCode = source.statusCode;
             payload.statusText = source.statusText;
             payload.headers = source.headers.response;
-            
+
             MessageGenerator.support.afterTimings('', payload, source.duration, source.dateTime);
-            
+
             return message;
         },
         createActionRoute: function(action, route, context) {
             var message = this.createMessage('action-route', context);
-            
+
             var payload = message.payload;
-            payload.actionId = action.actionId; 
+            payload.actionId = action.actionId;
             payload.routeName = route.name;
             payload.routePattern = route.pattern;
-            payload.routeData = route.data; 
-            //payload.routeConfiguration = null; // TODO: Not being used at the moment 
-            
+            payload.routeData = route.data;
+            //payload.routeConfiguration = null; // TODO: Not being used at the moment
+
             // TODO: Bring in timing data when we have it
-            //MessageGenerator.support.applyDuration('route', payload, chance.durationRange(0, 1), null, null); 
-        
+            //MessageGenerator.support.applyDuration('route', payload, chance.durationRange(0, 1), null, null);
+
             return message;
         },
         createActionBinding: function(action, binding, context) {
             var message = this.createMessage('action-content', context);
-            
+
             var payload = message.payload;
             payload.actionId = action.actionId;
             payload.binding = binding;
-            
+
             // TODO: Bring in timing data when we have it
             //MessageGenerator.support.applyDuration('binding', payload, chance.durationRange(0, 1), null, null); // TODO: need to fix offset timings
-            
-            return message; 
+
+            return message;
         },
         createBeforeActionInvoked: function(action, context, isPrimary) {
             var message = this.createMessage('before-action-invoked', context);
-            
-            var payload = message.payload; 
+
+            var payload = message.payload;
             payload.actionId = action.actionId;
             payload.actionDisplayName = 'Glimpse.AgentServer.Mvc.Sample.Controllers.' + action.controller + 'Controller.' + action.action;
-            payload.actionName = action.action; 
+            payload.actionName = action.action;
             payload.actionControllerName = action.controller;
             payload.actionTargetClass = action.controller + 'Controller';
             payload.actionTargetMethod = action.action;
             //payload.actionPhysicalFile = 'Controller/' + action.controller + 'Controller.cs'; // Not used currently
-            
+
             // TODO: Bring in timing data when we have it
             //MessageGenerator.support.beforeTimings('actionInvoked', payload, null);
-            
-            return message; 
+
+            return message;
         },
         createAfterActionInvoked: function(action, context) {
             var message = this.createMessage('after-action-invoked', context);
-            
-            var payload = message.payload; 
-            payload.actionId = action.actionId;
-            payload.actionName = action.action; 
-            payload.actionControllerName = action.controller;
-            
-            // TODO: Bring in timing data when we have it
-            MessageGenerator.support.afterTimings('actionInvoked', payload, action.actionDuration || action.duration, null);
-            
-            return message; 
-        }, 
-        createActionViewFound: function(action, result, context) {
-            var message = this.createMessage('action-view-found', context);
-            
+
             var payload = message.payload;
             payload.actionId = action.actionId;
-            payload.actionName = action.action; 
+            payload.actionName = action.action;
+            payload.actionControllerName = action.controller;
+
+            // TODO: Bring in timing data when we have it
+            MessageGenerator.support.afterTimings('actionInvoked', payload, action.actionDuration || action.duration, null);
+
+            return message;
+        },
+        createActionViewFound: function(action, result, context) {
+            var message = this.createMessage('action-view-found', context);
+
+            var payload = message.payload;
+            payload.actionId = action.actionId;
+            payload.actionName = action.action;
             payload.actionControllerName = action.controller;
             payload.viewName = result.name;
             payload.viewPath = 'View/' + action.controller + '/' + action.action + '.cshtml';
             payload.viewDidFind = true;
-            
+
             // TODO: Bring in timing data when we have it
             //MessageGenerator.support.spotTimings('viewSearched', payload, null);
-            
-            return message; 
+
+            return message;
         },
         createBeforeActionViewInvoked: function(action, result, context) {
             var message = this.createMessage('before-action-view-invoked', context);
-            
+
             var payload = message.payload;
             payload.actionId = action.actionId;
-            payload.actionName = action.action; 
+            payload.actionName = action.action;
             payload.actionControllerName = action.controller;
             payload.viewPath = 'View/' + action.controller + '/' + action.action + '.cshtml';
             payload.viewData = { tempData: {}, viewData: {} };
-            //payload.viewProvider = 'Razor'; 
-            
+            //payload.viewProvider = 'Razor';
+
             // TODO: Bring in timing data when we have it
             //MessageGenerator.support.beforeTimings('view', payload, null);
-            
-            return message; 
-        }, 
+
+            return message;
+        },
         createAfterActionViewInvoked: function(action, result, context) {
             var message = this.createMessage('after-action-view-invoked', context);
-            
+
             var payload = message.payload;
             payload.actionId = action.actionId;
-            payload.actionName = action.action; 
+            payload.actionName = action.action;
             payload.actionControllerName = action.controller;
-            
+
             // TODO: Bring in timing data when we have it
             MessageGenerator.support.afterTimings('view', payload, action.viewDuration || result.duration, null);
-            
-            return message; 
+
+            return message;
         },
         createBeforeExecuteCommand: function(action, query, context) {
             var message = this.createMessage('before-execute-command', context);
-            
+
             var payload = message.payload;
             payload.commandMethod = 'ExecuteReader';
             payload.commandIsAsync = true;
             payload.commandText = query.command;
             payload.commandType = 'Text';
             //payload.commandParameters = null;
-            
+
             // TODO: Bring in timing data when we have it
             //MessageGenerator.support.beforeTimings('command', payload, null);
-            
+
             this.stats.queryCount++;
             this.stats.queryDuration += query.duration;
-            
-            return message; 
+
+            return message;
         },
         createAfterExecuteCommand: function(action, query, context) {
             var message = this.createMessage('after-execute-command', context);
-            
+
             var payload = message.payload;
             payload.commandHadException = false;
             //payload.commandException = null;
-            
+
             // TODO: Bring in timing data when we have it
             MessageGenerator.support.afterTimings('command', payload, (parseInt(query.duration * 100)) / 100, null);
-            
+
             return message;
         },
         createMonogoCommand: function(action, query, context) {
             var message = this.createMessage(query.type, context);
-            
+
             message.payload = query;
-            
+
             MessageGenerator.support.afterTimings('', query, (parseInt(query.duration * 100)) / 100, null);
-            
+
             return message;
         },
         createMiddlewareStart: function(action, activity, context) {
             var message = this.createMessage('middleware-start', context);
-            
+
             var payload = message.payload;
             payload.name = activity.name;
             payload.displayName = activity.displayName;
@@ -663,15 +663,15 @@ var generateMvcRequest = (function() {
             payload.paths = activity.paths;
             payload.method = activity.method;
             payload.params = activity.params;
-             
+
             // TODO: Bring in timing data when we have it
             //MessageGenerator.support.beforeTimings('command', payload, null);
-           
+
             return message;
         },
         createMiddlewareEnd: function(action, activity, context) {
             var message = this.createMessage('middleware-end', context);
-            
+
             var payload = message.payload;
             payload.name = activity.name;
             payload.displayName = activity.displayName;
@@ -681,67 +681,67 @@ var generateMvcRequest = (function() {
             payload.params = activity.params;
             payload.headers = activity.headers;
             payload.result = activity.result;
-            
+
             // TODO: Bring in timing data when we have it
             //MessageGenerator.support.afterTimings('command', payload, (parseInt(query.duration * 100)) / 100, null);
-           
+
             return message;
         },
         createClientRequest: function(action, activity, context) {
             var message = this.createMessage('data-http-request', context);
-            
+
             var payload = message.payload;
             payload.url = activity.url;
             payload.method = activity.method;
             payload.headers = activity.headers.request;;
-             
+
             // TODO: Bring in timing data when we have it
             //MessageGenerator.support.beforeTimings('', payload, null);
-           
+
             return message;
         },
         createClientResponse: function(action, activity, context) {
             var httpStatus = chance.httpStatus();
-            
+
             var message = this.createMessage('data-http-response', context);
-            
+
             var payload = message.payload;
             payload.url = activity.url;
             payload.statusCode = httpStatus.code;
             payload.headers = activity.headers.response;
-           
+
             MessageGenerator.support.afterTimings('', payload, (parseInt(activity.duration * 100)) / 100, null);
-            
+
             return message;
         },
         createBeforeViewComponent: function(action, context) {
             var message = this.createMessage('before-view-component', context);
-            
-            var payload = message.payload; 
+
+            var payload = message.payload;
             payload.componentId = action.actionId;
             payload.componentDisplayName = 'Glimpse.AgentServer.Mvc.Sample.Components.' + action.action;
-            payload.componentName = action.action; 
-            
+            payload.componentName = action.action;
+
             // TODO: Bring in timing data when we have it
             //MessageGenerator.support.beforeTimings('actionInvoked', payload, null);
-            
-            return message; 
+
+            return message;
         },
         createAfterViewComponent: function(action, context) {
             var message = this.createMessage('after-view-component', context);
-            
-            var payload = message.payload; 
+
+            var payload = message.payload;
             payload.componentId = action.actionId;
-            payload.componentName = action.action; 
-            
-            // TODO: Bring in timing data when we have it 
+            payload.componentName = action.action;
+
+            // TODO: Bring in timing data when we have it
             MessageGenerator.support.afterTimings('component', payload, (parseInt(action.duration * 100)) / 100, null);
-            
-            return message; 
-        }, 
+
+            return message;
+        },
         createBrowserNavigationTiming: function(source) {
             var message = this.createMessage('browser-navigation-timing', source.context);
-            
+
             var payload = message.payload;
             payload.navigationStart = 1445665751561;
             payload.unloadEventStart = 1445665762764;
@@ -782,38 +782,38 @@ var generateMvcRequest = (function() {
             payload.networkTime = chance.integerRange(1, 5);
             payload.serverTime = source.duration;
             payload.browserTime = chance.integerRange(20, 120);
-            
+
             return message;
         },
-        createLog: function(log, context) { 
+        createLog: function(log, context) {
             var message = this.createMessage('log-write', context);
             mapProperties(log, message.payload, [ 'replacedRegions', 'message', 'level' ]);
-            
+
             //MessageGenerator.support.applyTiming('log', message.payload,  null, null); // TODO: need to fix offset timings
-            
+
             return message;
         },
         // createFilter: function(action, targetMethod, filterType, category, origin, context) {
         //     var message = this.createMessage('request-framework-filter', context);
-        //     
-        //     var payload = message.payload;  
+        //
+        //     var payload = message.payload;
         //     payload.targetClass = action.targetClass + 'Controller';
         //     payload.targetMethod = targetMethod;
         //     payload.filterType = filterType;
         //     payload.category = category;
         //     payload.filterOrigin = origin || 'system';
         //     payload.controller = action.controller;
-        //     payload.action = action.action; 
-        //     
+        //     payload.action = action.action;
+        //
         //     MessageGenerator.support.applyDuration('filter', payload, chance.durationRange(0, 1), null, null); // TODO: need to fix offset timings
-        //     
+        //
         //     return message;
         // },
         modifyInstance: function(action) {
             var availableTime = action.duration;
             availableTime -= MessageGenerator.support.childTimings(action.actions, availableTime, 2.5);
-            availableTime -= MessageGenerator.support.childTimings(action.activities, availableTime, 1.5);  
-            
+            availableTime -= MessageGenerator.support.childTimings(action.activities, availableTime, 1.5);
+
             action.actionId = chance.guid();
         },
         processActivities: function(activities, action, context) {
@@ -822,7 +822,7 @@ var generateMvcRequest = (function() {
                     if (activity.access == 'SQL') {
                         this.messages.push(this.createBeforeExecuteCommand(action, activity, context));
                         this.messages.push(this.createAfterExecuteCommand(action, activity, context));
-                    } 
+                    }
                     else if (activity.access == 'mongo') {
                         this.messages.push(this.createMonogoCommand(action, activity, context));
                     }
@@ -835,33 +835,33 @@ var generateMvcRequest = (function() {
                     else if (activity.access == 'client') {
                         this.messages.push(this.createClientRequest(action, activity, context));
                         this.messages.push(this.createClientResponse(action, activity, context));
-                    } 
+                    }
                 }, this);
             }
         },
         processChildActions: function(action, request, context) {
             this.modifyInstance(action);
-                
+
             this.messages.push(this.createBeforeViewComponent(action, context));
             this.processActivities(action.activities, action, context);
             this.messages.push(this.createAfterViewComponent(action, context));
         },
         processAction: function(action, request, context) {
             this.modifyInstance(action);
-                
+
             // route
             this.messages.push(this.createActionRoute(action, action.route, context));
-            
+
             // filter
             // this.messages.push(this.createFilter(action, 'OnAuthorization', 'Authorization', 'Authorization', null, context));
-            this.messages.push(this.createLog({ 
+            this.messages.push(this.createLog({
                 message: 'User Anthony authorized to execute this action',
                 replacedRegions: [ { name: 'user', start: 5, end: 12 } ],
                 level: 'Information'
             }, context));
-                
+
             // this.messages.push(this.createFilter(action, 'OnActionExecuting', 'Action', 'Executing', null, context));
-            
+
             // action
             if (action.binding) {
                 this.messages.push(this.createActionBinding(action, action.binding, context));
@@ -874,45 +874,45 @@ var generateMvcRequest = (function() {
                 }, this);
             }
             this.messages.push(this.createAfterActionInvoked(action, context));
-            
+
             // filter
             // this.messages.push(this.createFilter(action, 'OnActionExecuted', 'Action', 'Executed', null, context));
             // this.messages.push(this.createFilter(action, 'OnResultExecuting', 'Result', 'Executing', null, context));
-            
+
             // result
             this.messages.push(this.createActionViewFound(action, action.result, context));
             this.messages.push(this.createBeforeActionViewInvoked(action, action.result, context));
-            
+
             // child actions
             if (action.actions) {
                 _.forEach(action.actions, function(childAction) {
                     this.processChildActions(childAction, request, context);
                 }, this);
             }
-            
+
             // fitler
             // this.messages.push(this.createFilter(action, 'OnResultExecuted', 'Result', 'Executed', null, context));
-            
+
             this.messages.push(this.createAfterActionViewInvoked(action, action.result, context));
         },
         processRequest: function(source) {
             this.messages.push(this.createWebRequest(source));
-            
+
             // TODO: need to process timing data of these preActivities, in the mean time we will get some NaNs
             this.processActivities(source.preActivities, source, source.context);
-            
+
             this.messages.push(this.createUserIdentification(source));
             this.messages.push(this.createEnvironment(source));
             this.messages.push(this.createTab(source, source.context))
-            
+
             this.processAction(source, source, source.context);
-            
+
             // TODO: need to process timing data of these postActivities, in the mean time we will get some NaNs
             this.processActivities(source.postActivities, source, source.context);
-            
-            this.messages.push(this.createWebResponse(source)); 
+
+            this.messages.push(this.createWebResponse(source));
             this.messages.push(this.createBrowserNavigationTiming(source))
-            
+
             return this.messages;
         },
         modifySource: function(source) {
@@ -920,61 +920,61 @@ var generateMvcRequest = (function() {
             source.queryCount = this.stats.queryCount;
         }
     };
-    
+
     // generate request
-    var RequestGenerator = function() { 
+    var RequestGenerator = function() {
     };
     RequestGenerator.prototype.processRequest = function(source) {
         var request = {};
         request.id = source.id;
-        request.messages = _.indexBy(source.messages, 'id');
+        request.messages = _.keyBy(source.messages, 'id');
         request.types = {};
         request.tabs = { 'tab.messages': { title: 'Messages', payload: source.messages } };
-        
+
         _.forEach(request.messages, function(message) {
             _.forEach(message.types, function(type) {
                 if (!request.types[type]) {
                     request.types[type] = [];
-                    
+
                     var payload = message.payload;
                     if (type == 'web-request') {
                         payload.path = source.path;
                         payload.query = source.query;
-                        
+
                         request._requestStartTime = payload.startTime;
                         request._requestMethod = payload.method;
                         request._requestUrl = (payload.path || '') + (payload.query || '');
                     }
                     else if (type == 'web-response') {
-                        payload.statusText = source.statusText;  
+                        payload.statusText = source.statusText;
                         payload.contentCategory = source.contentCategory;
-                        
-                        request._responseStatusCode = payload.statusCode; 
+
+                        request._responseStatusCode = payload.statusCode;
                         request._responseStatusText = payload.statusText;
-                        request._responseContentCategory = payload.contentCategory;  
+                        request._responseContentCategory = payload.contentCategory;
                     }
                 }
-                
+
                 request.types[type].push(message.id);
             });
         });
-        
+
         return request;
     };
-    
+
     return function(dateTime) {
         var sourceGenerator = new SourceGenerator();
         var source = sourceGenerator.processRequest(dateTime);
-        
+
         var messageGenerator = new MessageGenerator();
         var messages = messageGenerator.processRequest(source);
-        
-        source.messages = messages; 
-         
+
+        source.messages = messages;
+
         var requestGenerator = new RequestGenerator();
         var request = requestGenerator.processRequest(source);
         source.request = request;
-        
+
         return source;
     };
 })();
@@ -983,6 +983,6 @@ var generateMvcRequest = (function() {
 // TODO: when aboves are shifted this setting should be changed
 mvcActions = seedMvcActions();
 allUsers = seedUsers();
-currentUsers = chance.pick(allUsers, chance.integerRange(3, allUsers.length));
+currentUsers = chance.pickset(allUsers, chance.integerRange(3, allUsers.length));
 
 module.exports = chance;
