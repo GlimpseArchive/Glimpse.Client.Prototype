@@ -9,7 +9,7 @@ var classNames = require('classnames');
 
 var getPayloads = (function() {
     var getItem = messageProcessor.getTypePayloadItem;
-    
+
     var options = {
         'web-response': getItem,
         'web-request': getItem,
@@ -19,16 +19,16 @@ var getPayloads = (function() {
         'action-view-found': getItem,
         'after-action-view-invoked': getItem
     };
-		
+
     return function(request) {
-		return messageProcessor.getTypeStucture(request, options); 
+		return messageProcessor.getTypeStucture(request, options);
     }
 })();
 
 var getMessages = (function() {
     var getItem = messageProcessor.getTypeMessageItem;
     var getList = messageProcessor.getTypeMessageList;
-    
+
     var options = {
         'web-response': getItem,
         'web-request': getItem,
@@ -48,9 +48,9 @@ var getMessages = (function() {
         'data-http-request': getList,
         'data-http-response': getList
     };
-		
+
     return function(request) {
-		return messageProcessor.getTypeStucture(request, options); 
+		return messageProcessor.getTypeStucture(request, options);
     }
 })();
 
@@ -76,7 +76,7 @@ var DetailListItem = React.createClass({
         if (value == null || value == '') {
             value = '--';
         }
-        
+
         return (
                 <section className="flex flex-row">
                     <div className="tab-section-details-key col-2"><div className="truncate">{this.props.title}:</div></div>
@@ -98,7 +98,7 @@ var MongoCommandMixin = {
     },
     render: function() {
         var mongoOperation = this.props.mongoOperation;
-            
+
         var showText = this.state.show ? 'close' : 'open';
         var containerClass = classNames({
                 'tab-section-details': true,
@@ -107,9 +107,9 @@ var MongoCommandMixin = {
             });
 
         var duration = mongoOperation.payload.duration;
-        
+
         var nesting = this.props.isRoot ? null : <span className="tab-execution-timing-arrow">➦</span>;
-            
+
         var content = (
                 <div className="tab-section-execution-command-item">
                     <div className="tab-section-execution-command-item-detail">
@@ -118,26 +118,26 @@ var MongoCommandMixin = {
                     </div>
                     <div className={containerClass} onClick={this.onClick}>
                         {this.getDetails()}
-                        <div className="tab-execution-hidden-gradient"></div>                                                
+                        <div className="tab-execution-hidden-gradient"></div>
                     </div>
                 </div>
             );
-    
+
         return content;
      }
 };
 
 var MongoInsertCommand = React.createClass({
     mixins: [MongoCommandMixin],
-    
+
     getTitle: function() {
         return 'Mongo DB - Inserted ' + this.props.mongoOperation.payload.count +  ' documents';
     },
-    
+
     getDetails: function() {
         var mongoOperation = this.props.mongoOperation;
         var details =
-            <div className="tab-section-details-item"> 
+            <div className="tab-section-details-item">
                 <DetailListItem title="Operation" value={mongoOperation.payload.operation} />
                 <DetailListItem title="Mongo DB URI" value={this._makeUri(mongoOperation)} />
                 <DetailListItem title="Options" value={JSON.stringify(mongoOperation.payload.options)} />
@@ -145,7 +145,7 @@ var MongoInsertCommand = React.createClass({
         return details;
     }
 });
- 
+
 var MongoReadCommand = React.createClass({
   mixins: [MongoCommandMixin],
   getTitle: function() {
@@ -153,7 +153,7 @@ var MongoReadCommand = React.createClass({
   },
   getDetails: function() {
         var mongoOperation = this.props.mongoOperation;
-        var details = 
+        var details =
             <div className="tab-section-details-item">
                 <DetailListItem title="Operation" value={mongoOperation.payload.operation} />
                 <DetailListItem title="Mongo DB URI" value={this._makeUri(mongoOperation)} />
@@ -170,7 +170,7 @@ var MongoUpdateCommand = React.createClass({
         return 'Mongo DB - Updated ' + this.props.mongoOperation.payload.modifiedCount +  ' documents';
     },
     getDetails: function() {
-        var mongoOperation = this.props.mongoOperation; 
+        var mongoOperation = this.props.mongoOperation;
         var details =
             <div className="tab-section-details-item">
                 <DetailListItem title="Operation" value={mongoOperation.payload.operation} />
@@ -184,7 +184,7 @@ var MongoUpdateCommand = React.createClass({
         return details;
     }
 });
- 
+
 var MongoDeleteCommand = React.createClass({
     mixins: [MongoCommandMixin],
     getTitle: function() {
@@ -193,7 +193,7 @@ var MongoDeleteCommand = React.createClass({
     getDetails: function() {
         var mongoOperation = this.props.mongoOperation;
         var details =
-            <div className="tab-section-details-item"> 
+            <div className="tab-section-details-item">
                 <DetailListItem title="Operation" value={mongoOperation.payload.operation} />
                 <DetailListItem title="Mongo DB URI" value={this._makeUri(mongoOperation)} />
                 <DetailListItem title="Query" value={JSON.stringify(mongoOperation.payload.query)} />
@@ -203,7 +203,7 @@ var MongoDeleteCommand = React.createClass({
     }
 });
 
-var HttpRequestItemHeaderList = React.createClass({ 
+var HttpRequestItemHeaderList = React.createClass({
     render: function() {
         var headers = this.props.headers;
         if (headers) {
@@ -213,11 +213,11 @@ var HttpRequestItemHeaderList = React.createClass({
                         })}</div>
                 );
         }
-        
+
         return <div className="text-minor">No headers found.</div>;
     }
 });
-var HttpRequestItem = React.createClass({ 
+var HttpRequestItem = React.createClass({
     getInitialState: function() {
         return { show: false };
     },
@@ -227,7 +227,7 @@ var HttpRequestItem = React.createClass({
     render: function() {
         var httpRequest = this.props.httpRequest;
         var httpResponse = this.props.httpResponse;
-            
+
         var showText = this.state.show ? 'close' : 'open';
         var containerClass = classNames({
                 'tab-section-details': true,
@@ -235,27 +235,27 @@ var HttpRequestItem = React.createClass({
                 'pre-open': this.state.show
             });
         var nesting = this.props.isRoot ? null : <span className="tab-execution-timing-arrow">➦</span>;
-            
+
         var content = (
                 <div className="tab-section-execution-command-item">
                     <div className="tab-section-execution-command-item-detail">
                         <div className="col-8">{httpRequest.payload.path}{httpRequest.payload.query} <span className="tab-section-execution-command-accent text-minor" title="Is Async">{httpResponse.payload.statusCode} - {httpResponse.payload.statusText}</span><span className="tab-section-execution-command-open" onClick={this.onClick}>[{showText}]</span></div>
                         <div className="tab-execution-timing col-2">{httpResponse.payload.duration} ms{nesting}</div>
                     </div>
-                    <div className={containerClass} onClick={this.onClick}> 
-                        <div className="flex"> 
+                    <div className={containerClass} onClick={this.onClick}>
+                        <div className="flex">
                             <div className="col-5">Request Headers</div>
                             <div className="col-5">Response Headers</div>
                         </div>
-                        <div className="flex">   
+                        <div className="flex">
                             <div className="tab-section-details-item col-5"><HttpRequestItemHeaderList headers={httpRequest.payload.headers} /></div>
-                            <div className="tab-section-details-item col-5"><HttpRequestItemHeaderList headers={httpResponse.payload.headers} /></div> 
+                            <div className="tab-section-details-item col-5"><HttpRequestItemHeaderList headers={httpResponse.payload.headers} /></div>
                         </div>
                         <div className="tab-execution-hidden-gradient"></div>
                     </div>
                 </div>
             );
-    
+
         return content;
     }
 });
@@ -270,7 +270,7 @@ var CommandItem = React.createClass({
     render: function() {
         var beforeCommand = this.props.beforeCommand;
         var afterCommand = this.props.afterCommand;
-            
+
         var showText = this.state.show ? 'close' : 'open';
         var containerClass = classNames({
                 'tab-section-execution-command-text': true,
@@ -278,7 +278,7 @@ var CommandItem = React.createClass({
                 'pre-open': this.state.show
             });
         var nesting = this.props.isRoot ? null : <span className="tab-execution-timing-arrow">➦</span>;
-            
+
         var content = (
                 <div className="tab-section-execution-command-item">
                     <div className="tab-section-execution-command-item-detail">
@@ -293,7 +293,7 @@ var CommandItem = React.createClass({
                     </div>
                 </div>
             );
-    
+
         return content;
     }
 });
@@ -307,7 +307,7 @@ var CommandList = React.createClass({
         var mongoDBMessages = this.props.mongoDBMessages;
         var dataHttpRequestMessages = this.props.dataHttpRequestMessages;
         var dataHttpResponseMessages = this.props.dataHttpResponseMessages;
-        
+
         var content = [];
         if (beginMessage && endMessage) {
             // sql commands
@@ -320,7 +320,7 @@ var CommandList = React.createClass({
                         commandItems.push(<CommandItem key={beforeCommand.id} beforeCommand={beforeCommand} afterCommand={afterCommand} isRoot={this.props.isRoot} />);
                     }
                 }
-            
+
                 // process action
                 if (commandItems.length > 0) {
                     content.push(
@@ -334,10 +334,10 @@ var CommandList = React.createClass({
                                 </section>
                             </div>
                         </div>
-                    ); 
+                    );
                 }
             }
-            
+
             // mongo commands
             if (mongoDBMessages) {
                 var mongoOperations = [];
@@ -349,7 +349,7 @@ var CommandList = React.createClass({
                         }
                     }
                 }
-                
+
                 // process action
                 if (mongoOperations.length > 0) {
                     content.push(
@@ -363,10 +363,10 @@ var CommandList = React.createClass({
                                 </section>
                             </div>
                         </div>
-                    ); 
+                    );
                 }
             }
-            
+
             // http client commands
             if (dataHttpRequestMessages && dataHttpResponseMessages) {
                 var requestItems = [];
@@ -377,7 +377,7 @@ var CommandList = React.createClass({
                         requestItems.push(<HttpRequestItem key={httpRequest.id} httpRequest={httpRequest} httpResponse={httpResponse} isRoot={this.props.isRoot} />);
                     }
                 }
-            
+
                 // process action
                 if (requestItems.length > 0) {
                     content.push(
@@ -391,11 +391,11 @@ var CommandList = React.createClass({
                                 </section>
                             </div>
                         </div>
-                    ); 
+                    );
                 }
             }
         }
-        
+
         return <div>{content}</div>;
     }
 });
@@ -411,7 +411,7 @@ function CreateMongoCommandItem(mongoDBMessage) {
        item = <MongoReadCommand key={mongoDBMessage.id} mongoOperation={mongoDBMessage} />
     }
     else if (_.intersection(mongoDBMessage.types, ['data-mongodb-update']).length === 1){
-       item = <MongoUpdateCommand key={mongoDBMessage.id} mongoOperation={mongoDBMessage} />  
+       item = <MongoUpdateCommand key={mongoDBMessage.id} mongoOperation={mongoDBMessage} />
     }
     else if (_.intersection(mongoDBMessage.types, ['data-mongodb-delete']).length === 1){
        item = <MongoDeleteCommand key={mongoDBMessage.id} mongoOperation={mongoDBMessage} />
@@ -422,9 +422,9 @@ function CreateMongoCommandItem(mongoDBMessage) {
 var ParamaterList = React.createClass({
     render: function() {
         var argumentData = this.props.argumentData;
-        
+
         var content = null;
-        if (argumentData) { 
+        if (argumentData) {
             content = _.map(argumentData, function(item, i) {
                 var value = '';
                 if (item.value) {
@@ -443,13 +443,13 @@ var ParamaterList = React.createClass({
                         value = <span>= <span className="hljs-number">{item.value}</span></span>;
                     }
                 }
-                
+
                 return <li key={i}><span className="hljs-keyword">{item.type}</span> <span className="hljs-params">{item.name}</span> {value}</li>;
             });
-            
+
             content = <ul className="paramater-list">{content}</ul>
         }
-        
+
         return content;
     }
 });
@@ -457,7 +457,7 @@ var ParamaterList = React.createClass({
 var MiddlewareParameters = React.createClass({
     render: function() {
         var params = this.props.params;
-        
+
         var paramComponents = _.map(params, function (value, key) {
             return (
                 <div className="flex tab-section-details-item">
@@ -466,7 +466,7 @@ var MiddlewareParameters = React.createClass({
                 </div>
             );
         });
-        
+
         return (
             <div>
                 <div className="flex flex-row flex-inherit tab-section-header">
@@ -481,7 +481,7 @@ var MiddlewareParameters = React.createClass({
 var MiddlewareHeaders = React.createClass({
     render: function() {
         var headers = this.props.headers;
-               
+
         var headerComponents = _.map(headers, function (value) {
             return (
                 <div className="flex tab-section-details-item">
@@ -490,7 +490,7 @@ var MiddlewareHeaders = React.createClass({
                 </div>
             );
         });
-                    
+
         return (
             <div>
                 <div className="flex flex-row flex-inherit tab-section-header">
@@ -510,9 +510,9 @@ var MiddlewareItem = React.createClass({
         var mongoDBMessages = this.props.mongoDBMessages;
         var dataHttpRequestMessages = this.props.dataHttpRequestMessages;
         var dataHttpResponseMessages = this.props.dataHttpResponseMessages;
-        
+
         var nestedComponent;
-        
+
         if (pair.pairs.length > 0) {
             nestedComponent = pair.pairs.map(function (nestedPair){
                 return <MiddlewareItem messagePair={nestedPair} beforeExecuteCommandMessages={beforeExecuteCommandMessages} afterExecuteCommandMessages={afterExecuteCommandMessages} mongoDBMessages={mongoDBMessages} dataHttpRequestMessages={dataHttpRequestMessages} dataHttpResponseMessages={dataHttpResponseMessages} />;
@@ -521,38 +521,38 @@ var MiddlewareItem = React.createClass({
         else {
             nestedComponent = <CommandList beforeExecuteCommandMessages={beforeExecuteCommandMessages} afterExecuteCommandMessages={afterExecuteCommandMessages} mongoDBMessages={mongoDBMessages} dataHttpRequestMessages={dataHttpRequestMessages} dataHttpResponseMessages={dataHttpResponseMessages} beginMessage={pair.startMessage} endMessage={pair.endMessage} />
         }
-        
+
         var middlewareEndPayload = pair.endMessage.payload;
-                                                        
+
         var method = null;
-        
+
         if (middlewareEndPayload.method) {
             method = (
                 <span className="text-minor">{middlewareEndPayload.method.toUpperCase()} &nbsp;</span>
             );
         }
 
-        // NOTE: Since middleware is often attached to the "relative root" (i.e. '/') of any given route, 
+        // NOTE: Since middleware is often attached to the "relative root" (i.e. '/') of any given route,
         //       we ignore paths === ['/'] to reduce the noise in the display and to emphasize non-root paths.
 
         var paths = null;
-        
-        if (middlewareEndPayload.paths 
+
+        if (middlewareEndPayload.paths
             && (middlewareEndPayload.paths.length > 1 || (middlewareEndPayload.paths.length == 1 && middlewareEndPayload.paths[0] != '/'))) {
             var pathsString;
-            
+
             if (middlewareEndPayload.paths.length == 1) {
                 pathsString = middlewareEndPayload.paths[0];
             }
             else {
                 pathsString = '[' + middlewareEndPayload.paths.join(', ') + ']';
             }
-            
+
             paths = (
                 <span className="text-minor">{pathsString}</span>
             );
         }
-        
+
         var route = null;
 
         if (method || paths) {
@@ -564,32 +564,32 @@ var MiddlewareItem = React.createClass({
         }
 
         var params = null;
-        
+
         if (middlewareEndPayload.params && middlewareEndPayload.name != 'router') {
             params = <MiddlewareParameters params={middlewareEndPayload.params} />;
         }
 
         var headers = null;
-        
+
         if (middlewareEndPayload.headers && middlewareEndPayload.name != 'router') {
             headers = <MiddlewareHeaders headers={middlewareEndPayload.headers} />;
         }
 
         var result = null;
-        
+
         switch (middlewareEndPayload.result) {
             case 'next': result = /* Rightwards Arrow U+2192 */ String.fromCharCode(8594); break;
-            case 'end': result = /* Rightwards Arrow to Bar U+21E5 */ String.fromCharCode(8677); break;                    
+            case 'end': result = /* Rightwards Arrow to Bar U+21E5 */ String.fromCharCode(8677); break;
             case 'error': result = /* Exlamation Mark U+0021 */ String.fromCharCode(33); break;
         }
 
         var name = middlewareEndPayload.displayName || middlewareEndPayload.name || '<anonymous>';
 
         var packageLink = null;
-        
+
         if (middlewareEndPayload.packageName) {
             var href = 'https://www.npmjs.com/package/' + middlewareEndPayload.packageName;
-            
+
             packageLink = <a href={href} target="_blank">({middlewareEndPayload.packageName})</a>;
         }
 
@@ -616,44 +616,44 @@ var MiddlewareComponents = React.createClass({
         var mongoDBMessages = this.props.mongoDBMessages;
         var dataHttpRequestMessages = this.props.dataHttpRequestMessages;
         var dataHttpResponseMessages = this.props.dataHttpResponseMessages;
-        
+
         var middlewareMessages = middlewareStartMessages.concat(middlewareEndMessages).sort(function (a,b) { return a.ordinal - b.ordinal; });
 
         var content = null;
-                
+
         if (middlewareMessages.length >= 2) {
-        
+
             var rootPair = {
                 pairs: []
             };
-                   
+
             var pairStack = [rootPair];
-        
+
             for (var i = 0; i < middlewareMessages.length; i++) {
                 var message = middlewareMessages[i];
-                
-                if (_.contains(message.types, 'middleware-start')) {
+
+                if (_.includes(message.types, 'middleware-start')) {
                     var pair = {
                         startMessage: message,
                         pairs: []
                     };
-                                       
+
                     pairStack[pairStack.length - 1].pairs.push(pair);
-                    pairStack.push(pair);                                                            
-                } 
+                    pairStack.push(pair);
+                }
                 else {
                     var pair = pairStack.pop();
-                    
+
                     pair.endMessage = message;
-                }                                                                              
+                }
             }
-            
+
             var generateMiddlewareItem = function (pair) {
-                return <MiddlewareItem messagePair={pair} beforeExecuteCommandMessages={beforeExecuteCommandMessages} afterExecuteCommandMessages={afterExecuteCommandMessages} mongoDBMessages={mongoDBMessages} dataHttpRequestMessages={dataHttpRequestMessages} dataHttpResponseMessages={dataHttpResponseMessages} />; 
+                return <MiddlewareItem messagePair={pair} beforeExecuteCommandMessages={beforeExecuteCommandMessages} afterExecuteCommandMessages={afterExecuteCommandMessages} mongoDBMessages={mongoDBMessages} dataHttpRequestMessages={dataHttpRequestMessages} dataHttpResponseMessages={dataHttpResponseMessages} />;
             };
-            
+
             var middlewareComponents = rootPair.pairs.map(generateMiddlewareItem);
-                                            
+
             content = (
                     <div className="tab-section tab-section-boxed tab-section-execution-middleware">
                         <div className="flex flex-row flex-inherit tab-section-header">
@@ -663,8 +663,8 @@ var MiddlewareComponents = React.createClass({
                     </div>
             );
         }
-        
-        return content;                           
+
+        return content;
     }
 });
 
@@ -674,8 +674,8 @@ module.exports = React.createClass({
     },
     render: function () {
         var request = this.props.request;
-               
-        // get payloads 
+
+        // get payloads
         var payload = getPayloads(request);
         var webRequestPayload = payload.webRequest;
         var webResponsePayload = payload.webResponse;
@@ -684,10 +684,10 @@ module.exports = React.createClass({
         var afterActionInvokedPayload = payload.afterActionInvoked;
         var actionViewFoundPayload = payload.actionViewFound;
         var afterActionViewInvokedPayload = payload.afterActionViewInvoked;
-        
+
         var content = null;
         if (routePayload || afterActionInvokedPayload || actionViewFoundPayload || afterActionViewInvokedPayload) {
-            // get messages 
+            // get messages
             var message = getMessages(request);
             var webRequestMessage = message.webRequest;
             var webResponseMessage = message.webResponse;
@@ -702,7 +702,7 @@ module.exports = React.createClass({
             var middlewareEndMessages = message.middlewareEnd;
             var dataHttpRequestMessages = message.dataHttpRequest;
             var dataHttpResponseMessages = message.dataHttpResponse;
-                  
+
             // intial processing of messages
             if (beforeExecuteCommandMessages && afterExecuteCommandMessages) {
                 beforeExecuteCommandMessages = beforeExecuteCommandMessages.sort(function(a, b) { return a.ordinal - b.ordinal; });
@@ -713,21 +713,21 @@ module.exports = React.createClass({
                 dataHttpResponseMessages = dataHttpResponseMessages.sort(function(a, b) { return a.ordinal - b.ordinal; });
             }
             var mongoDBMessages = combineMongoMessages(message);
-            
+
             //process pre action commands
             var preCommands = null;
-            if (webRequestMessage && beforeActionInvokedMessage) { 
-                preCommands = <CommandList beforeExecuteCommandMessages={beforeExecuteCommandMessages} afterExecuteCommandMessages={afterExecuteCommandMessages} mongoDBMessages={mongoDBMessages} dataHttpRequestMessages={dataHttpRequestMessages} dataHttpResponseMessages={dataHttpResponseMessages} beginMessage={webRequestMessage} endMessage={beforeActionInvokedMessage} isRoot={true} />            
+            if (webRequestMessage && beforeActionInvokedMessage) {
+                preCommands = <CommandList beforeExecuteCommandMessages={beforeExecuteCommandMessages} afterExecuteCommandMessages={afterExecuteCommandMessages} mongoDBMessages={mongoDBMessages} dataHttpRequestMessages={dataHttpRequestMessages} dataHttpResponseMessages={dataHttpResponseMessages} beginMessage={webRequestMessage} endMessage={beforeActionInvokedMessage} isRoot={true} />
             }
-            
+
             // process middleware
             var middleware = <MiddlewareComponents middlewareStartMessages={middlewareStartMessages} middlewareEndMessages={middlewareEndMessages} beforeExecuteCommandMessages={beforeExecuteCommandMessages} afterExecuteCommandMessages={afterExecuteCommandMessages} mongoDBMessages={mongoDBMessages} dataHttpRequestMessages={dataHttpRequestMessages} dataHttpResponseMessages={dataHttpResponseMessages} />
-            
+
             // process route
             var route = null;
             if (routePayload) {
                 var routePath = webRequestPayload ? (<span><span>{webRequestPayload.path}</span><span>{webRequestPayload.query}</span></span>) : '';
-            
+
                 route = (
                         <div className="tab-section tab-section-boxed tab-section-execution-route">
                             <div className="flex flex-row flex-inherit tab-section-header">
@@ -739,9 +739,9 @@ module.exports = React.createClass({
                                 </section>
                             </div>
                         </div>
-                    ); 
+                    );
             }
-            
+
             // process action
             var action = null;
             if (afterActionInvokedPayload) {
@@ -749,7 +749,7 @@ module.exports = React.createClass({
                 if (contentPayload && contentPayload.binding) {
                     content = <ParamaterList argumentData={contentPayload.binding} />
                 }
-                
+
                 action = (
                         <div className="tab-section tab-section-boxed tab-section-execution-action">
                             <div className="flex flex-row flex-inherit tab-section-header">
@@ -765,22 +765,22 @@ module.exports = React.createClass({
                                 <CommandList test={true} beforeExecuteCommandMessages={beforeExecuteCommandMessages} afterExecuteCommandMessages={afterExecuteCommandMessages} mongoDBMessages={mongoDBMessages} dataHttpRequestMessages={dataHttpRequestMessages} dataHttpResponseMessages={dataHttpResponseMessages} beginMessage={beforeActionInvokedMessage} endMessage={afterActionInvokedMessage} />
                             </div>
                         </div>
-                    ); 
+                    );
             }
-            
+
             // process view component
             var viewComponent = '';
             if (beforeViewComponentMessages && afterViewComponentMessages) {
                 beforeViewComponentMessages = beforeViewComponentMessages.sort(function(a, b) { return a.ordinal - b.ordinal; });
-                afterViewComponentMessages = _.indexBy(afterViewComponentMessages, 'payload.componentId');
-                
+                afterViewComponentMessages = _.keyBy(afterViewComponentMessages, 'payload.componentId');
+
                 viewComponent = _.map(beforeViewComponentMessages, function(beforeViewComponetMessage, i) {
                     var beforeViewComponetPayload = beforeViewComponetMessage.payload;
                     var afterViewComponetMessage = afterViewComponentMessages[beforeViewComponetPayload.componentId];
                     var afterViewComponetPayload = afterViewComponetMessage.payload;
-                    
+
                     var componentCommands = <CommandList beforeExecuteCommandMessages={beforeExecuteCommandMessages} afterExecuteCommandMessages={afterExecuteCommandMessages} mongoDBMessages={mongoDBMessages} beginMessage={beforeViewComponetMessage} endMessage={afterViewComponetMessage} />;
-                    
+
                     return (
                             <div className="tab-section tab-section-boxed tab-section-execution-component">
                                 <div className="flex flex-row flex-inherit tab-section-header">
@@ -797,15 +797,15 @@ module.exports = React.createClass({
                         );
                 });
             }
-            
+
             // process action
             var view = null;
             if (actionViewFoundPayload && afterActionViewInvokedPayload) {
                 var viewTitle = null;
-                if (actionViewFoundPayload) { 
+                if (actionViewFoundPayload) {
                     viewTitle = <div><span className="tab-execution-important">{actionViewFoundPayload.viewName}</span> - <span>{actionViewFoundPayload.viewPath}</span></div>;
                 }
-            
+
                 view = (
                         <div className="tab-section tab-section-boxed tab-section-execution-view">
                             <div className="flex flex-row flex-inherit tab-section-header">
@@ -821,13 +821,13 @@ module.exports = React.createClass({
                         </div>
                     );
             }
-            
+
             //process post action commands
             var postCommands = null;
-            if (afterActionResultMessage && webResponseMessage) { 
-                postCommands = <CommandList beforeExecuteCommandMessages={beforeExecuteCommandMessages} afterExecuteCommandMessages={afterExecuteCommandMessages} mongoDBMessages={mongoDBMessages} dataHttpRequestMessages={dataHttpRequestMessages} dataHttpResponseMessages={dataHttpResponseMessages} beginMessage={afterActionResultMessage} endMessage={webResponseMessage} isRoot={true} />            
+            if (afterActionResultMessage && webResponseMessage) {
+                postCommands = <CommandList beforeExecuteCommandMessages={beforeExecuteCommandMessages} afterExecuteCommandMessages={afterExecuteCommandMessages} mongoDBMessages={mongoDBMessages} dataHttpRequestMessages={dataHttpRequestMessages} dataHttpResponseMessages={dataHttpResponseMessages} beginMessage={afterActionResultMessage} endMessage={webResponseMessage} isRoot={true} />
             }
-            
+
             content = (
                 <div className="tab-content">
                     <div className="tab-section text-minor">Execution on Server</div>
@@ -838,7 +838,7 @@ module.exports = React.createClass({
         else {
             content = <div className="tab-content tab-section text-minor">Could not find any data.</div>;
         }
-        
+
         return content;
     }
 });

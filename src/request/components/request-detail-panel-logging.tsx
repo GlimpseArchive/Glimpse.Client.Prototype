@@ -2,6 +2,7 @@
 
 import { ILogMessage } from '../messages/ILogMessage';
 import { ILoggingComponentModel } from '../component-models/ILoggingComponentModel';
+import _ = require('lodash');
 
 import React = require('react');
 

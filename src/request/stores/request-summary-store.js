@@ -28,8 +28,8 @@ var filterRequests = (function () {
         _responseStatusCode: { type: 'array' },
         _responseContentCategory: {   // TODO: remove hack to temp filter what requests we deal with
             type: 'exact',
-            get: function (request) { 
-                return request._responseContentCategory && ((request._responseContentCategory.document && !request._requestIsAjax) || request._responseContentCategory.data); 
+            get: function (request) {
+                return request._responseContentCategory && ((request._responseContentCategory.document && !request._requestIsAjax) || request._responseContentCategory.data);
             }
         }
     };
@@ -76,29 +76,29 @@ var filterRequests = (function () {
         var matchFound = false;
 
         // TODO: BIG BIG BIG PROBLEM HERE!!!!! This assumes that the first time we see a request
-        //       we will have the begin message... this isn't always the case. Hence when we 
+        //       we will have the begin message... this isn't always the case. Hence when we
         //       don't have the begin request message on a new request we need to go through a
         //       reconcation process
         _.forEach(targetRequests, function(sourceRequest) {
             if (checkMatch(sourceRequest, filters)) {
                 var sortedIndex = 0;
-                
+
                 if (sourceRequest._requestStartTime) {
-                    sortedIndex = _.sortedIndex(destinationRequests, sourceRequest, function(value) {
+                    sortedIndex = _.sortedIndexBy(destinationRequests, sourceRequest, function(value) {
                         // TODO: This check wont really work because of the decending order logic
-                        return value._requestStartTime ? moment(value._requestStartTime).valueOf() * -1 : 0;   // decending order 
-                    }); 
+                        return value._requestStartTime ? moment(value._requestStartTime).valueOf() * -1 : 0;   // decending order
+                    });
                 }
                 else {
                     // TODO: store in a list which marks it as being reconciled later
                 }
-                
-                destinationRequests.splice(sortedIndex, 0, sourceRequest); 
-                
+
+                destinationRequests.splice(sortedIndex, 0, sourceRequest);
+
                 matchFound = true;
             }
         });
-        
+
         return matchFound;
     }
 
