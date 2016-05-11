@@ -3,6 +3,24 @@
 import { IComponentModel } from './IComponentModel';
 import { ILogMessage } from '../messages/ILogMessage';
 
+export interface ILogMessageModel extends ILogMessage {
+    id: string;
+    ordinal: number;
+}
+
+export interface ILoggingLevelModel {
+    level: string;
+    messageCount: number;
+}
+
 export interface ILoggingComponentModel extends IComponentModel {
-    messages: ILogMessage[];
+    levels: ILoggingLevelModel[];
+    totalMessageCount: number;
+
+    getMessages(): ILogMessageModel[];
+
+    isShown(level: ILoggingLevelModel): boolean;
+
+    showAll(): void;
+    toggleLevel(level: ILoggingLevelModel): void;
 }

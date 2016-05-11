@@ -818,25 +818,26 @@ var generateMvcRequest = (function() {
         },
         processActivities: function(activities, action, context) {
             if (activities) {
+                var that = this;
                 _.forEach(activities, function(activity) {
                     if (activity.access == 'SQL') {
-                        this.messages.push(this.createBeforeExecuteCommand(action, activity, context));
-                        this.messages.push(this.createAfterExecuteCommand(action, activity, context));
+                        that.messages.push(that.createBeforeExecuteCommand(action, activity, context));
+                        that.messages.push(that.createAfterExecuteCommand(action, activity, context));
                     }
                     else if (activity.access == 'mongo') {
-                        this.messages.push(this.createMonogoCommand(action, activity, context));
+                        that.messages.push(that.createMonogoCommand(action, activity, context));
                     }
                     else if (activity.access == 'middleware-start') {
-                        this.messages.push(this.createMiddlewareStart(action, activity, context));
+                        that.messages.push(that.createMiddlewareStart(action, activity, context));
                     }
                     else if (activity.access == 'middleware-end') {
-                        this.messages.push(this.createMiddlewareEnd(action, activity, context));
+                        that.messages.push(that.createMiddlewareEnd(action, activity, context));
                     }
                     else if (activity.access == 'client') {
-                        this.messages.push(this.createClientRequest(action, activity, context));
-                        this.messages.push(this.createClientResponse(action, activity, context));
+                        that.messages.push(that.createClientRequest(action, activity, context));
+                        that.messages.push(that.createClientResponse(action, activity, context));
                     }
-                }, this);
+                });
             }
         },
         processChildActions: function(action, request, context) {
@@ -869,9 +870,10 @@ var generateMvcRequest = (function() {
             this.messages.push(this.createBeforeActionInvoked(action, context, action == request));
             this.processActivities(action.activities, action, context);
             if (action.trace) {
+                var that = this;
                 _.forEach(action.trace, function(log) {
-                    this.messages.push(this.createLog(log, context));
-                }, this);
+                    that.messages.push(that.createLog(log, context));
+                });
             }
             this.messages.push(this.createAfterActionInvoked(action, context));
 
@@ -885,9 +887,10 @@ var generateMvcRequest = (function() {
 
             // child actions
             if (action.actions) {
+                var that = this;
                 _.forEach(action.actions, function(childAction) {
-                    this.processChildActions(childAction, request, context);
-                }, this);
+                    that.processChildActions(childAction, request, context);
+                });
             }
 
             // fitler

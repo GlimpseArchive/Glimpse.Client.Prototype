@@ -11,6 +11,16 @@
     src: url('../../../assets/selawkl.woff2') format('woff2'),
          url('../../../assets/selawkl.woff') format('woff');
 }
+@font-face {
+    font-family: 'Selawik Semibold';
+    src: url('../../../assets/selawksb.woff2') format('woff2'),
+         url('../../../assets/selawksb.woff') format('woff');
+}
+@font-face {
+    font-family: 'Selawik Semilight';
+    src: url('../../../assets/selawksl.woff2') format('woff2'),
+         url('../../../assets/selawksl.woff') format('woff');
+}
 
 body, html {
     margin: 0;
@@ -57,9 +67,9 @@ h1, h2, h3, h4, h5, h6 {
 
 
 //****** TABLE *******
-$table-border-color: #dbdbdb;
+$table-border-color: #ccc;
 $table-border-width: 1px;
-$table-background-alt-color: #fafafa;
+$table-background-alt-color: #f9f9f9;
 
 .table {
     width: 100%;
@@ -89,20 +99,16 @@ $table-background-alt-color: #fafafa;
 
 .table-bordered {
     .table-col-featured {
-        border-left: $table-border-width solid $table-border-color;
+        border-right: $table-border-width solid $table-border-color;
     }
     .table-col-title {
-        border-left: $table-border-width solid $table-border-color;
+        border-right: $table-border-width solid $table-border-color;
+        display: block
     }
     thead {
         .table-col-title-group th {
             border-bottom: $table-border-width solid $table-border-color;
-        }
-        
-        th:first-child .table-col-title,
-        .table-col-featured .table-col-title {
-            border-left: 0px;
-        }
+        }        
     }
     tfoot {
         .table-col-title-group th { 
@@ -129,7 +135,7 @@ $table-background-alt-color: #fafafa;
     }
     
     td, th {
-        border-left: 1px solid #eee;
+        border-left: 1px solid #ccc;
     }
     
     tr th:first-child,

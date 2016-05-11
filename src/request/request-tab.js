@@ -2,6 +2,8 @@
 
 var _ = require('lodash');
 var glimpse = require('glimpse');
+var messageProcessor = require('./util/request-message-processor');
+var requestDetailStore = require('./stores/request-detail-store');
 
 var PanelGeneric = require('./components/request-detail-panel-generic');
 
@@ -51,5 +53,5 @@ module.exports.registerTab({
     key: 'tab.logging',
     title: 'Trace',
     component: LoggingComponent,
-    viewModel: LoggingComponentModel
+    componentModelFactory: function() { return new LoggingComponentModel(glimpse, requestDetailStore, messageProcessor); }
 });

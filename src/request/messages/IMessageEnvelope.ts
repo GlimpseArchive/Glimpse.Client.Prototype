@@ -1,6 +1,7 @@
 'use strict';
 
 export interface IMessage {
+    id: string;
     ordinal: number;
     payload;
 }

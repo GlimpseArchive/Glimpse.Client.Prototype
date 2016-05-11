@@ -15,7 +15,10 @@ var _requests = {};   // TODO: Remove this, don't need to store
 var _viewModel = {
     selectedId: null,
     request: null,
-    tabs: null
+    tabs: null,
+    logging: {
+        filter: {}
+    }
 };
 
 function requestChanged(targetRequests) {
@@ -102,3 +105,18 @@ function getTabs(request) {
 
     glimpse.on('data.request.detail.requested', triggerRequest);
 })();
+
+// Toggle Logging Filter Level
+(function () {
+    function triggerRequest(payload) {
+        _viewModel.logging.filter = payload;
+
+        requestChanged(_viewModel);
+    }
+
+    glimpse.on('data.request.detail.logging.filter', triggerRequest);
+})();
+
+exports.getState = function getState() {
+    return _viewModel;
+}

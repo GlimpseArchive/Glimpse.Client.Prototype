@@ -1,14 +1,12 @@
 'use strict';
 
 import { ILogMessage } from '../messages/ILogMessage';
-import { ILoggingComponentModel } from '../component-models/ILoggingComponentModel';
-import _ = require('lodash');
+import { ILoggingComponentModel, ILoggingLevelModel } from '../component-models/ILoggingComponentModel';
 
 import React = require('react');
 
 export interface ILoggingProps {
-    request;
-    viewModel: ILoggingComponentModel;
+    componentModel: ILoggingComponentModel;
 }
 
 /**
@@ -16,34 +14,54 @@ export interface ILoggingProps {
  */
 export class Logging extends React.Component<ILoggingProps, {}> {
     public render() {
-        if (!_.isEmpty(this.props.viewModel.messages)) {
+        const totalMessages = this.props.componentModel.totalMessageCount;
+
+        if (totalMessages !== 0) {
+            const messages = this.props.componentModel.getMessages();
             return (
                 <div className='tab-content'>
-                    <h3>{this.props.viewModel.messages.length} {this.props.viewModel.messages.length === 1 ? 'Message' : 'Messages'}</h3>
+                    <div className='tab-logs-message-count'>{totalMessages} {totalMessages === 1 ? 'Message' : 'Messages'}</div>
+                    <br/>
+                    <div className='flex filter-bar'>
+                        <button className='filter-show-all' onClick={e => this.toggleAll()}>Show All</button>
+                        <div className='flex'>
+                        {
+                            this.props.componentModel.levels.map(
+                                level => {
+                                    return <button className={this.props.componentModel.isShown(level) ? 'filter-button-shown' : 'filter-button-not-shown'} type='button' onClick={e => this.toggleLevel(level)}>{level.level} ({level.messageCount})</button>;
+                                })
+                        }
+                        </div>
+                    </div>
+                    <br/>
                     <table className='table table-bordered table-striped tab-content-item'>
                         <thead>
                             <tr className='table-col-title-group'>
-                                <th width='5%'><span className='table-col-title'>#</span></th>
+                                <th width='5%'><span className='table-col-title'>Ordinal</span></th>
                                 <th width='10%'><span className='table-col-title'>Level</span></th>
-                                <th><span className='table-col-title'>Message</span></th>
+                                <th width='40%'><span className='table-col-title'>Message</span></th>
                                 <th width='10%'><span className='table-col-title'>From Start</span></th>
                                 <th width='10%'><span className='table-col-title'>Duration</span></th>
+                                <th />
                             </tr>
                         </thead>
-                        {this.props.viewModel.messages.map(function(message, index) {
-                            const className = Logging.getRowClass(message);
-
-                            return (
-                                <tr className={className}>
-                                    <td>{index + 1}</td>
-                                    <td>{message.level}</td>
-                                    <td>{message.message}</td>
-                                    <td>-</td>
-                                    <td>-</td>
-                                </tr>);
-                        }) }
+                        <tbody>
+                        {
+                            messages.map(message => {
+                                return (
+                                    <tr className='tab-logs-data-default' key={message.id}>
+                                        <td>{message.ordinal}</td>
+                                        <td className={Logging.getRowClass(message)}>{message.level}</td>
+                                        <td>{message.message}</td>
+                                        <td>-</td>
+                                        <td>-</td>
+                                        <td />
+                                    </tr>);
+                            })
+                        }
+                        </tbody>
                         <tfoot>
-                            <tr className='table-body-padding table-col-title-group'><th colSpan='5'></th></tr>
+                            <tr className='table-body-padding table-col-title-group'><th colSpan='6'></th></tr>
                         </tfoot>
                     </table>
                 </div>
@@ -78,5 +96,13 @@ export class Logging extends React.Component<ILoggingProps, {}> {
                 break;
         }
         return rowClass;
+    }
+
+    private toggleLevel(level: ILoggingLevelModel) {
+        this.props.componentModel.toggleLevel(level);
+    }
+
+    private toggleAll() {
+        this.props.componentModel.showAll();
     }
 }

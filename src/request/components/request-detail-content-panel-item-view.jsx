@@ -17,14 +17,14 @@ module.exports = React.createClass({
         
         //var tabContent = requestTabController.resolveTab(name);
 
-        var viewModel;
+        var componentModel;
         
-        if (tab.viewModel) {
-            viewModel = new tab.viewModel();
+        if (tab.componentModelFactory) {
+            componentModel = tab.componentModelFactory();
             
-            viewModel.init(request);
+            componentModel.init(request);
         }
 
-        return <div className={containerClass}><tab.component key={name} request={request} tab={tab} viewModel={viewModel}/></div>;
+        return <div className={containerClass}><tab.component key={name} request={request} tab={tab} componentModel={componentModel}/></div>;
     }
 });

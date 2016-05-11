@@ -48,7 +48,7 @@ var ServiceMessages = React.createClass({
                     <td>-</td>
                     <td>-</td>
                     <td>-</td>
-                    <td className="table-col-featured">-</td>
+                    <td>-</td>
                 </tr>);
             
         }
@@ -63,14 +63,13 @@ var ServiceMessages = React.createClass({
                         <th width="10%"><span className="table-col-title">Protocol</span></th>
                         <th width="10%"><span className="table-col-title">Type</span></th>
                         <th width="10%"><span className="table-col-title">Duration</span></th>
-                        <th width="20%" className="table-col-featured"><span className="table-col-title">Timeline</span></th>
+                        <th width="20%"><span className="table-col-title">Timeline</span></th>
                     </tr>
                 </thead>
                 {requestItems}
                 <tfoot>
                     <tr className="table-body-padding table-col-title-group">
-                        <th colSpan="6"></th>
-                        <th className="table-col-featured"></th>
+                        <th colSpan="7"></th>
                     </tr>
                 </tfoot>
             </table>

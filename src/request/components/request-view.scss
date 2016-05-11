@@ -63,6 +63,56 @@
     text-align: right;
 }
 
+//***** LIST FILTERS *****
+.filter-bar {
+    margin-bottom: 2px;
+    margin-top: 2px;
+}
+
+.filter-show-all {
+    background: transparent;
+    border: none;
+    border-right: 1px solid #ccc;
+    color: #26688e;
+    padding-left: 0;
+}
+
+.filter-show-all:hover {
+    @extend .filter-show-all;
+    
+    text-decoration: underline; 
+}
+
+.filter-show-all:active {
+    @extend .filter-show-all;
+    
+    color: #f08221;
+}
+
+.filter-button {
+    background-color: transparent;
+    margin-left: 5px;
+}
+
+.filter-button-shown {
+    @extend .filter-button;
+
+    background-color: #e4f4ff;   
+    border: 1px solid #a0daff;
+}
+
+.filter-button-not-shown {
+    @extend .filter-button;
+    
+    border: 1px solid #e3e3e3;
+}
+
+.filter-button-not-shown:hover {
+    @extend .filter-button;
+    
+    border: 1px solid #26688e;
+}
+
     //***** SECTION LAYOUTS *******
     .application-section {
         background-color: #fff;
@@ -326,9 +376,14 @@
     border-bottom-width: 2px;
 }
 
+.tab-logs-message-count {
+    font-family: 'Segoe UI', 'Selawik Semibold', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 175%;
+}
+
 .tab-logs-data-default {
     font-weight: normal;
-    color: #616A6B; // grey
+    color: #333333; // grey
 }
 
 .tab-logs-data-warning {
