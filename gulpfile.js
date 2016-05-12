@@ -82,7 +82,15 @@ gulp.task('bundle', (cb) => {
     let started = false;
     const config = getBundleConfig();
     function processResult(err, stats) {
+        if (err) {
+            return cb(err);
+        }
+        
         gutil.log('Webpack\n' + stats.toString(config.log));
+
+        if (stats.hasErrors()) {
+            return cb(new Error('Webpack completed with errors.'))
+        }
 
         if (config.watch) {
             browserSync.reload(settings.entry);

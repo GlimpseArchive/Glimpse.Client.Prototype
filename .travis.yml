@@ -2,8 +2,9 @@ language: node_js
 node_js:
 - 5.6
 install:
-- npm install -g gulp
+- npm install -g gulp typings
 - npm install
+- typings install
 - cd _temp/hud && npm install && cd ../..
 script:
 - gulp ci

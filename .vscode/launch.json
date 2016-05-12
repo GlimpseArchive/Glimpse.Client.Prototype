@@ -1,8 +1,29 @@
 {
 	"version": "0.2.0",
 	"configurations": [
+        {
+            "name": "Launch Build",
+            "type": "node",
+            "request": "launch",
+            "program": "/usr/local/bin/gulp",
+            "stopOnEntry": false,
+            "args": [
+                "build"
+            ],
+            "cwd": "${workspaceRoot}/",
+            "runtimeExecutable": null,
+            "runtimeArgs": [
+                "--nolazy"
+            ],
+            "env": {
+                "NODE_ENV": "development"
+            },
+            "externalConsole": false,
+            "sourceMaps": false,
+            "outDir": null
+        },
 		{
-            "name": "Tests",
+            "name": "Launch Tests",
             "type": "node",
             "request": "launch",
             "program": "${workspaceRoot}/node_modules/mocha/bin/_mocha",
