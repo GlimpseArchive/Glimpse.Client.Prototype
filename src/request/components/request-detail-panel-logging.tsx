@@ -3,6 +3,7 @@
 import { ILogMessage } from '../messages/ILogMessage';
 import { ILoggingComponentModel, ILoggingLevelModel } from '../component-models/ILoggingComponentModel';
 
+import _ = require('lodash');
 import React = require('react');
 
 export interface ILoggingProps {
@@ -52,7 +53,7 @@ export class Logging extends React.Component<ILoggingProps, {}> {
                                     <tr className='tab-logs-data-default' key={message.id}>
                                         <td>{message.ordinal}</td>
                                         <td className={Logging.getRowClass(message)}>{message.level}</td>
-                                        <td>{message.message}</td>
+                                        <td>{message.spans.map(span => <span className={span.wasReplaced ? 'tab-logs-data-replaced-region' : ''}>{span.text}</span>)}</td>
                                         <td>-</td>
                                         <td>-</td>
                                         <td />

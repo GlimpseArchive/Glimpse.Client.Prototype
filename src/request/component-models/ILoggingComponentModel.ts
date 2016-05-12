@@ -3,9 +3,15 @@
 import { IComponentModel } from './IComponentModel';
 import { ILogMessage } from '../messages/ILogMessage';
 
+export interface ILogMessageSpan {
+    text: string;
+    wasReplaced?: boolean;
+}
+
 export interface ILogMessageModel extends ILogMessage {
     id: string;
     ordinal: number;
+    spans: ILogMessageSpan[];
 }
 
 export interface ILoggingLevelModel {
