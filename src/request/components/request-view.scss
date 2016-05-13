@@ -376,6 +376,15 @@
     border-bottom-width: 2px;
 }
 
+.tab-logs {
+    .fa-svg {
+        height: 12px;
+        width: 12px;
+        margin-right: 5px;
+        vertical-align: middle;
+    }
+}
+
 .tab-logs-data-replaced-region {
     font-weight: bold;
 }
@@ -388,16 +397,31 @@
 .tab-logs-data-default {
     font-weight: normal;
     color: #333333; // grey
+    vertical-align: middle;
 }
 
 .tab-logs-data-warning {
-    font-weight: normal;
+    @extend .tab-logs-data-default;
+    
     color: #D35400; // orange
+    
+    .fa-svg {
+        .fa-svg-path {        
+          fill: #D35400; // orange
+        }
+    }
 }
 
 .tab-logs-data-error {
-    font-weight: normal;
+    @extend .tab-logs-data-default;
+    
     color: #FF0000; // red
+    
+    .fa-svg {
+        .fa-svg-path {        
+          fill: #FF0000; // red
+        }
+    }
 }
 
 

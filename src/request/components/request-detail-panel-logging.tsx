@@ -1,5 +1,6 @@
 'use strict';
 
+import { FontAwesomeIcon } from '../../shell/components/FontAwesomeIcon';
 import { ILogMessage } from '../messages/ILogMessage';
 import { ILoggingComponentModel, ILoggingLevelModel } from '../component-models/ILoggingComponentModel';
 
@@ -20,7 +21,7 @@ export class Logging extends React.Component<ILoggingProps, {}> {
         if (totalMessages !== 0) {
             const messages = this.props.componentModel.getMessages();
             return (
-                <div className='tab-content'>
+                <div className='tab-content tab-logs'>
                     <div className='tab-logs-message-count'>{totalMessages} {totalMessages === 1 ? 'Message' : 'Messages'}</div>
                     <br/>
                     <div className='flex filter-bar'>
@@ -39,7 +40,7 @@ export class Logging extends React.Component<ILoggingProps, {}> {
                         <thead>
                             <tr className='table-col-title-group'>
                                 <th width='5%'><span className='table-col-title'>Ordinal</span></th>
-                                <th width='10%'><span className='table-col-title'>Level</span></th>
+                                <th width='10%'><span className='table-col-title'><FontAwesomeIcon path=''/>Level</span></th>
                                 <th width='40%'><span className='table-col-title'>Message</span></th>
                                 <th width='10%'><span className='table-col-title'>From Start</span></th>
                                 <th width='10%'><span className='table-col-title'>Duration</span></th>
@@ -52,7 +53,7 @@ export class Logging extends React.Component<ILoggingProps, {}> {
                                 return (
                                     <tr className='tab-logs-data-default' key={message.id}>
                                         <td>{message.ordinal}</td>
-                                        <td className={Logging.getRowClass(message)}>{message.level}</td>
+                                        <td className={Logging.getRowClass(message)}><FontAwesomeIcon path={Logging.getIconPath(message.level)} />{message.level}</td>
                                         <td>{message.spans.map(span => <span className={span.wasReplaced ? 'tab-logs-data-replaced-region' : ''}>{span.text}</span>)}</td>
                                         <td>-</td>
                                         <td>-</td>
@@ -70,6 +71,20 @@ export class Logging extends React.Component<ILoggingProps, {}> {
         }
         else {
             return <div className='tab-section text-minor'>Could not find any data.</div>;
+        }
+    }
+
+    private static getIconPath(level: string) {
+        switch (level) {
+            case 'Critical':
+            case 'Error':
+                return FontAwesomeIcon.paths.TimesCircle;
+
+            case 'Warning':
+                return FontAwesomeIcon.paths.Warning;
+
+            default:
+                return '';
         }
     }
 

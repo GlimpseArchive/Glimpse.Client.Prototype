@@ -51,7 +51,7 @@ var LoggingComponentModel = require('./component-models/LoggingComponentModel').
 
 module.exports.registerTab({
     key: 'tab.logging',
-    title: 'Trace',
+    title: 'Logs',
     component: LoggingComponent,
     componentModelFactory: function() { return new LoggingComponentModel(glimpse, requestDetailStore, messageProcessor); }
 });
