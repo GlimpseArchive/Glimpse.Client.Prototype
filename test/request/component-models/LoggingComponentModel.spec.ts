@@ -7,6 +7,7 @@ import { MockRequestDetailStore } from '../mocks/MockRequestDetailStore';
 
 import * as _ from 'lodash';
 import * as chai from 'chai';
+import * as util from 'util';
 
 const should = chai.should();
 
@@ -24,6 +25,81 @@ describe('LogMessageModel', () => {
             },
             1);
     }
+    
+    describe('#isObject', () => {
+        it('should return false for undefined messages', () => {
+            const model = createModel(undefined);
+            
+            model.isObject.should.equal(false);
+        });
+
+        it('should return false for empty messages', () => {
+            const model = createModel('');
+            
+            model.isObject.should.equal(false);
+        });
+
+        it('should return false for plain text messages', () => {
+            const model = createModel('this is plain text');
+            
+            model.isObject.should.equal(false);
+        });
+
+        it('should return true for JavaScript-like messages', () => {
+            const model = createModel('{ key: \'value\' }');
+            
+            model.isObject.should.equal(true);
+        });
+
+        it('should return true for JSON-like messages', () => {
+            const model = createModel('{ \'key\': \'value\' }');
+            
+            model.isObject.should.equal(true);
+        });
+
+        it('should return true for JavaScript stringified-like messages', () => {
+            const model = createModel('ServerResponse { key: \'value\' }');
+            
+            model.isObject.should.equal(true);
+        });
+        
+        it('should return true for a JavaScript object', () => {
+            class TestObject {
+                constructor(public key1: string, public key2: number) {
+                }
+            }
+            
+            const testObject = new TestObject('value1', 2);            
+            const message = util.inspect(testObject);
+            const model = createModel(message);
+            
+            model.isObject.should.equal(true);
+        });
+        
+        it('should return true for objects with whitespace', () => {
+            const model = createModel(' { key: \'value\' } ');
+            
+            model.isObject.should.equal(true);
+        });
+
+        it('should return false for text lacking starting brace', () => {
+            const model = createModel(' key: \'value\' } ');
+            
+            model.isObject.should.equal(false);
+        });
+
+        it('should return false for text lacking ending brace', () => {
+            const model = createModel(' { key: \'value\' ');
+            
+            model.isObject.should.equal(false);
+        });
+
+        it('should return false for text with inverted braces', () => {
+            const model = createModel(' } key: \'value\' { ');
+            
+            model.isObject.should.equal(false);
+        });
+    });
 
     describe('#spans', () => {
         it('should return one span for undefined messages', () => {

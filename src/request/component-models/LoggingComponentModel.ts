@@ -11,6 +11,9 @@ import { IRequestDetailStore } from '../stores/IRequestDetailStore';
 import _ = require('lodash');
 
 export class LogMessageModel implements ILogMessageModel {
+    private static OBJECT_BRACE_WINDOW = 64;
+    
+    private _isObject: boolean;
     private _spans: ILogMessageSpan[];
 
     public constructor(private _message: IMessageEnvelope<ILogMessage>, private _ordinal: number) {
@@ -20,6 +23,14 @@ export class LogMessageModel implements ILogMessageModel {
         return this._message.id;
     }
 
+    public get isObject(): boolean {
+        if (this._isObject === undefined) {
+            this._isObject = LogMessageModel.isMessageObject(this._message.payload.message);
+        }
+        
+        return this._isObject;
+    }
+    
     public get level(): string {
         return this._message.payload.level;
     }
@@ -42,6 +53,52 @@ export class LogMessageModel implements ILogMessageModel {
         }
 
         return this._spans;
+    }
+
+    private static indexOf(value: string, term: string, window: number) {
+        for (let i = 0; i < value.length && i < window; i++) {
+            if (value[i] === term) {
+                return i;
+            }
+        }
+        
+        return -1;
+    }
+
+    private static isMessageObject(message: string): boolean {
+        //
+        // NOTE: Our heuristic for determining whether text represents an object rather simplistic 
+        //       (to minimize impact on performance). We simply look for starting and ending braces
+        //       (i.e. '{' and '}') near the beginning and ending of the text, respectively, allowing 
+        //       for whitespace and other text that might pre-fix/post-fix the actual object.
+        //
+        
+        if (message) {
+            const length = message.length;
+
+            if (length > 0) {
+                const startIndex = LogMessageModel.indexOf(message, '{', LogMessageModel.OBJECT_BRACE_WINDOW);
+                const lastIndex = LogMessageModel.lastIndexOf(message, '}', LogMessageModel.OBJECT_BRACE_WINDOW);
+                
+                if (startIndex >= 0 && lastIndex >= 0 && startIndex < lastIndex) {
+                    return true;
+                }
+            }
+        }
+        
+        return false;
+    }
+
+    private static lastIndexOf(value: string, term: string, window: number) {
+        const lastWindowIndex = value.length - window;
+        
+        for (let i = value.length - 1; i >= 0 && i >= lastWindowIndex; i--) {
+            if (value[i] === term) {
+                return i;
+            }
+        }
+        
+        return -1;
     }
 
     private static createSpans(message: string, replacedRegions: ({ start: number, end: number })[]): ILogMessageSpan[] {

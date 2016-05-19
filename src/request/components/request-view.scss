@@ -377,53 +377,89 @@
 }
 
 .tab-logs {
-    .fa-svg {
-        height: 12px;
-        width: 12px;
-        margin-right: 5px;
-        vertical-align: middle;
+    .tab-logs-message-count {
+        font-family: 'Segoe UI', 'Selawik Semibold', Tahoma, Geneva, Verdana, sans-serif;
+        font-size: 175%;
     }
-}
 
-.tab-logs-data-replaced-region {
-    font-weight: bold;
-}
+    .tab-logs-table {
+        table-layout: fixed;
+        
+        .fa-svg {
+            height: 12px;
+            width: 12px;
+            margin-right: 3px;
+            vertical-align: middle;
+        }
 
-.tab-logs-message-count {
-    font-family: 'Segoe UI', 'Selawik Semibold', Tahoma, Geneva, Verdana, sans-serif;
-    font-size: 175%;
-}
+        .tab-logs-table-message {
+            display: flex;
+            flex-direction: row;
+            
+            .tab-logs-table-message-icon {
+                visibility: hidden;               
+            }
 
-.tab-logs-data-default {
-    font-weight: normal;
-    color: #333333; // grey
-    vertical-align: middle;
-}
+            .tab-logs-table-message-icon-expandable {
+                @extend .tab-logs-table-message-icon;
+                
+                visibility: visible;               
+            }
 
-.tab-logs-data-warning {
-    @extend .tab-logs-data-default;
-    
-    color: #D35400; // orange
-    
-    .fa-svg {
-        .fa-svg-path {        
-          fill: #D35400; // orange
+            .tab-logs-table-message-object {
+                overflow: auto;
+                
+                > pre {
+                        margin: 0;
+                        
+                        > code {
+                            background: transparent;
+                            padding: 0;
+                        }
+                    }
+            }
+
+            .tab-logs-table-message-multiline {
+                overflow: auto;
+                white-space: pre-wrap;
+            }
+
+            .tab-logs-table-message-replaced-region {
+                font-weight: bold;
+            }           
+        }
+
+        .tab-logs-table-icon-column {
+            padding-left: 0px;
+            overflow: hidden;
+            white-space: nowrap;
+        }
+        
+        .tab-logs-data-default {
+            font-weight: normal;
+        }
+
+        .tab-logs-data-warning {
+            @extend .tab-logs-data-default;
+                        
+            .fa-svg {
+                .fa-svg-path {        
+                fill: #f28300;
+                }
+            }
+        }
+
+        .tab-logs-data-error {
+            @extend .tab-logs-data-default;
+            
+            .fa-svg {
+                .fa-svg-path {        
+                fill: #e81123;
+                }
+            }
         }
     }
 }
-
-.tab-logs-data-error {
-    @extend .tab-logs-data-default;
-    
-    color: #FF0000; // red
-    
-    .fa-svg {
-        .fa-svg-path {        
-          fill: #FF0000; // red
-        }
-    }
-}
-
 
 //****** BUTTONS *********
 .button-holder {
