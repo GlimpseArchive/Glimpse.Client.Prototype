@@ -46,6 +46,14 @@ module.exports.registerTab({
     component: Request
 });
 
+var DataContainer = require('./containers/RequestDetailPanelDataContainer');
+
+module.exports.registerTab({
+    key: 'tab.data',
+    title: 'Data',
+    component: DataContainer
+});
+
 var LoggingComponent = require('./components/request-detail-panel-logging').Logging;
 var LoggingComponentModel = require('./component-models/LoggingComponentModel').LoggingComponentModel;
 

@@ -6,6 +6,7 @@
     "react": "registry:dt/react#0.13.3+20160423065914"
   },
   "dependencies": {
-    "lodash": "registry:npm/lodash#4.0.0+20160416211519"
+    "lodash": "registry:npm/lodash#4.0.0+20160416211519",
+    "react-redux": "registry:npm/react-redux#4.4.0+20160207114942"
   }
 }

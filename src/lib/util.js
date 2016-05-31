@@ -59,7 +59,7 @@ module.exports = {
         return result;
     },
     timeOrEmpty: function(value) {
-        return value !== null && value !== undefined ? value + 'ms' : '--';
+        return value !== null && value !== undefined ? value + ' ms' : '-';
     },
     getQueryStringParam: function(variable) {
         var query = window.location.search.substring(1);

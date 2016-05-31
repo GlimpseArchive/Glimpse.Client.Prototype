@@ -1,32 +1,41 @@
 require('./request-view.scss');
 
 var React = require('react');
+var ReactRedux = require('react-redux');
 var User = require('./request-user-view');
 var Filter = require('./request-filter-view');
 var Summary = require('./request-summary-view');
 var Detail = require('./request-detail-view');
 
+var store = require('../stores/RequestStore');
+
 module.exports = React.createClass({
     render: function () {
         return (
-            <div className="request-holder application-section-group">
-                <div className="request-user-section application-section">
-                    <div className="request-holder-content">
-                        <User />
-                    </div>
-                </div>
-                <div className="request-summary-section application-section">
-                    <div className="request-holder-content">
-                        <Summary />
-                    </div>
-                </div>
-                <div className="request-filter-section application-section">
-                    <div className="request-holder-content">
-                        <Filter />
-                    </div>
-                </div>
-                <Detail />
-            </div> 
+            <ReactRedux.Provider store={store}>
+                {
+                    () => (
+                        <div className="request-holder application-section-group">
+                            <div className="request-user-section application-section">
+                                <div className="request-holder-content">
+                                    <User />
+                                </div>
+                            </div>
+                            <div className="request-summary-section application-section">
+                                <div className="request-holder-content">
+                                    <Summary />
+                                </div>
+                            </div>
+                            <div className="request-filter-section application-section">
+                                <div className="request-holder-content">
+                                    <Filter />
+                                </div>
+                            </div>
+                            <Detail />
+                        </div> 
+                    )
+                }
+            </ReactRedux.Provider>
         );
     }
 });
