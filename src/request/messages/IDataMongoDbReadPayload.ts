@@ -1,3 +1,5 @@
+export const DataMongoDbReadType = 'data-mongodb-read';
+
 export interface IDataMongoDbReadPayload {
     operation: string;
     query;

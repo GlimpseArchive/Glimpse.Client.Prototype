@@ -4,13 +4,17 @@ interface IActionCreatorAction<TPayload> extends Action {
     payload: TPayload;
 }
 
-interface IActionCreatorBase<TPayload> {
+interface IActionCreatorBase {
     type: string;
+}
+
+interface IActionCreator<TPayload> extends IActionCreatorBase {
+    (payload: TPayload): IActionCreatorAction<TPayload>;
     unwrap(action: Action): TPayload;
 }
 
-interface IActionCreator<TPayload> extends IActionCreatorBase<TPayload> {
-    (payload: TPayload): IActionCreatorAction<TPayload>;
+interface ISimpleActionCreator extends IActionCreatorBase {
+    (): Action;
 }
 
 export function createActionCreator<TPayload>(type: string): IActionCreator<TPayload> {
@@ -27,6 +31,20 @@ export function createActionCreator<TPayload>(type: string): IActionCreator<TPay
     typedActionCreator.unwrap = (action: Action) => {
         return (<IActionCreatorAction<TPayload>>action).payload;
     };
+    
+    return typedActionCreator;
+}
+
+export function createSimpleActionCreator(type: string): ISimpleActionCreator {
+    const actionCreator = () => {
+        return {
+            type: type        
+        }
+    };
+    
+    const typedActionCreator = <ISimpleActionCreator>actionCreator;
+    
+    typedActionCreator.type = type;
     
     return typedActionCreator;
 }

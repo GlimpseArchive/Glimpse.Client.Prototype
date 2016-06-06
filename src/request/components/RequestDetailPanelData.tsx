@@ -1,4 +1,5 @@
 import { MasterDetailTriPanel } from './MasterDetailTriPanel';
+import { RequestDetailPanelDataFilterBarContainer } from '../containers/RequestDetailPanelDataFilterBarContainer';
 import { RequestDetailPanelDataOperationCommandContainer } from '../containers/RequestDetailPanelDataOperationCommandContainer';
 import { RequestDetailPanelDataOperationTableContainer } from '../containers/RequestDetailPanelDataOperationTableContainer';
 
@@ -27,6 +28,7 @@ export class DataComponent extends React.Component<IDataComponentProps, {}> {
             <div className='tab-data-master'>
                 <div className='tab-data-operation-count'>{this.getTotalOperationCountText()}</div>
                 <br />
+                <RequestDetailPanelDataFilterBarContainer />
                 <RequestDetailPanelDataOperationTableContainer />
             </div>
         );

@@ -1,3 +1,5 @@
+export const DataMongoDbDeleteType = 'data-mongodb-delete';
+
 export interface IDataMongoDbDeletePayload {
     operation: string;
     query: string;

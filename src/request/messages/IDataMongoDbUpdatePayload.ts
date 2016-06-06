@@ -1,3 +1,5 @@
+export const DataMongoDbUpdateType = 'data-mongodb-update';
+
 export interface IDataMongoDbUpdatePayload {
     operation: string;
     query;

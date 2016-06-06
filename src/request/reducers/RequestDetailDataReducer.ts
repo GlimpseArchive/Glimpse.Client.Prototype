@@ -1,31 +1,48 @@
 import { IRequestDetailDataOperationState } from '../stores/IRequestDetailDataOperationState';
-import { selectOperationAction } from '../actions/RequestDetailDataActions';
+import { selectOperationAction, showAllAction, toggleFilterAction } from '../actions/RequestDetailDataActions';
 import { requestDetailUpdateAction } from '../actions/RequestDetailActions';
 
-import { ICommandAfterExecutePayload } from '../messages/ICommandAfterExecutePayload';
-import { ICommandBeforeExecutePayload } from '../messages/ICommandBeforeExecutePayload';
-import { IDataMongoDbDeletePayload } from '../messages/IDataMongoDbDeletePayload';
-import { IDataMongoDbInsertPayload } from '../messages/IDataMongoDbInsertPayload';
-import { IDataMongoDbReadPayload } from '../messages/IDataMongoDbReadPayload';
-import { IDataMongoDbUpdatePayload } from '../messages/IDataMongoDbUpdatePayload';
+import { CommandAfterExecuteType, ICommandAfterExecutePayload } from '../messages/ICommandAfterExecutePayload';
+import { CommandBeforeExecuteType, ICommandBeforeExecutePayload } from '../messages/ICommandBeforeExecutePayload';
+import { DataMongoDbDeleteType, IDataMongoDbDeletePayload } from '../messages/IDataMongoDbDeletePayload';
+import { DataMongoDbInsertType, IDataMongoDbInsertPayload } from '../messages/IDataMongoDbInsertPayload';
+import { DataMongoDbReadType, IDataMongoDbReadPayload } from '../messages/IDataMongoDbReadPayload';
+import { DataMongoDbUpdateType, IDataMongoDbUpdatePayload } from '../messages/IDataMongoDbUpdatePayload';
 import { IMessage, IMessageEnvelope } from '../messages/IMessageEnvelope';
 
 import { Action, combineReducers } from 'redux';
 
 import * as _ from 'lodash';
 
+const Databases = {
+    sql: {
+        name: 'SQL',
+        messageTypes: [
+            CommandBeforeExecuteType,
+            CommandAfterExecuteType
+        ]
+    },
+    mongoDb: {
+        name: 'MongoDB',
+        messageTypes: [
+            DataMongoDbInsertType,
+            DataMongoDbReadType,
+            DataMongoDbUpdateType,
+            DataMongoDbDeleteType
+        ]
+    }
+};
+
 interface ISortableOperation {
     ordinal: number;
     operation: IRequestDetailDataOperationState;
 }
 
-function updateSelectedIndex(state: number, request) {
-    return request
-        ? state
-        : 0; 
+function updateSelectedIndex(state: string, request) {
+    return request ? state : ''; 
 }
 
-export function selectedIndexReducer(state: number = 0, action: Action) {
+export function selectedOperationIdReducer(state: string = '', action: Action) {
     switch (action.type) {
         case selectOperationAction.type:
             return selectOperationAction.unwrap(action);            
@@ -66,7 +83,8 @@ function createSqlOperation(beforeAfterMessage: { beforeMessage: IMessageEnvelop
     return {
         ordinal: beforeAfterMessage.beforeMessage.ordinal,
         operation: {
-            database: 'SQL',
+            id: beforeAfterMessage.beforeMessage.id,
+            database: Databases.sql.name,
             command: beforeAfterMessage.beforeMessage.payload.commandText,
             duration: beforeAfterMessage.afterMessage ? beforeAfterMessage.afterMessage.payload.commandDuration : undefined,
             operation: getOperationForSqlCommand(beforeAfterMessage.beforeMessage.payload.commandMethod),
@@ -81,7 +99,8 @@ function prettyPrintJson(value): string {
 
 function createMongoDbInsertOperation(message: IMessageEnvelope<IDataMongoDbInsertPayload>): IRequestDetailDataOperationState {
     return {
-        database: 'MongoDB',
+        id: message.id,
+        database: Databases.mongoDb.name,
         command: prettyPrintJson(message.payload.options),
         duration: message.payload.duration,
         operation: 'Insert',
@@ -91,7 +110,8 @@ function createMongoDbInsertOperation(message: IMessageEnvelope<IDataMongoDbInse
 
 function createMongoDbReadOperation(message: IMessageEnvelope<IDataMongoDbReadPayload>): IRequestDetailDataOperationState {
     return {
-        database: 'MongoDB',
+        id: message.id,
+        database: Databases.mongoDb.name,
         command: prettyPrintJson(message.payload.options),
         duration: message.payload.duration,
         operation: 'Read',
@@ -101,7 +121,8 @@ function createMongoDbReadOperation(message: IMessageEnvelope<IDataMongoDbReadPa
 
 function createMongoDbUpdateOperation(message: IMessageEnvelope<IDataMongoDbUpdatePayload>): IRequestDetailDataOperationState {
     return {
-        database: 'MongoDB',
+        id: message.id,
+        database: Databases.mongoDb.name,
         command: prettyPrintJson(message.payload.options),
         duration: message.payload.duration,
         operation: 'Update',
@@ -111,6 +132,7 @@ function createMongoDbUpdateOperation(message: IMessageEnvelope<IDataMongoDbUpda
 
 function createMongoDbDeleteOperation(message: IMessageEnvelope<IDataMongoDbDeletePayload>): IRequestDetailDataOperationState {
     return {
+        id: message.id,
         database: 'MongoDB',
         command: prettyPrintJson(message.payload.options),
         duration: message.payload.duration,
@@ -130,7 +152,7 @@ function getMessages(request, messageType: string): IMessage[] {
 }
 
 function getSqlOperations(request): ISortableOperation[] {
-    return correlateSqlCommands(getMessages(request, 'before-execute-command'), getMessages(request, 'after-execute-command'))
+    return correlateSqlCommands(getMessages(request, CommandBeforeExecuteType), getMessages(request, CommandAfterExecuteType))
         .map(createSqlOperation);   
 }
 
@@ -148,10 +170,10 @@ function updateOperations(state: IRequestDetailDataOperationState[], request): I
         
         return allOperations
             .concat(getSqlOperations(request))
-            .concat(getDataOperations(request, 'data-mongodb-insert', createMongoDbInsertOperation))
-            .concat(getDataOperations(request, 'data-mongodb-read', createMongoDbReadOperation))
-            .concat(getDataOperations(request, 'data-mongodb-update', createMongoDbUpdateOperation))
-            .concat(getDataOperations(request, 'data-mongodb-delete', createMongoDbDeleteOperation))
+            .concat(getDataOperations(request, DataMongoDbInsertType, createMongoDbInsertOperation))
+            .concat(getDataOperations(request, DataMongoDbReadType, createMongoDbReadOperation))
+            .concat(getDataOperations(request, DataMongoDbUpdateType, createMongoDbUpdateOperation))
+            .concat(getDataOperations(request, DataMongoDbDeleteType, createMongoDbDeleteOperation))
             .sort((a, b) => a.ordinal - b.ordinal)
             .map(operation => operation.operation);
     }
@@ -168,7 +190,78 @@ export function operationsReducer(state: IRequestDetailDataOperationState[] = []
     return state;
 }
 
+function toggleFilter(state: { [key: string]: boolean }, name: string): { [key: string]: boolean } {
+    const filterValue = state[name];
+    
+    if (filterValue !== undefined) {
+        const newState = _.clone(state);
+        
+        newState[name] = !filterValue;
+        
+        return newState;       
+    }
+
+    return state;
+}
+
+function hasMessagesOfType(request, messageType: string) {
+    if (request) {
+        const messageIds = request.types[messageType];
+        
+        return messageIds && messageIds.length > 0;
+    }
+    
+    return false;
+}
+
+function hasMessagesOfTypes(request, messageTypes: string[]) {
+    return _.some(messageTypes, messageType => hasMessagesOfType(request, messageType));
+}
+
+function updateFilters(state: { [key: string]: boolean }, request): { [key: string]: boolean } {
+    if (request) {
+        const existingDatabaseNames = _.values<{ name: string, messageTypes: string[] }>(Databases).filter(databaseType => hasMessagesOfTypes(request, databaseType.messageTypes)).map(dataBaseType => dataBaseType.name);
+        
+        const newState = _.clone(state);
+
+        let newDatabaseFound = false;
+                
+        existingDatabaseNames.forEach(name => {
+            if (newState[name] === undefined) {
+                newState[name] = newDatabaseFound = true;
+            }
+        });
+        
+        return newDatabaseFound ? newState : state;
+    }
+    
+    return state;
+}
+
+function showAllFilters(state: { [key: string]: boolean }): { [key: string]: boolean } {
+    if (_.some(state, filter => !filter)) {
+        return _.mapValues(state, filter => true);    
+    }
+    else {       
+        return state;
+    }
+}
+
+export function filtersReducer(state: { [key: string]: boolean } = {}, action: Action) {
+    switch (action.type) {
+        case toggleFilterAction.type:
+            return toggleFilter(state, toggleFilterAction.unwrap(action));
+        case showAllAction.type:
+            return showAllFilters(state);
+        case requestDetailUpdateAction.type: 
+            return updateFilters(state, requestDetailUpdateAction.unwrap(action));
+    }
+    
+    return state;
+}
+
 export const requestDetailDataReducer = combineReducers({
+    filters: filtersReducer,
     operations: operationsReducer,
-    selectedIndex: selectedIndexReducer
+    selectedOperationId: selectedOperationIdReducer
 });

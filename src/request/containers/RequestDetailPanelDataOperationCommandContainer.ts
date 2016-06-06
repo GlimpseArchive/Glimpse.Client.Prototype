@@ -17,8 +17,8 @@ function mapStateToProps(state: IRequestState, ownProps): IRequestDetailPanelDat
     const operation = getSelectedOperation(state);
 
     return {
-        command: operation ? operation.command : '',
-        language: getLanguageForDatabase(operation ? operation.database : undefined)
+        command: operation ? operation.operation.command : '',
+        language: getLanguageForDatabase(operation ? operation.operation.database : undefined)
     }    
 }
 

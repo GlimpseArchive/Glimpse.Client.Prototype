@@ -6,13 +6,18 @@ import * as React from 'react';
 
 const classNames = require('classnames');
 
+export interface IRequestDetailPanelDataOperationProps {
+    ordinal: number;
+    operation: IRequestDetailDataOperationState;
+}
+
 export interface IRequestDetailPanelDataOperationTableProps {
-    operations: IRequestDetailDataOperationState[],
-    selectedIndex: number,
+    operations: IRequestDetailPanelDataOperationProps[],
+    selectedOperationId: string,
 }
 
 export interface IRequestDetailPanelDataOperationTableCallbacks {
-    onSelected: (index: number) => void
+    onSelected: (operationId: string) => void
 }
 
 interface IRequestDetailPanelDataOperationTableCombinedProps
@@ -36,7 +41,7 @@ export class RequestDetailPanelDataOperationTable extends React.Component<IReque
                 </thead>
                 <tbody>
                 {
-                    this.props.operations.map((operation, index) => this.renderOperation(operation, index))
+                    this.props.operations.map(operation => this.renderOperation(operation))
                 }
                 </tbody>
                 <tfoot>
@@ -48,15 +53,15 @@ export class RequestDetailPanelDataOperationTable extends React.Component<IReque
         );
     }
     
-    public renderOperation(operation: IRequestDetailDataOperationState, index: number) {
+    public renderOperation(operation: IRequestDetailPanelDataOperationProps) {
         return (
-            <tr className={classNames({ selected: index === this.props.selectedIndex })} key={index} onClick={e => this.props.onSelected(index)}>
-                <td>{index + 1}</td>
-                <td>{operation.database}</td>
-                <td className='tab-data-operation-table-command-column'>{operation.command}</td>
-                <td>{util.timeOrEmpty(operation.duration)}</td>
-                <td>{operation.operation}</td>
-                <td>{RequestDetailPanelDataOperationTable.getRecordCountText(operation.recordCount)}</td>
+            <tr className={classNames({ selected: operation.operation.id === this.props.selectedOperationId })} key={operation.operation.id} onClick={e => this.props.onSelected(operation.operation.id)}>
+                <td>{operation.ordinal}</td>
+                <td>{operation.operation.database}</td>
+                <td className='tab-data-operation-table-command-column'>{operation.operation.command}</td>
+                <td>{util.timeOrEmpty(operation.operation.duration)}</td>
+                <td>{operation.operation.operation}</td>
+                <td>{RequestDetailPanelDataOperationTable.getRecordCountText(operation.operation.recordCount)}</td>
                 <td />
             </tr>
         );

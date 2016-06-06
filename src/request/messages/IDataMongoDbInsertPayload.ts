@@ -1,3 +1,5 @@
+export const DataMongoDbInsertType = 'data-mongodb-insert';
+
 export interface IDataMongoDbInsertPayload {
     operation: string;
     docs: ({})[];
