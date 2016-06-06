@@ -29,6 +29,7 @@ export class DataComponent extends React.Component<IDataComponentProps, {}> {
                 <div className='tab-data-operation-count'>{this.getTotalOperationCountText()}</div>
                 <br />
                 <RequestDetailPanelDataFilterBarContainer />
+                <br />
                 <RequestDetailPanelDataOperationTableContainer />
             </div>
         );

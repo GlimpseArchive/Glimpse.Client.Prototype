@@ -41,7 +41,7 @@
         "trailing-comma": [ true, { "multiline": "never", "singleline": "never" }],
         "triple-equals": [ true, "allow-null-check" ],
         "typedef-whitespace": [ true, { "call-signature": "nospace", "index-signature": "nospace", "parameter": "nospace", "property-declaration": "nospace", "variable-declaration": "nospace" } ],
-        "use-strict": [ true, "check-module", "check-function" ],
+        "use-strict": [ true, "check-module" ],
         "variable-name": [ true, "allow-leading-underscore" ],
         "whitespace": [ true, "check-branch", "check-decl", "check-operator", "check-module", "check-separator", "check-type"] 
     }

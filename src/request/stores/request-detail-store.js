@@ -17,10 +17,7 @@ var _requests = {};   // TODO: Remove this, don't need to store
 var _viewModel = {
     selectedId: null,
     request: null,
-    tabs: null,
-    logging: {
-        filter: {}
-    }
+    tabs: null
 };
 
 function requestChanged(targetRequests) {

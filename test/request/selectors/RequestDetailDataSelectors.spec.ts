@@ -15,6 +15,10 @@ describe('RequestDetailDataSelectors', () => {
                     filters: filters || {},
                     operations: operations || [],
                     selectedOperationId: selectedOperationId || ''
+                },
+                logging: {
+                    messages: [],
+                    filters: []
                 }
             }
         }

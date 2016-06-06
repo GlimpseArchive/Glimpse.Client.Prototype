@@ -54,12 +54,10 @@ module.exports.registerTab({
     component: DataContainer
 });
 
-var LoggingComponent = require('./components/request-detail-panel-logging').Logging;
-var LoggingComponentModel = require('./component-models/LoggingComponentModel').LoggingComponentModel;
+var LoggingContainer = require('./containers/RequestDetailPanelLoggingContainer');
 
 module.exports.registerTab({
     key: 'tab.logging',
     title: 'Logs',
-    component: LoggingComponent,
-    componentModelFactory: function() { return new LoggingComponentModel(glimpse, requestDetailStore, messageProcessor); }
+    component: LoggingContainer
 });

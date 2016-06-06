@@ -2,11 +2,13 @@
 
 import { FontAwesomeIcon } from '../../shell/components/FontAwesomeIcon';
 import { ILogMessage } from '../messages/ILogMessage';
-import { ILoggingComponentModel, ILoggingLevelModel, ILogMessageModel, ILogMessageSpan } from '../component-models/ILoggingComponentModel';
+import { RequestDetailPanelLoggingFilterBarContainer } from '../containers/RequestDetailPanelLoggingFilterBarContainer';
 
 import _ = require('lodash');
 import React = require('react');
 import Highlight = require('react-highlight');
+
+var store = require('../stores/RequestStore');
 
 class LogMessageObject extends React.Component<{ message: string }, {}> {
     public render() {
@@ -20,6 +22,18 @@ class LogMessageText extends React.Component<{ className: string, ref: string, s
             <div className={this.props.className}>{this.props.spans.map(span => <span className={span.wasReplaced ? 'tab-logs-table-message-replaced-region' : ''}>{span.text}</span>)}</div>
         );
     }
+}
+
+interface ILogMessageSpan {
+    text: string;
+    wasReplaced?: boolean;
+}
+
+interface ILogMessageModel extends ILogMessage {
+    id: string;
+    isObject: boolean;
+    ordinal: number;
+    spans: ILogMessageSpan[];
 }
 
 interface ILogMessageProps {
@@ -41,10 +55,6 @@ class LogMessage extends React.Component<ILogMessageProps, ILogMessageState> {
             isExpanded: false,
             isTruncated: false
         };
-    }
-
-    public componentDidUpdate(prevProps, prevState) {
-        const messageWidth = React.findDOMNode(this.refs['text'])['offsetWidth'];
     }
 
     public render() {
@@ -104,34 +114,22 @@ class LogMessage extends React.Component<ILogMessageProps, ILogMessageState> {
 }
 
 export interface ILoggingProps {
-    componentModel: ILoggingComponentModel;
+    filteredMessages: ({ index: number, message })[];
+    totalMessageCount: number;
 }
 
-/**
- * React class to for the console log messages tab
- */
 export class Logging extends React.Component<ILoggingProps, {}> {
+    constructor(props?) {
+        super(props);
+    }
     public render() {
-        const totalMessages = this.props.componentModel.totalMessageCount;
-
-        if (totalMessages !== 0) {
-            const messages = this.props.componentModel.getMessages();
+        if (this.props.totalMessageCount > 0) {
             return (
                 <div className='tab-content tab-logs'>
-                    <div className='tab-logs-message-count'>{totalMessages} {totalMessages === 1 ? 'Message' : 'Messages'}</div>
+                    <div className='tab-logs-message-count'>{this.props.totalMessageCount} {this.props.totalMessageCount === 1 ? 'Message' : 'Messages'}</div>
                     <br/>
-                    <div className='flex filter-bar'>
-                        <button className='filter-show-all' onClick={e => this.toggleAll()}>Show All</button>
-                        <div className='flex'>
-                        {
-                            this.props.componentModel.levels.map(
-                                level => {
-                                    return <button className={this.props.componentModel.isShown(level) ? 'filter-button-shown' : 'filter-button-not-shown'} type='button' onClick={e => this.toggleLevel(level)}>{level.level} ({level.messageCount})</button>;
-                                })
-                        }
-                        </div>
-                    </div>
-                    <br/>
+                    <RequestDetailPanelLoggingFilterBarContainer />
+                    <br />
                     <table className='table table-bordered table-striped tab-content-item tab-logs-table'>
                         <thead>
                             <tr className='table-col-title-group'>
@@ -145,12 +143,12 @@ export class Logging extends React.Component<ILoggingProps, {}> {
                         </thead>
                         <tbody>
                         {
-                            messages.map(message => {
+                            this.props.filteredMessages.map(message => {
                                 return (
-                                    <tr className='tab-logs-data-default' key={message.id}>
-                                        <td>{message.ordinal}</td>
-                                        <td className={Logging.getRowClass(message)}><FontAwesomeIcon path={Logging.getIconPath(message.level)} />{message.level}</td>
-                                        <td className='tab-logs-table-icon-column'><LogMessage message={message} /></td>
+                                    <tr className='tab-logs-data-default' key={message.index}>
+                                        <td>{message.index}</td>
+                                        <td className={Logging.getRowClass(message.message.level)}><FontAwesomeIcon path={Logging.getIconPath(message.message.level)} />{message.message.level}</td>
+                                        <td className='tab-logs-table-icon-column'><LogMessage message={message.message} /></td>
                                         <td>-</td>
                                         <td>-</td>
                                         <td />
@@ -187,10 +185,10 @@ export class Logging extends React.Component<ILoggingProps, {}> {
     /**
      * Return the CSS class name to use for the given message
      */
-    private static getRowClass(message: ILogMessage) {
+    private static getRowClass(level: string) {
         let rowClass = 'tab-logs-table-icon-column';
 
-        switch (message.level) {
+        switch (level) {
             case 'Critical':
             case 'Error':
                 rowClass += ' tab-logs-data-error';
@@ -204,13 +202,5 @@ export class Logging extends React.Component<ILoggingProps, {}> {
         }
 
         return rowClass;
-    }
-
-    private toggleLevel(level: ILoggingLevelModel) {
-        this.props.componentModel.toggleLevel(level);
-    }
-
-    private toggleAll() {
-        this.props.componentModel.showAll();
     }
 }
