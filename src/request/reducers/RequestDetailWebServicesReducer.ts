@@ -62,7 +62,7 @@ function updateRequests(state: { [key: string]: IRequestDetailWebServicesRequest
             .value();
     }
 
-    return state;
+    return {};
 }
 
 export function requestsReducer(state: { [key: string]: IRequestDetailWebServicesRequestState } = {}, action: Action) {

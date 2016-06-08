@@ -45,12 +45,12 @@ module.exports.registerTab({
     component: WebServices
 });
 
-var Request = require('./components/request-detail-panel-request').Request;
+var RequestContainer = require('./containers/RequestDetailPanelRequestContainer');
 
 module.exports.registerTab({
     key: 'tab.request',
     title: 'Request',
-    component: Request
+    component: RequestContainer
 });
 
 var DataContainer = require('./containers/RequestDetailPanelDataContainer');

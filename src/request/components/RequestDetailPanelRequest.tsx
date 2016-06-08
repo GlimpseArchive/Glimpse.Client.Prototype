@@ -67,30 +67,21 @@ class RequestHeaders extends React.Component<IRequestHeadersProps, {}> {
 }
 
 export interface IRequestProps {
-    request;
+    url: string;
+    requestHeaders: { [key: string]: string };
+    responseHeaders: { [key: string]: string };
 }
 
 export class Request extends React.Component<IRequestProps, {}> {
-    public getInitialState() {
-        return { checkedState: false };
-    }
-
     public render() {
-        const request = this.props.request;
-
-        // get payloads 
-        const payload = getPayloads(request);
-        const webRequestPayload = payload.webRequest;
-        const webResponsePayload = payload.webResponse;
-
         let content;
-        if (webRequestPayload && webResponsePayload) {
+        if (this.props.url && this.props.requestHeaders && this.props.responseHeaders) {
             content = (
                 <div className='tab-content'>
                     <div className='tab-section text-minor'>Web Request/Response</div>
-                    <RequestUrl url={webRequestPayload.url} />
-                    <RequestHeaders title='Request Headers' headers={webRequestPayload.headers} />
-                    <RequestHeaders title='Response Headers' headers={webResponsePayload.headers} />
+                    <RequestUrl url={this.props.url} />
+                    <RequestHeaders title='Request Headers' headers={this.props.requestHeaders} />
+                    <RequestHeaders title='Response Headers' headers={this.props.responseHeaders} />
                 </div>
             );
         }

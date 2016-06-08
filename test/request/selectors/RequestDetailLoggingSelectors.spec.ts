@@ -21,6 +21,11 @@ describe('RequestDetailLoggingSelectors', () => {
                     messages: messages || [],
                     filters: filters || []
                 },
+                request: {
+                    url: '',
+                    requestHeaders: {},
+                    responseHeaders: {}
+                },
                 webServices: {
                     requests: {},
                     selectedRequestId: ''

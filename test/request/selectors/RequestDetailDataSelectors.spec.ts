@@ -20,6 +20,11 @@ describe('RequestDetailDataSelectors', () => {
                     messages: [],
                     filters: []
                 },
+                request: {
+                    url: '',
+                    requestHeaders: {},
+                    responseHeaders: {}
+                },
                 webServices: {
                     requests: {},
                     selectedRequestId: ''
