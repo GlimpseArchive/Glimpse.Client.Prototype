@@ -35,8 +35,15 @@ module.exports = {
 
 // TODO: Need to come up with a better self registration process
 require('./components/request-detail-panel-execution');
-require('./components/request-detail-panel-webservices');
 require('./components/request-detail-panel-messages');
+
+var WebServices = require('./containers/RequestDetailPanelWebServicesContainer');
+
+module.exports.registerTab({
+    key: 'tab.webservices',
+    title: 'Web Services',
+    component: WebServices
+});
 
 var Request = require('./components/request-detail-panel-request').Request;
 

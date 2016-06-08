@@ -19,6 +19,10 @@ describe('RequestDetailDataSelectors', () => {
                 logging: {
                     messages: [],
                     filters: []
+                },
+                webServices: {
+                    requests: {},
+                    selectedRequestId: ''
                 }
             }
         }

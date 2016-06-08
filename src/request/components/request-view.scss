@@ -470,6 +470,20 @@ $tabbed-panel-border-color: #cccccc;
     padding: 10px 5px 5px 5px;
 }
 
+.tab-web-services {
+    display: flex;
+}
+
+.tab-web-services-header-details {
+    overflow-y: auto;
+    padding-left: 20px;
+    padding-top: 5px;
+}
+
+.tab-web-services-table {
+    table-layout: fixed;
+}
+
 .tab-data {
     display: flex;
 }
