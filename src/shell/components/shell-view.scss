@@ -143,12 +143,16 @@ $table-background-alt-color: #f9f9f9;
         border-left: 0px;
     }
 }
+
 .table-selectable {
     > tbody > tr {
-        cursor: pointer;
+        cursor: pointer;        
+    }
+
+    > tbody > tr:hover {
+        background: #cccccc;
     }
 }
-
 
 //****** LISTS *******
 .list-unstyled {

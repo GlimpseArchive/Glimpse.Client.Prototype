@@ -5,4 +5,6 @@ export interface IRequestDetailDataOperationState {
     id: string;
     operation: string;
     recordCount: number;
+    databaseName: string;
+    serverName: string;
 }

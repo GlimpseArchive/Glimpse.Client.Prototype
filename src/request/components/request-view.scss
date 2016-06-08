@@ -389,6 +389,7 @@
 }
 
 .master-detail-tri-panel-detail {
+    box-shadow: 0px -2px 4px #999999;
     display: flex;
     flex: none;
     flex-direction: row;
@@ -409,16 +410,64 @@
 }
 
 .master-detail-tri-panel-detail-panel-title {
-    background-color: #323d42;
+    align-items: center;
+    background-color: #394351;
     color: white;
+    display: flex;
+    flex: none;
     font-weight: bold;
-    padding-bottom: 5px;
-    padding-left: 10px;
-    padding-top: 5px;
+    height: 28px;
+    padding-left: 30px;
 }
 
 .master-detail-tri-panel-detail-panel-content {
     overflow: auto;
+}
+
+$tabbed-panel-background-color: white;
+$tabbed-panel-border-color: #cccccc;
+
+.tabbed-panel {
+    background: $tabbed-panel-background-color;
+    display: flex;
+    flex-direction: column;
+}
+
+.tabbed-panel-headers {
+    background: #fafafa;
+    border-bottom: 1px solid $tabbed-panel-border-color;
+    display: flex;
+    flex-direction: row;
+    padding: 5px 30px 0px 30px;
+}
+
+.tabbed-panel-header {
+    align-items: center;
+    border-color: transparent transparent $tabbed-panel-border-color transparent;
+    border-style: solid;
+    border-width: 1px;
+    color: #767676;
+    cursor: pointer;
+    display: flex;
+    height: 23px;
+    margin-bottom: -1px;
+    padding: 0px 5px 0px 5px;
+}
+
+.tabbed-panel-header:hover {
+    color: black;
+}
+
+.tabbed-panel-header-selected {
+    @extend .tabbed-panel-header;
+    
+    background: $tabbed-panel-background-color;
+    border-color: $tabbed-panel-border-color $tabbed-panel-border-color $tabbed-panel-background-color $tabbed-panel-border-color;
+    color: black;
+}
+
+.tabbed-panel-selected {
+    padding: 10px 5px 5px 5px;
 }
 
 .tab-data {
@@ -430,6 +479,19 @@
     font-size: 175%;
 }
 
+.tab-data-operation-command {
+    padding-left: 30px;
+
+    > pre {
+        margin: 10px 0px 0px 0px;
+        
+        > code {
+            background: transparent;
+            padding: 0;
+        }
+    }
+}
+
 .tab-data-operation-table {
     table-layout: fixed;
 }
@@ -437,6 +499,24 @@
 .tab-data-operation-table-command-column {
     overflow: hidden;
     white-space: nowrap;
+}
+
+.tab-data-operation-summary-general-info {
+    padding-left: 31px;  
+    
+    > ul {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+
+        > li {
+            margin-bottom: 5px;
+        }
+    }
+
+    .label {
+        font-weight: bold;
+    } 
 }
 
 .tab-logs {

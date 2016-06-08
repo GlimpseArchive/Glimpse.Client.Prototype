@@ -29,6 +29,8 @@ describe('RequestDetailDataSelectors', () => {
             id: index.toString(),
             command: 'command' + index,
             database: database || 'db',
+            databaseName: 'db1',
+            serverName: 'server1',
             duration: 123,
             operation: 'op' + index,
             recordCount: 456

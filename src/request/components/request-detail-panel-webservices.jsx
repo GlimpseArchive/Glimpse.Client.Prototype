@@ -67,11 +67,6 @@ var ServiceMessages = React.createClass({
                     </tr>
                 </thead>
                 {requestItems}
-                <tfoot>
-                    <tr className="table-body-padding table-col-title-group">
-                        <th colSpan="7"></th>
-                    </tr>
-                </tfoot>
             </table>
         );
     }

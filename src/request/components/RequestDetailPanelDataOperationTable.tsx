@@ -40,15 +40,8 @@ export class RequestDetailPanelDataOperationTable extends React.Component<IReque
                     </tr>
                 </thead>
                 <tbody>
-                {
-                    this.props.operations.map(operation => this.renderOperation(operation))
-                }
+                    { this.props.operations.map(operation => this.renderOperation(operation)) }
                 </tbody>
-                <tfoot>
-                    <tr className='table-body-padding table-col-title-group'>
-                        <th colSpan={7} />
-                    </tr>
-                </tfoot>
             </table>
         );
     }

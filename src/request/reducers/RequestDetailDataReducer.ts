@@ -85,6 +85,8 @@ function createSqlOperation(beforeAfterMessage: { beforeMessage: IMessageEnvelop
         operation: {
             id: beforeAfterMessage.beforeMessage.id,
             database: Databases.sql.name,
+            databaseName: undefined, // NOTE: SQL does not track database name.
+            serverName: undefined, // NOTE: SQL does not track server name.
             command: beforeAfterMessage.beforeMessage.payload.commandText,
             duration: beforeAfterMessage.afterMessage ? beforeAfterMessage.afterMessage.payload.commandDuration : undefined,
             operation: getOperationForSqlCommand(beforeAfterMessage.beforeMessage.payload.commandMethod),
@@ -101,6 +103,8 @@ function createMongoDbInsertOperation(message: IMessageEnvelope<IDataMongoDbInse
     return {
         id: message.id,
         database: Databases.mongoDb.name,
+        databaseName: message.payload.database,
+        serverName: message.payload.connectionHost,
         command: prettyPrintJson(message.payload.options),
         duration: message.payload.duration,
         operation: 'Insert',
@@ -112,6 +116,8 @@ function createMongoDbReadOperation(message: IMessageEnvelope<IDataMongoDbReadPa
     return {
         id: message.id,
         database: Databases.mongoDb.name,
+        databaseName: message.payload.database,
+        serverName: message.payload.connectionHost,
         command: prettyPrintJson(message.payload.options),
         duration: message.payload.duration,
         operation: 'Read',
@@ -123,6 +129,8 @@ function createMongoDbUpdateOperation(message: IMessageEnvelope<IDataMongoDbUpda
     return {
         id: message.id,
         database: Databases.mongoDb.name,
+        databaseName: message.payload.database,
+        serverName: message.payload.connectionHost,
         command: prettyPrintJson(message.payload.options),
         duration: message.payload.duration,
         operation: 'Update',
@@ -134,6 +142,8 @@ function createMongoDbDeleteOperation(message: IMessageEnvelope<IDataMongoDbDele
     return {
         id: message.id,
         database: 'MongoDB',
+        databaseName: message.payload.database,
+        serverName: message.payload.connectionHost,
         command: prettyPrintJson(message.payload.options),
         duration: message.payload.duration,
         operation: 'Delete',

@@ -1,6 +1,7 @@
 import { MasterDetailTriPanel } from './MasterDetailTriPanel';
 import { RequestDetailPanelDataFilterBarContainer } from '../containers/RequestDetailPanelDataFilterBarContainer';
 import { RequestDetailPanelDataOperationCommandContainer } from '../containers/RequestDetailPanelDataOperationCommandContainer';
+import { RequestDetailPanelDataOperationSummaryContainer } from '../containers/RequestDetailPanelDataOperationSummaryContainer';
 import { RequestDetailPanelDataOperationTableContainer } from '../containers/RequestDetailPanelDataOperationTableContainer';
 
 import * as React from 'react';
@@ -42,7 +43,9 @@ export class DataComponent extends React.Component<IDataComponentProps, {}> {
     }
     
     private renderRightDetail() {
-        return null;
+        return (
+            <RequestDetailPanelDataOperationSummaryContainer />
+        );
     }
     
     private getTotalOperationCountText() {

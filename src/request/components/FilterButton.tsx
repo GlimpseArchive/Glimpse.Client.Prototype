@@ -3,6 +3,7 @@ import * as React from 'react';
 export interface IFilterButtonProps {
     count: number;
     isShown: boolean;
+    key?: string;
     name: string;
 }
 
