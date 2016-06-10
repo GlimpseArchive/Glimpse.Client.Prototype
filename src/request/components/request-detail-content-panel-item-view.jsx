@@ -15,16 +15,6 @@ module.exports = React.createClass({
             'active': this.props.isActive
         });
         
-        //var tabContent = requestTabController.resolveTab(name);
-
-        var componentModel;
-        
-        if (tab.componentModelFactory) {
-            componentModel = tab.componentModelFactory();
-            
-            componentModel.init(request);
-        }
-
-        return <div className={containerClass}><tab.component key={name} request={request} tab={tab} componentModel={componentModel}/></div>;
+        return <div className={containerClass}><tab.component key={name} request={request} tab={tab} /></div>;
     }
 });

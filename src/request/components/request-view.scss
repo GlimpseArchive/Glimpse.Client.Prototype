@@ -437,6 +437,7 @@ $tabbed-panel-border-color: #cccccc;
     background: #fafafa;
     border-bottom: 1px solid $tabbed-panel-border-color;
     display: flex;
+    flex: none;
     flex-direction: row;
     padding: 5px 30px 0px 30px;
 }
@@ -467,6 +468,7 @@ $tabbed-panel-border-color: #cccccc;
 }
 
 .tabbed-panel-selected {
+    flex: none;
     padding: 10px 5px 5px 5px;
 }
 
@@ -482,6 +484,68 @@ $tabbed-panel-border-color: #cccccc;
 
 .tab-web-services-table {
     table-layout: fixed;
+}
+
+.tab-request {
+    display: flex;
+    flex: none;
+    flex-direction: row;
+    width: 100%;
+}
+
+.tab-request-response {
+    box-sizing: border-box;
+    display: flex;
+    flex: none;
+    flex-direction: row;
+    padding: 10px 40px 10px 40px;
+    width: 100%;
+}
+
+.tab-request-response-panel {
+    display: flex;
+    flex: none;
+    flex-direction: column;
+    width: 50%;
+}
+
+.tab-request-response-title {
+    font-family: 'Segoe UI', 'Selawik Semibold', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 175%;    
+}
+
+.tab-request-separator {
+    background: #ccc;
+    flex: none;
+    margin: 0px 10px 0px 10px;
+    width: 1px;
+}
+
+.tab-request-headers {
+    overflow: auto;
+
+    > ul {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+
+        > li {
+            margin-bottom: 5px;
+        }
+    }
+}
+
+.tab-request-body {
+    display: flex;
+    overflow: auto;
+
+    .hljs {
+        white-space: normal;
+    }
+}
+
+.tab-request-header-key {
+    font-weight: bold;
 }
 
 .tab-data {

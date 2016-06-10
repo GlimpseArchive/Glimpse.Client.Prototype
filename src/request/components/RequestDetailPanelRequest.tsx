@@ -1,87 +1,34 @@
-'use strict';
-
-/*tslint:disable:no-var-requires */
-const messageProcessor = require('../util/request-message-processor');
-/*tslint:enable:no-var-requires */
+import { TabbedPanel } from './TabbedPanel';
+import { TabPanel } from './TabPanel';
+import { trainCase } from '../../lib/StringUtilities';
 
 import _ = require('lodash');
+import Highlight = require('react-highlight');
 import React = require('react');
-
-const getPayloads = (function() {
-    const getItem = messageProcessor.getTypePayloadItem;
-
-    const options = {
-        'web-response': getItem,
-        'web-request': getItem
-    };
-
-    return function(request) {
-        return messageProcessor.getTypeStucture(request, options);
-    };
-})();
-
-interface IRequestUrlProps {
-    url: string;
-}
-
-class RequestUrl extends React.Component<IRequestUrlProps, {}> {
-    public render() {
-        return (
-            <div>
-                <div className='tab-section tab-section-execution-url'>
-                    <div className='flex flex-row flex-inherit tab-section-header'>
-                        <div className='tab-title col-10'>Url</div>
-                    </div>
-                    <div>{this.props.url}</div>
-                </div>
-            </div>
-        );
-    }
-}
-
-interface IRequestHeadersProps {
-    headers: { [key: string]: string };
-    title: string;
-}
-
-class RequestHeaders extends React.Component<IRequestHeadersProps, {}> {
-    public render() {
-        return (
-            <div>
-                <div className='tab-section tab-section-execution-headers'>
-                    <div className='flex flex-row flex-inherit tab-section-header'>
-                        <div className='tab-title col-10'>{this.props.title}</div>
-                    </div>
-                    <div className='tab-section-listing'>
-                        {_.map(this.props.headers, function(value, key) {
-                            return (<section className='flex flex-row'>
-                                    <div className='col-2'>{key}</div>
-                                    <div className='col-8'>{value}</div>
-                                </section>);
-                        })}
-                    </div>
-                </div>
-            </div>
-        );
-    }
-}
 
 export interface IRequestProps {
     url: string;
-    requestHeaders: { [key: string]: string };
-    responseHeaders: { [key: string]: string };
+    request: {
+        body: string;
+        headers: { [key: string]: string }
+    };
+    response: {
+        body: string;
+        headers: { [key: string]: string };
+    };
 }
 
 export class Request extends React.Component<IRequestProps, {}> {
     public render() {
         let content;
-        if (this.props.url && this.props.requestHeaders && this.props.responseHeaders) {
+        if (this.props.url && this.props.request && this.props.response) {
             content = (
-                <div className='tab-content'>
-                    <div className='tab-section text-minor'>Web Request/Response</div>
-                    <RequestUrl url={this.props.url} />
-                    <RequestHeaders title='Request Headers' headers={this.props.requestHeaders} />
-                    <RequestHeaders title='Response Headers' headers={this.props.responseHeaders} />
+                <div className='tab-request'>
+                    <div className='tab-request-response'>
+                        { this.renderRequestResponse('Request', this.props.request.body, this.props.request.headers) }
+                        <div className='tab-request-separator' />
+                        { this.renderRequestResponse('Response', this.props.response.body, this.props.response.headers) }
+                    </div>
                 </div>
             );
         }
@@ -90,5 +37,46 @@ export class Request extends React.Component<IRequestProps, {}> {
         }
 
         return content;
+    }
+
+    private renderRequestResponse(title: string, body: string, headers: { [key: string]: string }) {
+        return (
+            <div className='tab-request-response-panel'>
+                <div className='tab-request-response-title'>{title}</div>
+                <br />
+                <TabbedPanel>
+                    <TabPanel header='Headers'>
+                        { this.renderHeaders(headers) }
+                    </TabPanel>
+                    <TabPanel header='Body'>
+                        { this.renderBody(body) }
+                    </TabPanel>
+                </TabbedPanel>
+            </div>
+        );     
+    }
+
+    private renderHeaders(headers: { [key: string]: string}) {
+        return (
+            <div className='tab-request-headers'>
+                <ul>
+                    { _.map(headers, (value, key) => this.renderHeader(key, value)) }
+                </ul>
+            </div>
+        );
+    }
+
+    private renderHeader(key: string, value: string) {
+        return (
+            <li key={key}><span className='tab-request-header-key'>{trainCase(key)}: </span><span>{value}</span></li>
+        );
+    }
+
+    private renderBody(body: string) {
+        return (
+            <div className='tab-request-body'>
+                <Highlight className=''>{body}</Highlight>
+            </div>
+        );
     }
 }

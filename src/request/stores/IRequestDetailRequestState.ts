@@ -1,5 +1,7 @@
+import { IRequestDetailRequestDetailsState } from './IRequestDetailRequestDetailsState';
+
 export interface IRequestDetailRequestState {
     url: string;
-    requestHeaders: { [key: string]: string };
-    responseHeaders: { [key: string]: string };
+    request: IRequestDetailRequestDetailsState;
+    response: IRequestDetailRequestDetailsState;
 }

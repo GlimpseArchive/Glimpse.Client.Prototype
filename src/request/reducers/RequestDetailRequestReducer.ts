@@ -8,8 +8,14 @@ import { Action } from 'redux';
 
 const defaultState: IRequestDetailRequestState = {
     url: '',
-    requestHeaders: {},
-    responseHeaders: {}
+    request: {
+        body: '',
+        headers: {}
+    },
+    response: {
+        body: '',
+        headers: {}
+    }
 };
 
 // TODO: Consolidate this function into a utility function across reducers.
@@ -30,8 +36,14 @@ function updateRequestState(state: IRequestDetailRequestState, request): IReques
 
         return {
             url: requestMessage ? requestMessage.payload.url : undefined,
-            requestHeaders: requestMessage ? requestMessage.payload.headers : undefined,
-            responseHeaders: responseMessage ? responseMessage.payload.headers : undefined
+            request: {
+                body: requestMessage && requestMessage.payload.body && requestMessage.payload.body.content ? requestMessage.payload.body.content : '',
+                headers: requestMessage ? requestMessage.payload.headers : undefined
+            },
+            response: {
+                body: responseMessage && responseMessage.payload.body && responseMessage.payload.body.content ? responseMessage.payload.body.content : '',
+                headers: responseMessage ? responseMessage.payload.headers : undefined
+            }
         };
     }
 

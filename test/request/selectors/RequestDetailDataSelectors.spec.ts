@@ -22,8 +22,14 @@ describe('RequestDetailDataSelectors', () => {
                 },
                 request: {
                     url: '',
-                    requestHeaders: {},
-                    responseHeaders: {}
+                    request: {
+                        body: '',
+                        headers: {}
+                    },
+                    response: {
+                        body: '',
+                        headers: {}
+                    }
                 },
                 webServices: {
                     requests: {},
