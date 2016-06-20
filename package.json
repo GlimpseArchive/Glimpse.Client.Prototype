@@ -56,7 +56,7 @@
     "del": "^2.2.0",
     "exports-loader": "^0.6.2",
     "expose-loader": "^0.7.1",
-    "file-loader": "^0.8.5",
+    "file-loader": "^0.9.0",
     "gulp": "^3.9.0",
     "gulp-filelog": "^0.4.1",
     "gulp-if": "^2.0.0",
