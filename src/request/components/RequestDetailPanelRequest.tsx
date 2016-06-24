@@ -51,6 +51,9 @@ export class Request extends React.Component<IRequestProps, {}> {
                     <TabPanel header='Body'>
                         { this.renderBody(body) }
                     </TabPanel>
+                    <TabPanel header='Raw'>
+                        { this.renderRaw(body) }
+                    </TabPanel>
                 </TabbedPanel>
             </div>
         );     
@@ -78,5 +81,13 @@ export class Request extends React.Component<IRequestProps, {}> {
                 <Highlight className=''>{body}</Highlight>
             </div>
         );
+    }
+
+    private renderRaw(body: string) {
+        return (
+            <div className='tab-request-raw'>
+                <span>{ body }</span>
+            </div>
+        )
     }
 }

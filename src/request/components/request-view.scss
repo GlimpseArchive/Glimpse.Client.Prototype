@@ -539,9 +539,20 @@ $tabbed-panel-border-color: #cccccc;
     display: flex;
     overflow: auto;
 
+    > pre {
+        margin: 0;
+    }
+
     .hljs {
         white-space: normal;
     }
+}
+
+.tab-request-raw {
+    display: flex;
+    overflow: auto;
+    padding: 0.5em;
+    white-space: normal;
 }
 
 .tab-request-header-key {
