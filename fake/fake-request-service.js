@@ -246,6 +246,17 @@ var details = (function () {
         details.remote(req.params.contextId.replace('?contextId=', '')); 
     });
     
+    requestMock.get(window.location.origin + '/glimpse/telemetry-config', function(req) {
+        return {
+            "ok" : true,
+            "body" : {
+                "enabled": true,
+                "uri": "https://vortex.data.microsoft.com/collect/v1",
+                "instrumentationKey": "AIF-a96980ad-8a38-47a2-bbb0-328338b6964a"
+            }
+        }
+    });
+
     requestMock.get(window.location.origin + '/glimpse/metadata', function(req){
        return {
            "ok" : true,
@@ -261,7 +272,8 @@ var details = (function () {
                     "request-history": window.location.origin + "/glimpse/request-history/{?dmin,dmax,url,methods,smin,smax,tags,before,userId,types}",
                     "message-ingress": window.location.origin + "/glimpse/message-ingress/",
                     "metadata": window.location.origin + "/glimpse/metadata/?hash={hash}",
-                    "script-options": window.location.origin + "/glimpse/script-options/{?hash}"
+                    "script-options": window.location.origin + "/glimpse/script-options/{?hash}",
+                    "telemetry-config": window.location.origin + "/glimpse/telemetry-config"
                 },
                 "hash": "801b465f"
             }

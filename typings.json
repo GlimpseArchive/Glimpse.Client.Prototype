@@ -7,6 +7,7 @@
   },
   "dependencies": {
     "lodash": "registry:npm/lodash#4.0.0+20160416211519",
+    "node-uuid": "registry:npm/node-uuid#1.4.7+20160503013124",
     "react-redux": "registry:npm/react-redux#4.4.0+20160207114942"
   }
 }

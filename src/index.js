@@ -12,4 +12,7 @@ var shell = require('shell/shell');
 // TODO: Need to come up with a better self registration process
 require('request/request');
 
+var telemetryClient = require('lib/TelemetryClient').default;
+telemetryClient.registerListeners();
+
 shell.initialize();
