@@ -11,6 +11,7 @@ function mapStateToProps(state) {
         request: {
             body: request.request.body,
             contentType: getRequestContentType(state),
+            formData: request.request.formData,
             headers: request.request.headers
         },
         response: {

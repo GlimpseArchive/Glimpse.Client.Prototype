@@ -10,6 +10,7 @@ const defaultState: IRequestDetailRequestState = {
     url: '',
     request: {
         body: '',
+        formData: {},
         headers: {}
     },
     response: {
@@ -38,11 +39,12 @@ function updateRequestState(state: IRequestDetailRequestState, request): IReques
             url: requestMessage ? requestMessage.payload.url : undefined,
             request: {
                 body: requestMessage && requestMessage.payload.body && requestMessage.payload.body.content ? requestMessage.payload.body.content : '',
-                headers: requestMessage ? requestMessage.payload.headers : undefined
+                formData: requestMessage && requestMessage.payload.body && requestMessage.payload.body.form ? requestMessage.payload.body.form : {}, 
+                headers: requestMessage ? requestMessage.payload.headers : {}
             },
             response: {
                 body: responseMessage && responseMessage.payload.body && responseMessage.payload.body.content ? responseMessage.payload.body.content : '',
-                headers: responseMessage ? responseMessage.payload.headers : undefined
+                headers: responseMessage ? responseMessage.payload.headers : {}
             }
         };
     }

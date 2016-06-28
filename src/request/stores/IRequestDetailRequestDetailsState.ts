@@ -1,4 +1,5 @@
 export interface IRequestDetailRequestDetailsState {
     body: string;
-    headers: { [key: string]: string }
+    formData?: { [key: string]: string };
+    headers: { [key: string]: string };
 }

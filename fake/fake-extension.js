@@ -963,6 +963,12 @@ var generateMvcRequest = (function() {
                     if (type == 'web-request') {
                         payload.path = source.path;
                         payload.query = source.query;
+                        payload.body = {
+                            form: {
+                                keyTwo: 'value2',
+                                keyOne: 'value1'
+                            }
+                        };
 
                         request._requestStartTime = payload.startTime;
                         request._requestMethod = payload.method;
