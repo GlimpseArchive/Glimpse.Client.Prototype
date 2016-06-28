@@ -22,6 +22,7 @@ describe('RequestDetailDataSelectors', () => {
                 },
                 request: {
                     url: '',
+                    middleware: [],
                     request: {
                         body: '',
                         headers: {}

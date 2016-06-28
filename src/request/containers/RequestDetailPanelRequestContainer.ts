@@ -1,4 +1,4 @@
-import { getRequest, getRequestContentType, getResponseContentType } from '../selectors/RequestDetailRequestSelectors';
+import { getMiddleware, getRequest, getRequestContentType, getResponseContentType } from '../selectors/RequestDetailRequestSelectors';
 import { Request } from '../components/RequestDetailPanelRequest';
 
 import { connect } from 'react-redux';
@@ -7,6 +7,7 @@ function mapStateToProps(state) {
     const request = getRequest(state);
 
     return {
+        middleware: getMiddleware(state),
         url: request.url,
         request: {
             body: request.request.body,

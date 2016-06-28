@@ -3,6 +3,7 @@
 export interface IMessage {
     id: string;
     ordinal: number;
+    types: string[];
     payload;
 }
 

@@ -487,18 +487,18 @@ $tabbed-panel-border-color: #cccccc;
 }
 
 .tab-request {
+    box-sizing: border-box;
     display: flex;
     flex: none;
-    flex-direction: row;
+    flex-direction: column;
+    padding: 10px 40px 10px 40px;
     width: 100%;
 }
 
 .tab-request-response {
-    box-sizing: border-box;
     display: flex;
     flex: none;
     flex-direction: row;
-    padding: 10px 40px 10px 40px;
     width: 100%;
 }
 
@@ -509,7 +509,7 @@ $tabbed-panel-border-color: #cccccc;
     width: 50%;
 }
 
-.tab-request-response-title {
+.tab-request-title {
     font-family: 'Segoe UI', 'Selawik Semibold', Tahoma, Geneva, Verdana, sans-serif;
     font-size: 175%;    
 }
@@ -575,6 +575,14 @@ $tabbed-panel-border-color: #cccccc;
 
 .tab-request-parameter-key {
     font-weight: bold;
+}
+
+.tab-request-middleware {
+    flex: none;
+}
+
+.tab-request-middleware-indent {
+    margin-left: 15px;
 }
 
 .tab-data {

@@ -210,27 +210,27 @@ var seedMvcActions = (function() {
                         action: 'Index',
                         route: generate.common.route('home', 'index', null),
                         preActivities: [
-                            { access: 'middleware-start', name: 'query', paths: ['/'] },
-                            { access: 'middleware-end', name: 'query', paths: ['/'], result: 'next' },
-                            { access: 'middleware-start', name: 'expressInit', paths: ['/'] },
-                            { access: 'middleware-end', name: 'expressInit', paths: ['/'], headers: [{ op: 'set', name: 'x-powered-by', value: 'Express' }], result: 'next' },
-                            { access: 'middleware-start', name: 'logger', displayName: 'Morgan Logger', packageName: 'morgan', paths: ['/'] },
-                            { access: 'middleware-end', name: 'logger', displayName: 'Morgan Logger', packageName: 'morgan', paths: ['/'], result: 'next' },
-                            { access: 'middleware-start', name: 'jsonParser', displayName: 'JSON Body Parser', packageName: 'body-parser', paths: ['/'] },
-                            { access: 'middleware-end', name: 'jsonParser', displayName: 'JSON Body Parser', packageName: 'body-parser', paths: ['/'], result: 'next' },
-                            { access: 'middleware-start', name: 'urlencodedParser', displayName: 'URL-Encoded Body Parser', packageName: 'body-parser', paths: ['/'] },
-                            { access: 'middleware-end', name: 'urlencodedParser', displayName: 'URL-Encoded Body Parser', packageName: 'body-parser', paths: ['/'], result: 'next' },
-                            { access: 'middleware-start', name: 'cookieParser', displayName: 'Cookie Parser', packageName: 'cookie-parser', paths: ['/'] },
-                            { access: 'middleware-end', name: 'cookieParser', displayName: 'Cookie Parser', packageName: 'cookie-parser', paths: ['/'], result: 'next' },
-                            { access: 'middleware-start', name: 'serveStatic', displayName: 'Express Static File Server', packageName: 'express', paths: ['/'] },
-                            { access: 'middleware-end', name: 'serveStatic', displayName: 'Express Static File Server', packageName: 'express', paths: ['/'], result: 'next' },
-                            { access: 'middleware-start', name: 'router', paths: ['/'] },
-                            { access: 'middleware-end', name: 'router', paths: ['/'], result: 'error' },
-                            { access: 'middleware-start', name: 'router', paths: ['/users'] },
-                            { access: 'middleware-start', name: '<anonymous>', paths: ['/:id'], method: 'GET', params: { id: '1' } },
+                            { access: 'middleware-start', correlationId: '1', name: 'query', paths: ['/'] },
+                            { access: 'middleware-end', correlationId: '1', name: 'query', paths: ['/'], result: 'next' },
+                            { access: 'middleware-start', correlationId: '2', name: 'expressInit', paths: ['/'] },
+                            { access: 'middleware-end', correlationId: '2', name: 'expressInit', paths: ['/'], headers: [{ op: 'set', name: 'x-powered-by', value: 'Express' }], result: 'next' },
+                            { access: 'middleware-start', correlationId: '3', name: 'logger', displayName: 'Morgan Logger', packageName: 'morgan', paths: ['/'] },
+                            { access: 'middleware-end', correlationId: '3', name: 'logger', displayName: 'Morgan Logger', packageName: 'morgan', paths: ['/'], result: 'next' },
+                            { access: 'middleware-start', correlationId: '4', name: 'jsonParser', displayName: 'JSON Body Parser', packageName: 'body-parser', paths: ['/'] },
+                            { access: 'middleware-end', correlationId: '4', name: 'jsonParser', displayName: 'JSON Body Parser', packageName: 'body-parser', paths: ['/'], result: 'next' },
+                            { access: 'middleware-start', correlationId: '5', name: 'urlencodedParser', displayName: 'URL-Encoded Body Parser', packageName: 'body-parser', paths: ['/'] },
+                            { access: 'middleware-end', correlationId: '5', name: 'urlencodedParser', displayName: 'URL-Encoded Body Parser', packageName: 'body-parser', paths: ['/'], result: 'next' },
+                            { access: 'middleware-start', correlationId: '6', name: 'cookieParser', displayName: 'Cookie Parser', packageName: 'cookie-parser', paths: ['/'] },
+                            { access: 'middleware-end', correlationId: '6', name: 'cookieParser', displayName: 'Cookie Parser', packageName: 'cookie-parser', paths: ['/'], result: 'next' },
+                            { access: 'middleware-start', correlationId: '7', name: 'serveStatic', displayName: 'Express Static File Server', packageName: 'express', paths: ['/'] },
+                            { access: 'middleware-end', correlationId: '7', name: 'serveStatic', displayName: 'Express Static File Server', packageName: 'express', paths: ['/'], result: 'next' },
+                            { access: 'middleware-start', correlationId: '8', name: 'router', paths: ['/'] },
+                            { access: 'middleware-end', correlationId: '8', name: 'router', paths: ['/'], result: 'error' },
+                            { access: 'middleware-start', correlationId: '9', name: 'router', paths: ['/users'] },
+                            { access: 'middleware-start', correlationId: '10', name: '<anonymous>', paths: ['/:id'], method: 'GET', params: { id: '1' } },
                             { access: 'mongo', type: 'data-mongodb-read', operation: 'toArray', query: {}, options: { find: 'MusicStore.AlbumCollection', limit: 0, skip: 0, query: {}, slaveOk: true, readPreference: { mode: 'primary' } }, connectionHost: 'localhost', connectionPort: 27017, database: 'MusicStore', collection: 'AlbumCollection' },
-                            { access: 'middleware-end', name: '<anonymous>', paths: ['/:id'], method: 'GET', params: { id: '1' }, headers: [{ op: 'set', name: 'content-type', value: 'text/html; charset=utf-8'}, { op: 'set', name: 'content-length', value: '1478'}, { op: 'set', name: 'etag', value: 'W/"5c6-KfLI6FEDrv9C6HycXY0IbA"'}], result: 'end' },
-                            { access: 'middleware-end', name: 'router', paths: ['/users'], headers: [{ op: 'set', name: 'content-type', value: 'text/html; charset=utf-8'}, { op: 'set', name: 'content-length', value: '1478'}, { op: 'set', name: 'etag', value: 'W/"5c6-KfLI6FEDrv9C6HycXY0IbA"'}], result: 'end' },
+                            { access: 'middleware-end', correlationId: '10', name: '<anonymous>', paths: ['/:id'], method: 'GET', params: { id: '1' }, headers: [{ op: 'set', name: 'content-type', value: 'text/html; charset=utf-8'}, { op: 'set', name: 'content-length', value: '1478'}, { op: 'set', name: 'etag', value: 'W/"5c6-KfLI6FEDrv9C6HycXY0IbA"'}], result: 'end' },
+                            { access: 'middleware-end', correlationId: '9', name: 'router', paths: ['/users'], headers: [{ op: 'set', name: 'content-type', value: 'text/html; charset=utf-8'}, { op: 'set', name: 'content-length', value: '1478'}, { op: 'set', name: 'etag', value: 'W/"5c6-KfLI6FEDrv9C6HycXY0IbA"'}], result: 'end' },
                             { access: 'SQL', operation: 'Select', target: 'Albums', affected: 1, command: 'SELECT TOP (2) \n[Extent1].[AlbumId] AS [AlbumId], \n[Extent1].[GenreId] AS [GenreId], \n[Extent1].[ArtistId] AS [ArtistId], \n[Extent1].[Title] AS [Title], \n[Extent1].[Price] AS [Price], \n[Extent1].[AlbumArtUrl] AS [AlbumArtUrl]\nFROM [dbo].[Albums] AS [Extent1]\nWHERE [Extent1].[AlbumId] = 1 /* @p0 */' },
                             { access: 'mongo', type: 'data-mongodb-read', operation: 'toArray', query: {}, options: { find: 'MusicStore.AlbumCollection', limit: 0, skip: 0, query: {}, slaveOk: true, readPreference: { mode: 'primary' } }, connectionHost: 'localhost', connectionPort: 27017, database: 'MusicStore', collection: 'AlbumCollection' }
                         ],
@@ -677,6 +677,7 @@ var generateMvcRequest = (function() {
             var message = this.createMessage('middleware-start', context);
 
             var payload = message.payload;
+            payload.correlationId = activity.correlationId;
             payload.name = activity.name;
             payload.displayName = activity.displayName;
             payload.packageName = activity.packageName;
@@ -693,6 +694,7 @@ var generateMvcRequest = (function() {
             var message = this.createMessage('middleware-end', context);
 
             var payload = message.payload;
+            payload.correlationId = activity.correlationId;
             payload.name = activity.name;
             payload.displayName = activity.displayName;
             payload.packageName = activity.packageName;

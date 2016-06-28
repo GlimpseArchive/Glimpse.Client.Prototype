@@ -23,6 +23,7 @@ describe('RequestDetailLoggingSelectors', () => {
                 },
                 request: {
                     url: '',
+                    middleware: [],
                     request: {
                         body: '',
                         headers: {}
