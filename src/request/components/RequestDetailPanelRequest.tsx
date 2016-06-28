@@ -2,6 +2,8 @@ import { TabbedPanel } from './TabbedPanel';
 import { TabPanel } from './TabPanel';
 import { trainCase } from '../../lib/StringUtilities';
 
+import requestConverter = require('../repository/converter/request-converter');
+
 import _ = require('lodash');
 import Highlight = require('react-highlight');
 import React = require('react');
@@ -10,10 +12,12 @@ export interface IRequestProps {
     url: string;
     request: {
         body: string;
+        contentType: string;
         headers: { [key: string]: string }
     };
     response: {
         body: string;
+        contentType: string;
         headers: { [key: string]: string };
     };
 }
@@ -25,9 +29,9 @@ export class Request extends React.Component<IRequestProps, {}> {
             content = (
                 <div className='tab-request'>
                     <div className='tab-request-response'>
-                        { this.renderRequestResponse('Request', this.props.request.body, this.props.request.headers) }
+                        { this.renderRequestResponse('Request', this.props.request.body, this.props.request.contentType, this.props.request.headers) }
                         <div className='tab-request-separator' />
-                        { this.renderRequestResponse('Response', this.props.response.body, this.props.response.headers) }
+                        { this.renderRequestResponse('Response', this.props.response.body, this.props.response.contentType, this.props.response.headers) }
                     </div>
                 </div>
             );
@@ -39,7 +43,7 @@ export class Request extends React.Component<IRequestProps, {}> {
         return content;
     }
 
-    private renderRequestResponse(title: string, body: string, headers: { [key: string]: string }) {
+    private renderRequestResponse(title: string, body: string, contentType: string, headers: { [key: string]: string }) {
         return (
             <div className='tab-request-response-panel'>
                 <div className='tab-request-response-title'>{title}</div>
@@ -49,7 +53,7 @@ export class Request extends React.Component<IRequestProps, {}> {
                         { this.renderHeaders(headers) }
                     </TabPanel>
                     <TabPanel header='Body'>
-                        { this.renderBody(body) }
+                        { this.renderBody(body, contentType) }
                     </TabPanel>
                 </TabbedPanel>
             </div>
@@ -72,11 +76,19 @@ export class Request extends React.Component<IRequestProps, {}> {
         );
     }
 
-    private renderBody(body: string) {
+    private renderBody(body: string, contentType: string) {
+        const highlightClassName = this.getHighlightClassNameForContentType(contentType);
+
         return (
             <div className='tab-request-body'>
-                <Highlight className=''>{body}</Highlight>
+                <Highlight className={highlightClassName}>{body}</Highlight>
             </div>
         );
+    }
+
+    private getHighlightClassNameForContentType(contentType: string): string {
+        const category = requestConverter.getContentTypeCategory(contentType);
+
+        return (category && category.highlight) || '';
     }
 }

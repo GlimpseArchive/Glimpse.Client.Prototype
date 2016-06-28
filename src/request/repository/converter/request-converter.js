@@ -8,13 +8,13 @@ var _strategies = [];
 
 var getContentTypeCategory = (function() {
     var listing = {
-        'text/html':                   {'document': true},
+        'text/html':                   {'document': true, 'highlight': 'xml'},
         'text/plain':                  {'document': true},
-        'application/xhtml+xml':       {'document': true},
-        'text/xml':                    {'data': true},
-        'application/json':            {'data': true},
-        'text/css':                    {'stylesheet': true},
-        'text/xsl':                    {'stylesheet': true},
+        'application/xhtml+xml':       {'document': true, 'highlight': 'xml'},
+        'text/xml':                    {'data': true, 'highlight': 'xml'},
+        'application/json':            {'data': true, 'highlight': 'json'},
+        'text/css':                    {'stylesheet': true, 'highlight': 'css'},
+        'text/xsl':                    {'stylesheet': true, 'highlight': 'xml'},
         'image/jpg':                   {'image': true},
         'image/jpeg':                  {'image': true},
         'image/pjpeg':                 {'image': true},
@@ -39,16 +39,16 @@ var getContentTypeCategory = (function() {
         'application/x-font-type1':    {'font': true},
         'application/x-font-ttf':      {'font': true},
         'application/x-truetype-font': {'font': true},
-        'text/javascript':             {'script': true},
-        'text/ecmascript':             {'script': true},
-        'application/javascript':      {'script': true},
-        'application/ecmascript':      {'script': true},
-        'application/x-javascript':    {'script': true},
-        'text/javascript1.1':          {'script': true},
-        'text/javascript1.2':          {'script': true},
-        'text/javascript1.3':          {'script': true},
-        'text/jscript':                {'script': true},
-        'text/livescript':             {'script': true},
+        'text/javascript':             {'script': true, 'highlight': 'javascript'},
+        'text/ecmascript':             {'script': true, 'highlight': 'javascript'},
+        'application/javascript':      {'script': true, 'highlight': 'javascript'},
+        'application/ecmascript':      {'script': true, 'highlight': 'javascript'},
+        'application/x-javascript':    {'script': true, 'highlight': 'javascript'},
+        'text/javascript1.1':          {'script': true, 'highlight': 'javascript'},
+        'text/javascript1.2':          {'script': true, 'highlight': 'javascript'},
+        'text/javascript1.3':          {'script': true, 'highlight': 'javascript'},
+        'text/jscript':                {'script': true, 'highlight': 'javascript'},
+        'text/livescript':             {'script': true, 'highlight': 'livescript'},
         'text/vtt':                    {'texttrack': true},
     };
     
@@ -226,7 +226,8 @@ module.exports = {
         });  
         
         return didUpdate;
-    }
+    },
+    getContentTypeCategory: getContentTypeCategory
 };
 
 // TODO: Need to come up with a better self registration process

@@ -141,6 +141,10 @@ var seedMvcActions = (function() {
 
                     return {
                         headers: generate.common.headers('localhost:3000', 'text/html'),
+                        body: {
+                            request: '<html><body><div className="request">Request</div></body></html>',
+                            response: '<html><body><div className="response">Response</div></body></html>' 
+                        },
                         path: '/Store/Browse',
                         query: '?Genre=' + genre,
                         controller: 'Store',
@@ -248,7 +252,11 @@ var seedMvcActions = (function() {
                 },
                 cart: function() {
                     return {
-                        headers: generate.common.headers('localhost:3000', 'text/html'),
+                        headers: generate.common.headers('localhost:3000', 'application/json'),
+                        body: {
+                            request: '{ "request": "value" }',
+                            response: '{ "response": "value" }' 
+                        },
                         path: '/ShoppingCart/',
                         controller: 'ShoppingCart',
                         action: 'Index',
@@ -494,6 +502,12 @@ var generateMvcRequest = (function() {
             payload.url = 'http://localhost:5000' + source.path + defaultOrEmpty(source.query);
             payload.method = source.method;
             payload.headers = source.headers.request;
+            
+            if (source.body && source.body.request) {
+                payload.body = {
+                    content: source.body.request
+                }
+            }
 
             MessageGenerator.support.beforeTimings('', payload, source.dateTime);
 
@@ -507,6 +521,12 @@ var generateMvcRequest = (function() {
             payload.statusCode = source.statusCode;
             payload.statusText = source.statusText;
             payload.headers = source.headers.response;
+
+            if (source.body && source.body.response) {
+                payload.body = {
+                    content: source.body.response
+                }
+            }
 
             MessageGenerator.support.afterTimings('', payload, source.duration, source.dateTime);
 
