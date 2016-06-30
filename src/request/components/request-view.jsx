@@ -13,8 +13,9 @@ module.exports = React.createClass({
     render: function () {
         return (
             <ReactRedux.Provider store={store}>
-                {
-                    () => (
+            {
+                function () {
+                    return (
                         <div className="request-holder application-section-group">
                             <div className="request-user-section application-section">
                                 <div className="request-holder-content">
@@ -32,9 +33,10 @@ module.exports = React.createClass({
                                 </div>
                             </div>
                             <Detail />
-                        </div> 
-                    )
+                        </div>
+                    );
                 }
+            } 
             </ReactRedux.Provider>
         );
     }
