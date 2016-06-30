@@ -1,5 +1,5 @@
 export interface IRequestDetailRequestMiddlewareState {
-    headers: { [key: string]: string };
+    headers: { [key: string]: { value: string, wasSet: boolean } };
     middleware: IRequestDetailRequestMiddlewareState[];
     name: string;
     packageName: string;

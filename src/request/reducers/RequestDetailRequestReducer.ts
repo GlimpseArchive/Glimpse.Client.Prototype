@@ -1,5 +1,4 @@
 import { IRequestDetailRequestMiddlewareState } from '../stores/IRequestDetailRequestMiddlewareState';
-import { IRequestDetailRequestState } from '../stores/IRequestDetailRequestState';
 import { IMessage, IMessageEnvelope } from '../messages/IMessageEnvelope';
 import { IMiddlewareEndPayload, MiddlewareEndType } from '../messages/IMiddlewareEndPayload';
 import { IMiddlewareStartPayload, MiddlewareStartType } from '../messages/IMiddlewareStartPayload';
@@ -12,42 +11,28 @@ import * as _ from 'lodash';
 
 const defaultMiddlewareState = [];
 
-const defaultState: IRequestDetailRequestState = {
-    url: '',
-    middleware: defaultMiddlewareState,
-    request: {
-        body: '',
-        formData: {},
-        headers: {}
-    },
-    response: {
-        body: '',
-        headers: {}
-    }
-};
-
 // TODO: Consolidate this function into a utility function across reducers.
 function getMessages(request, messageType: string): IMessage[] {
     if (request) {
         const messageIds = request.types[messageType];
-        
+
         if (messageIds) {
             return messageIds.map(messageId => request.messages[messageId]);
         }
     }
-    
+
     return [];
 }
 
 function getMessageWithPayload<T>(request, messageType: string): IMessageEnvelope<T> {
     if (request) {
         const messageIds = request.types[messageType];
-        
+
         if (messageIds && messageIds.length > 0) {
             return request.messages[messageIds[0]];
         }
     }
-    
+
     return undefined;
 }
 
@@ -58,9 +43,9 @@ interface ICorrelatedMiddlewareMessages {
 }
 
 function correlateMiddlewareMessages(startMessages: IMessageEnvelope<IMiddlewareStartPayload>[], endMessages: IMessageEnvelope<IMiddlewareEndPayload>[]): ICorrelatedMiddlewareMessages[] {
-    const endMessagesByCorrelationId = _.keyBy(endMessages, endMessage => endMessage.payload.correlationId);    
+    const endMessagesByCorrelationId = _.keyBy(endMessages, endMessage => endMessage.payload.correlationId);
     const sortedStartMessages = startMessages.sort((a, b) => a.ordinal - b.ordinal);
-    
+
     const messageStack = [
         {
             startMessage: undefined,
@@ -70,8 +55,6 @@ function correlateMiddlewareMessages(startMessages: IMessageEnvelope<IMiddleware
     ];
 
     sortedStartMessages.forEach(startMessage => {
-        const topOfStack = messageStack[messageStack.length - 1];
-
         while (messageStack[messageStack.length - 1].endMessage && startMessage.ordinal > messageStack[messageStack.length - 1].endMessage.ordinal) {
             messageStack.pop();
         }
@@ -92,20 +75,37 @@ function correlateMiddlewareMessages(startMessages: IMessageEnvelope<IMiddleware
 function toMap<T, TResult>(values: T[], keySelector: (value: T) => string, valueSelector: (value: T) => TResult): { [key: string]: TResult } {
 
     return _.reduce(
-        values, 
+        values,
         (result: { [key: string]: TResult }, value: T) => {
             result[keySelector(value)] = valueSelector(value);
 
             return result;
-        }, 
+        },
         <{ [key: string]: TResult }>{});
+}
+
+function createMiddlewareHeaders(endMessage: IMessageEnvelope<IMiddlewareEndPayload>): { [key: string]: { value: string, wasSet: boolean } } {
+    if (endMessage && endMessage.payload.name !== 'router') {
+        return toMap(
+            endMessage.payload.headers,
+            header => header.name,
+            header => {
+                return {
+                    value: header.value,
+                    wasSet: header.op === 'set'
+                };
+            });
+    }
+    else {
+        return {};
+    }
 }
 
 function createMiddlewareState(messages: ICorrelatedMiddlewareMessages): IRequestDetailRequestMiddlewareState {
     // NOTE: We ignore Express Router header modifications as they're likely actually modifications made by route middleware, not the Router itself.
 
     return {
-        headers: messages.endMessage && messages.startMessage.payload.name !== 'router' ? toMap(messages.endMessage.payload.headers, header => header.name, header => header.value) : {},
+        headers: createMiddlewareHeaders(messages.endMessage),
         middleware: messages.middleware.map(middlewareMessages => createMiddlewareState(middlewareMessages)),
         name: messages.startMessage.payload.displayName || messages.startMessage.payload.name,
         packageName: messages.startMessage.payload.packageName
@@ -120,34 +120,34 @@ export function middlewareReducer(state: IRequestDetailRequestMiddlewareState[] 
     switch (action.type) {
         case requestDetailUpdateAction.type:
             return updateMiddlewareState(requestDetailUpdateAction.unwrap(action));
+        default:
+            return state;
     }
-
-    return state;
 }
 
 function createRequestReducer<T>(defaultState: T, reducer: (state: T, requestPayload: IWebRequestPayload, responsePayload: IWebResponsePayload) => T): (state: T, action: Action) => T {
     return (state: T = defaultState, action: Action) => {
         switch (action.type) {
-            case requestDetailUpdateAction.type: {
+            case requestDetailUpdateAction.type:
                 const request = requestDetailUpdateAction.unwrap(action);
                 const requestMessage = getMessageWithPayload<IWebRequestPayload>(request, WebRequestType);
                 const responseMessage = getMessageWithPayload<IWebResponsePayload>(request, WebResponseType);
 
                 return reducer(
-                    state, 
+                    state,
                     requestMessage ? requestMessage.payload : undefined,
                     responseMessage ? responseMessage.payload : undefined);
-            }
-        }
 
-        return state;
-    }
+            default:
+                return state;
+        }
+    };
 }
 
 const urlReducer = createRequestReducer<string>(
     '',
     (state, request, response) => {
-        return request ? request.url : ''
+        return request ? request.url : '';
     });
 
 const webRequestReducer = createRequestReducer<{ body: string, formData: { [key: string]: string }, headers: { [key: string]: string } }>(
@@ -159,9 +159,9 @@ const webRequestReducer = createRequestReducer<{ body: string, formData: { [key:
     (state, request, response) => {
         return {
             body: request && request.body && request.body.content ? request.body.content : '',
-            formData: request && request.body && request.body.form ? request.body.form : {}, 
+            formData: request && request.body && request.body.form ? request.body.form : {},
             headers: request && request.headers ? request.headers : {}
-        }
+        };
     });
 
 const webResponseReducer = createRequestReducer<{ body: string, headers: { [key: string]: string } }>(
@@ -173,7 +173,7 @@ const webResponseReducer = createRequestReducer<{ body: string, headers: { [key:
         return {
             body: response && response.body && response.body.content ? response.body.content : '',
             headers: response && response.headers ? response.headers : {}
-        }
+        };
     });
 
 export const requestReducer = combineReducers({

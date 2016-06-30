@@ -1,3 +1,4 @@
+import { RequestDetailPanelRequestMiddlewareContainer } from '../containers/RequestDetailPanelRequestMiddlewareContainer';
 import { TabbedPanel } from './TabbedPanel';
 import { TabPanel } from './TabPanel';
 import { trainCase } from '../../lib/StringUtilities';
@@ -9,18 +10,8 @@ import Highlight = require('react-highlight');
 import React = require('react');
 import parseUrl = require('url-parse');
 
-interface IFlattenedMiddleware {
-    depth: number;
-    middleware: { 
-        name: string, 
-        packageName: string, 
-        headers: { [key: string]: string }
-    };
-}
-
 export interface IRequestProps {
     url: string;
-    middleware: IFlattenedMiddleware[],
     request: {
         body: string;
         contentType: string;
@@ -48,7 +39,7 @@ export class Request extends React.Component<IRequestProps, {}> {
                         <div className='tab-request-separator' />
                         { this.renderRequestResponse('Response', this.props.response.body, this.props.response.contentType, this.props.response.headers) }
                     </div>
-                    { this.renderMiddleware() }
+                    <RequestDetailPanelRequestMiddlewareContainer />
                 </div>
             );
         }
@@ -68,36 +59,36 @@ export class Request extends React.Component<IRequestProps, {}> {
         if (!_.isEmpty(query) || !_.isEmpty(formData)) {
             panels.push({ header: 'Params', renderContent: () => this.renderParams(query, formData) });
         }
-        
+
         return (
             <div className='tab-request-response-panel'>
                 <div className='tab-request-title'>{title}</div>
                 <br />
                 <TabbedPanel>
-                    { 
+                    {
                         panels.map(panel => {
                             return (
                                 <TabPanel header={panel.header}>
                                     { panel.renderContent() }
                                 </TabPanel>
                             );
-                        }) 
+                        })
                     }
                 </TabbedPanel>
             </div>
-        );     
+        );
     }
 
     private renderHeaders(headers: { [key: string]: string}) {
         return (
             <div className='tab-request-headers'>
                 <ul>
-                    { 
+                    {
                         _(headers)
                             .map((value, key) => { return { key: key, value: value }; })
                             .sortBy(pair => pair.key)
                             .map(pair => this.renderHeader(pair.key, pair.value))
-                            .value() 
+                            .value()
                     }
                 </ul>
             </div>
@@ -106,7 +97,7 @@ export class Request extends React.Component<IRequestProps, {}> {
 
     private renderHeader(key: string, value: string) {
         return (
-            <li key={key}><span className='tab-request-header-key'>{trainCase(key)}: </span><span>{value}</span></li>
+            <li key={key}><span className='tab-request-header-key'>{trainCase(key)}: </span><span className='tab-request-header-value'>{value}</span></li>
         );
     }
 
@@ -123,8 +114,8 @@ export class Request extends React.Component<IRequestProps, {}> {
     private renderParams(query: { [key: string]: string }, formData: { [key: string]: string }) {
         return (
             <div className='tab-request-params'>
-                { !_.isEmpty(query) ? this.renderParameterSet('Query String', query) : null }
-                { !_.isEmpty(formData) ? this.renderParameterSet('Form Data', formData) : null }
+                { !_.isEmpty(query) ? this.renderParameterSet('Query String', query) : null     /* tslint:disable-line:no-null-keyword */ }
+                { !_.isEmpty(formData) ? this.renderParameterSet('Form Data', formData) : null  /* tslint:disable-line:no-null-keyword */ }
             </div>
         );
     }
@@ -134,12 +125,12 @@ export class Request extends React.Component<IRequestProps, {}> {
             <div className='tab-request-parameter-set'>
                 <div className='tab-request-parameter-title'>{title}</div>
                 <ul>
-                    { 
+                    {
                         _(set)
                             .map((value, key) => { return { key: key, value: value }; })
                             .sortBy(pair => pair.key)
                             .map(pair => this.renderParameter(pair.key, pair.value))
-                            .value() 
+                            .value()
                     }
                 </ul>
             </div>
@@ -148,68 +139,8 @@ export class Request extends React.Component<IRequestProps, {}> {
 
     private renderParameter(key: string, value: string) {
         return (
-            <li key={key}><span className='tab-request-parameter-key'>{key}: </span><span>{value}</span></li>
+            <li key={key}><span className='tab-request-parameter-key'>{key}: </span><span className='tab-request-parameter-value'>{value}</span></li>
         );
-    }
-
-    private renderMiddleware() {
-        return (
-            <div className='tab-request-middleware'>
-                <div className='tab-request-title'>Middleware</div>
-                <br />
-                <table className='table table-bordered table-striped table-selectable tab-request-middleware-table'>
-                    <thead>
-                        <tr className='table-col-title-group'>
-                            <th width='10%'><span className='table-col-title'>Ordinal</span></th>
-                            <th width='25%'><span className='table-col-title'>Name</span></th>
-                            <th width='20%'><span className='table-col-title'>Type</span></th>
-                            <th width='10%'><span className='table-col-title'>Modify</span></th>
-                            <th width='25%'><span className='table-col-title'>Parameter</span></th>
-                            <th />
-                        </tr>
-                    </thead>
-                    <tbody>
-                        { this.props.middleware.map((middlewareRow, index) => this.renderMiddlewareRow(index + 1, middlewareRow)) }      
-                    </tbody>
-                </table>
-            </div>
-        );
-    }
-
-    private renderMiddlewareRow(ordinal: number, middleware: IFlattenedMiddleware) {
-        return (
-            <tr>
-                <td>{ordinal}</td>
-                <td>{this.renderName(middleware.middleware.name, middleware.depth)}</td>                            
-                <td>{middleware.middleware.packageName}</td>
-                <td>{_.size(middleware.middleware.headers) > 0 ? 'Header' : '-'}</td>
-                <td>{this.renderHeaders(middleware.middleware.headers)}</td>
-                <td />
-            </tr>
-        );
-    }
-
-    private renderName(name: string, depth: number) {
-        return (
-            <div>
-                {this.renderIndent(depth)}<span>{name}</span>
-            </div>
-        )
-    }
-
-    private renderIndent(depth: number) {
-        if (depth > 0) {
-            const spans = [];
-
-            for (let i = 0; i < depth; i++) {
-                spans.push(<span className='tab-request-middleware-indent' />);
-            }
-
-            return spans;
-        }
-        else {
-            return null;
-        }
     }
 
     private getHighlightClassNameForContentType(contentType: string): string {

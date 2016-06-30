@@ -486,6 +486,9 @@ $tabbed-panel-border-color: #cccccc;
     table-layout: fixed;
 }
 
+$tab-request-value-color: #225b7d;
+$tab-request-value-strikethrough-color: #f6999e;
+
 .tab-request {
     box-sizing: border-box;
     display: flex;
@@ -549,6 +552,10 @@ $tabbed-panel-border-color: #cccccc;
     font-weight: bold;
 }
 
+.tab-request-header-value {
+    color: $tab-request-value-color;
+}
+
 .tab-request-params {
     overflow: auto;
 }
@@ -577,12 +584,44 @@ $tabbed-panel-border-color: #cccccc;
     font-weight: bold;
 }
 
+.tab-request-parameter-value {
+    color: $tab-request-value-color;
+}
+
 .tab-request-middleware {
     flex: none;
 }
 
 .tab-request-middleware-indent {
     margin-left: 15px;
+}
+
+.tab-request-middleware-headers {
+    > ul {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+
+        > li {
+            margin-bottom: 5px;
+        }
+    }
+}
+
+.tab-request-middleware-header-key {
+    font-weight: bold;
+}
+
+.tab-request-middleware-header-value {
+    color: $tab-request-value-color;
+}
+
+.tab-request-middleware-header-overwritten {
+    color: #b5b5b5;
+    text-decoration: line-through;
+    text-decoration-color: $tab-request-value-strikethrough-color;
+    -moz-text-decoration-color: $tab-request-value-strikethrough-color;
+    -webkit-text-decoration-color: $tab-request-value-strikethrough-color;
 }
 
 .tab-data {
