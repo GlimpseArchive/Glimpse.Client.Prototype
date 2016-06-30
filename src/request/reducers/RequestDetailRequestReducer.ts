@@ -8,6 +8,7 @@ import { requestDetailUpdateAction } from '../actions/RequestDetailActions';
 
 import { Action, combineReducers } from 'redux';
 import * as _ from 'lodash';
+import * as querystring from 'querystring-browser';
 
 const defaultMiddlewareState = [];
 
@@ -150,7 +151,54 @@ const urlReducer = createRequestReducer<string>(
         return request ? request.url : '';
     });
 
-const webRequestReducer = createRequestReducer<{ body: string, formData: { [key: string]: string }, headers: { [key: string]: string } }>(
+function getValueAtKeyCaseInsensitive<T>(values: { [key: string]: T }, searchKey: string): T {
+    const normalizedSearchKey = searchKey.toLowerCase();
+    let foundValue = undefined;
+
+
+    _.forEach(values, (value, key) => {
+        if (key.toLowerCase() === normalizedSearchKey) {
+            foundValue = value;
+
+            return false;
+        }
+    });
+
+    return foundValue;
+}
+
+function getMediaType(contentType: string): string {
+    const index = contentType.indexOf(';');
+
+    if (index >= 0) {
+        return contentType.slice(0, index);
+    }
+    else {
+        return contentType;
+    }
+}
+
+function getFormData(request: IWebRequestPayload): { [key: string]: string } {
+    if (request && request.body) {
+        if (request.body.form && !_.isEmpty(request.body.form)) {
+            return request.body.form;
+        }
+
+        if (request.body.content && request.headers) {
+            const mediaType = getMediaType(getValueAtKeyCaseInsensitive(request.headers, 'content-type'));
+
+            if (mediaType.toLowerCase() === 'application/x-www-form-urlencoded') {
+                const formData = querystring.parse(request.body.content);
+
+                return formData;
+            }
+        }
+    }
+
+    return {};
+}
+
+export const webRequestReducer = createRequestReducer<{ body: string, formData: { [key: string]: string }, headers: { [key: string]: string } }>(
     {
         body: '',
         formData: {},
@@ -159,7 +207,7 @@ const webRequestReducer = createRequestReducer<{ body: string, formData: { [key:
     (state, request, response) => {
         return {
             body: request && request.body && request.body.content ? request.body.content : '',
-            formData: request && request.body && request.body.form ? request.body.form : {},
+            formData: getFormData(request),
             headers: request && request.headers ? request.headers : {}
         };
     });

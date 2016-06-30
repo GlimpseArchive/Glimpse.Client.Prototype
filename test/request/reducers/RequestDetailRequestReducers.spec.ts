@@ -1,11 +1,13 @@
 import { IMessage, IMessageEnvelope } from '../../../src/request/messages/IMessageEnvelope';
 import { IMiddlewareStartPayload } from '../../../src/request/messages/IMiddlewareStartPayload';
 import { IMiddlewareEndPayload } from '../../../src/request/messages/IMiddlewareEndPayload';
-import { middlewareReducer } from '../../../src/request/reducers/RequestDetailRequestReducer';
+import { IWebRequestPayload } from '../../../src/request/messages/IWebRequestPayload';
+import { middlewareReducer, webRequestReducer } from '../../../src/request/reducers/RequestDetailRequestReducer';
 
 import { Action } from 'redux';
 
 import * as chai from 'chai';
+import * as querystring from 'querystring-browser';
 
 const should = chai.should();
 
@@ -192,6 +194,153 @@ describe('RequestDetailRequestReducers', () => {
                     ]
                 }
             ]);
+        });
+    });
+
+    describe('#webRequestReducer', () => {
+        function createWebRequest(ordinal: number, headers: { [key: string]: string }, body?: string, formData?: { [key: string]: string }): IMessageEnvelope<IWebRequestPayload> {
+            return {
+                id: ordinal.toString(),
+                ordinal: ordinal,
+                types: [ 'web-request' ],
+                payload: {
+                    body: {
+                        content: body || undefined,
+                        encoding: 'utf8',
+                        files: undefined,
+                        form: formData || undefined,
+                        size: (body && body.length) || 0,
+                        isTruncated: false
+                    },
+                    headers: headers || {},
+                    protocol: {
+                        identifier: 'HTTP',
+                        version: '1.1'
+                    },
+                    url: 'http://localhost:3000/request',
+                    method: 'GET',
+                    startTime: '',
+                    isAjax: false,
+                    clientIp: ''
+                }
+            };
+        }
+
+        it('should return pre-parsed form data', () => {
+            const state = undefined;
+            const request = createRequest([
+                createWebRequest(1, {}, '', { key1: 'value1' })
+            ]);
+            const newState = webRequestReducer(state, createAction('request.detail.update', request));
+
+            should.exist(newState);
+            newState.should.deep.equal({
+                body: '',
+                formData: {
+                    key1: 'value1'
+                },
+                headers: {}
+            });
+        });
+
+        it('should return parsed form data', () => {
+            const state = undefined;
+            const body = querystring.stringify({
+                key1: 'value1',
+                key2: 'value2'
+            });
+            const headers: { [key: string]: string } = {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            };
+            const request = createRequest([
+                createWebRequest(1, headers, body, {})
+            ]);
+            const newState = webRequestReducer(state, createAction('request.detail.update', request));
+
+            should.exist(newState);
+            newState.should.deep.equal({
+                body: body,
+                formData: {
+                    key1: 'value1',
+                    key2: 'value2'
+                },
+                headers: headers
+            });
+        });
+
+        it('should return parsed form data for case insensitive headers', () => {
+            const state = undefined;
+            const body = querystring.stringify({
+                key1: 'value1',
+                key2: 'value2'
+            });
+            const headers: { [key: string]: string } = {
+                'content-Type': 'application/x-www-form-urlencoded'
+            };
+            const request = createRequest([
+                createWebRequest(1, headers, body, {})
+            ]);
+            const newState = webRequestReducer(state, createAction('request.detail.update', request));
+
+            should.exist(newState);
+            newState.should.deep.equal({
+                body: body,
+                formData: {
+                    key1: 'value1',
+                    key2: 'value2'
+                },
+                headers: headers
+            });
+        });
+
+        it('should return parsed form data for case insensitive content type', () => {
+            const state = undefined;
+            const body = querystring.stringify({
+                key1: 'value1',
+                key2: 'value2'
+            });
+            const headers: { [key: string]: string } = {
+                'Content-Type': 'Application/X-www-form-urlencoded'
+            };
+            const request = createRequest([
+                createWebRequest(1, headers, body, {})
+            ]);
+            const newState = webRequestReducer(state, createAction('request.detail.update', request));
+
+            should.exist(newState);
+            newState.should.deep.equal({
+                body: body,
+                formData: {
+                    key1: 'value1',
+                    key2: 'value2'
+                },
+                headers: headers
+            });
+        });
+
+        it('should return parsed form data for extended content type header', () => {
+            const state = undefined;
+            const body = querystring.stringify({
+                key1: 'value1',
+                key2: 'value2'
+            });
+            const headers: { [key: string]: string } = {
+                'Content-Type': 'application/x-www-form-urlencoded; charset=utf-8'
+            };
+            const request = createRequest([
+                createWebRequest(1, headers, body, {})
+            ]);
+            const newState = webRequestReducer(state, createAction('request.detail.update', request));
+
+            should.exist(newState);
+            newState.should.deep.equal({
+                body: body,
+                formData: {
+                    key1: 'value1',
+                    key2: 'value2'
+                },
+                headers: headers
+            });
         });
     });
 });

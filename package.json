@@ -38,6 +38,7 @@
     "node-uuid": "^1.4.7",
     "postal": "^2.0.0",
     "postal.diagnostics": "^0.7.4",
+    "querystring-browser": "^1.0.4",
     "react": "^0.13.3",
     "react-highlight": "^0.5.1",
     "react-redux": "^3.1.0",
