@@ -1,6 +1,6 @@
 {
   "name": "glimpse.client",
-  "version": "2.0.0-alpha.7",
+  "version": "2.0.0-alpha.8",
   "description": "The JavaScript client that acts as a viewer for the various Glimpse server backends",
   "main": "dist/glimpse.js",
   "repository": {
