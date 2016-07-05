@@ -7,6 +7,6 @@ export interface IMiddlewareEndPayload {
     packageName: string;
     endTime: string;
     duration: number;
-    headers: { op: string, name: string, value: string }[];
+    headers: { op: string, name: string, values: string[] }[];
     result: string;
 }

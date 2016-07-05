@@ -3,12 +3,21 @@ import { trainCase } from '../../lib/StringUtilities';
 import * as _ from 'lodash';
 import * as React from 'react';
 
+interface IHeaderValue {
+    values: string[];
+    isCurrent: boolean;
+}
+
+interface IHeaders {
+    [key: string]: IHeaderValue;
+}
+
 interface IFlattenedMiddleware {
     depth: number;
     middleware: {
         name: string,
         packageName: string,
-        headers: { [key: string]: { value: string, isCurrent: boolean } }
+        headers: IHeaders
     };
 }
 
@@ -77,17 +86,24 @@ export class RequestMiddleware extends React.Component<IRequestMiddlewareProps, 
         }
     }
 
-    private renderMiddlewareHeaders(headers: { [key: string]: { value: string } }) {
+    private renderMiddlewareHeaders(headers: IHeaders) {
+        const sortedHeaders = _(headers)
+            .map((value: IHeaderValue, key: string) => { return { key: key, value: value }; })
+            .sortBy(pair => pair.key)
+            .value();
+
+        const headerArray = [];
+
+        _.forEach(sortedHeaders, pair => {
+            pair.value.values.forEach(value => {
+                headerArray.push(pair.value.isCurrent ? this.renderCurrentHeader(pair.key, value) : this.renderOverwrittenHeader(pair.key, value));
+            });
+        });
+
         return (
             <div className='tab-request-middleware-headers'>
                 <ul>
-                    {
-                        _(headers)
-                            .map((value, key) => { return { key: key, value: value }; })
-                            .sortBy(pair => pair.key)
-                            .map(pair => pair.value.isCurrent ? this.renderCurrentHeader(pair.key, pair.value.value) : this.renderOverwrittenHeader(pair.key, pair.value.value))
-                            .value()
-                    }
+                    { headerArray }
                 </ul>
             </div>
         );

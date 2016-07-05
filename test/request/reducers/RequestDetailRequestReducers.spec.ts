@@ -54,7 +54,7 @@ describe('RequestDetailRequestReducers', () => {
         };
     }
 
-    function createMiddlewareEnd(ordinal: number, correlationId: string, name: string, packageName: string, headers?: { name: string, op: string, value: string }[]): IMessageEnvelope<IMiddlewareEndPayload> {
+    function createMiddlewareEnd(ordinal: number, correlationId: string, name: string, packageName: string, headers?: { name: string, op: string, values: string[] }[]): IMessageEnvelope<IMiddlewareEndPayload> {
         return {
             id: ordinal.toString(),
             ordinal: ordinal,
@@ -100,7 +100,7 @@ describe('RequestDetailRequestReducers', () => {
             const state = [];
             const request = createRequest([
                 createMiddlewareStart(1, 'one', 'name', 'package'),
-                createMiddlewareEnd(2, 'one', 'name', 'package', [ { name: 'set-header', op: 'set', value: 'value' }, { name: 'not-set-header', op: 'unset', value: 'value' }])
+                createMiddlewareEnd(2, 'one', 'name', 'package', [ { name: 'set-header', op: 'set', values: ['value'] }, { name: 'not-set-header', op: 'unset', values: ['value'] }])
             ]);
             const newState = middlewareReducer(state, createAction('request.detail.update', request));
 
@@ -111,11 +111,11 @@ describe('RequestDetailRequestReducers', () => {
                     packageName: 'package',
                     headers: {
                         'set-header': {
-                            value: 'value',
+                            values: ['value'],
                             wasSet: true
                         },
                         'not-set-header': {
-                            value: 'value',
+                            values: ['value'],
                             wasSet: false
                         }
                     },

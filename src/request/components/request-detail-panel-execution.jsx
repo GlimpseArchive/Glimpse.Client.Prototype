@@ -486,7 +486,7 @@ var MiddlewareHeaders = React.createClass({
             return (
                 <div className="flex tab-section-details-item">
                     <div className="tab-section-details-key col-2"><div className="truncate">{value.name}:</div></div>
-                    <div className="tab-section-details-value col-8"><div className="truncate">{value.value}</div></div>
+                    <div className="tab-section-details-value col-8"><div className="truncate">{value.values.join(', ')}</div></div>
                 </div>
             );
         });

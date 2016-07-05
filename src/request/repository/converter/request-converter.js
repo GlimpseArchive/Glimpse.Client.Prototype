@@ -150,7 +150,7 @@ var modifyPayload = (function() {
                 payload.query = url.query;
             }
             else if (type == 'web-response' || type == 'data-http-response') {
-                var contentType = payload.headers && glimpse.util.getPropertyCaseInsensitive(payload.headers, 'Content-Type');;
+                var contentType = payload.headers && glimpse.util.getPropertyCaseInsensitive(payload.headers, 'Content-Type')[0];
                 payload.contentType = contentType;
                 payload.statusText = getStatusCodeText(payload.statusCode);  
                 payload.contentCategory = getContentTypeCategory(payload.contentType);

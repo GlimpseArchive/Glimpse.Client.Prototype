@@ -10,6 +10,10 @@ import Highlight = require('react-highlight');
 import React = require('react');
 import parseUrl = require('url-parse');
 
+interface IRequestResponseHeaders {
+    [key: string]: string | string[];
+}
+
 export interface IRequestProps {
     url: string;
     request: {
@@ -21,7 +25,7 @@ export interface IRequestProps {
     response: {
         body: string;
         contentType: string;
-        headers: { [key: string]: string };
+        headers: IRequestResponseHeaders;
     };
 }
 
@@ -50,7 +54,7 @@ export class Request extends React.Component<IRequestProps, {}> {
         return content;
     }
 
-    private renderRequestResponse(title: string, body: string, contentType: string, headers: { [key: string]: string }, query?: { [key: string]: string }, formData?: { [key: string]: string }) {
+    private renderRequestResponse(title: string, body: string, contentType: string, headers: IRequestResponseHeaders, query?: { [key: string]: string }, formData?: { [key: string]: string }) {
         const panels = [
             { header: 'Headers', renderContent: () => this.renderHeaders(headers) },
             { header: 'Body', renderContent: () => this.renderBody(body, contentType) }
@@ -79,25 +83,38 @@ export class Request extends React.Component<IRequestProps, {}> {
         );
     }
 
-    private renderHeaders(headers: { [key: string]: string}) {
+    private renderHeaders(headers: IRequestResponseHeaders) {
+        const sortedHeaders = _(headers)
+            .map((value: string | string[], key: string) => { return { key: key, value: value }; })
+            .sortBy(pair => pair.key)
+            .value();
+
+        const headerArray = [];
+
+        _.forEach(sortedHeaders, (pair) => {
+            const value = pair.value;
+            if (Array.isArray(value)) {
+                value.forEach((v, index) => {
+                    headerArray.push(this.renderHeader(pair.key, index, v));
+                });
+            }
+            else {
+                headerArray.push(this.renderHeader(pair.key, 0, value));
+            }
+        });
+
         return (
             <div className='tab-request-headers'>
                 <ul>
-                    {
-                        _(headers)
-                            .map((value, key) => { return { key: key, value: value }; })
-                            .sortBy(pair => pair.key)
-                            .map(pair => this.renderHeader(pair.key, pair.value))
-                            .value()
-                    }
+                    { headerArray }
                 </ul>
             </div>
         );
     }
 
-    private renderHeader(key: string, value: string) {
+    private renderHeader(key: string, index: number, value: string) {
         return (
-            <li key={key}><span className='tab-request-header-key'>{trainCase(key)}: </span><span className='tab-request-header-value'>{value}</span></li>
+            <li key={key + index}><span className='tab-request-header-key'>{trainCase(key)}: </span><span className='tab-request-header-value'>{value}</span></li>
         );
     }
 

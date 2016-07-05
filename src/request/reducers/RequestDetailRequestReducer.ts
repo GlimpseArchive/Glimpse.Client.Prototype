@@ -85,14 +85,14 @@ function toMap<T, TResult>(values: T[], keySelector: (value: T) => string, value
         <{ [key: string]: TResult }>{});
 }
 
-function createMiddlewareHeaders(endMessage: IMessageEnvelope<IMiddlewareEndPayload>): { [key: string]: { value: string, wasSet: boolean } } {
+function createMiddlewareHeaders(endMessage: IMessageEnvelope<IMiddlewareEndPayload>): { [key: string]: { values: string[], wasSet: boolean } } {
     if (endMessage && endMessage.payload.name !== 'router') {
         return toMap(
             endMessage.payload.headers,
             header => header.name,
             header => {
                 return {
-                    value: header.value,
+                    values: header.values,
                     wasSet: header.op === 'set'
                 };
             });
@@ -212,7 +212,7 @@ export const webRequestReducer = createRequestReducer<{ body: string, formData: 
         };
     });
 
-const webResponseReducer = createRequestReducer<{ body: string, headers: { [key: string]: string } }>(
+const webResponseReducer = createRequestReducer<{ body: string, headers: { [key: string]: string[] } }>(
     {
         body: '',
         headers: {}

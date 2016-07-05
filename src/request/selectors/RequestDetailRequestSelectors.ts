@@ -12,7 +12,7 @@ export const getUrl = (state: IRequestState) => state.detail.request.url;
 interface IMiddleware {
     name: string;
     packageName: string;
-    headers: { [key: string]: { value: string, isCurrent: boolean } };
+    headers: { [key: string]: { values: string[], isCurrent: boolean } };
 }
 
 interface IFlattenedMiddleware {
@@ -26,7 +26,7 @@ function flattenMiddlewareRecursive(middleware: IRequestDetailRequestMiddlewareS
         const newMiddleware = {
             name: middlewareItem.name,
             packageName: middlewareItem.packageName,
-            headers: _.mapValues(middlewareItem.headers, value => { return { value: value.value, isCurrent: false }; })
+            headers: _.mapValues(middlewareItem.headers, value => { return { values: value.values, isCurrent: false }; })
         };
 
         _.forEach(middlewareItem.headers, (value, key) => {

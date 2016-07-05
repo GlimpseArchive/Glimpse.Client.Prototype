@@ -39,7 +39,7 @@ describe('RequestDetailRequestSelectors', () => {
         };
     }
 
-    function createMiddleware(name: string, packageName: string, headers?: { [key: string]: { value: string, wasSet: boolean } }, middleware?: IRequestDetailRequestMiddlewareState[]): IRequestDetailRequestMiddlewareState {
+    function createMiddleware(name: string, packageName: string, headers?: { [key: string]: { values: string[], wasSet: boolean } }, middleware?: IRequestDetailRequestMiddlewareState[]): IRequestDetailRequestMiddlewareState {
         return {
             headers: headers || {},
             middleware: middleware || [],
@@ -59,8 +59,8 @@ describe('RequestDetailRequestSelectors', () => {
 
         it('should return a middleware if one was executed', () => {
             const state = createState([
-                createMiddleware('name1', 'package1', { 'set-header': { value: 'value', wasSet: true }, 'un-set-header': { value: 'value', wasSet: true } }),
-                createMiddleware('name2', 'package2', { 'set-header': { value: 'value', wasSet: true }, 'un-set-header': { value: 'value', wasSet: false } })
+                createMiddleware('name1', 'package1', { 'set-header': { values: ['value'], wasSet: true }, 'un-set-header': { values: ['value'], wasSet: true } }),
+                createMiddleware('name2', 'package2', { 'set-header': { values: ['value'], wasSet: true }, 'un-set-header': { values: ['value'], wasSet: false } })
             ]);
             const middleware = getMiddleware(state);
 
@@ -73,11 +73,11 @@ describe('RequestDetailRequestSelectors', () => {
                         packageName: 'package1',
                         headers: {
                             'set-header': {
-                                value: 'value',
+                                values: ['value'],
                                 isCurrent: false
                             },
                             'un-set-header': {
-                                value: 'value',
+                                values: ['value'],
                                 isCurrent: false
                             }
                         }
@@ -90,11 +90,11 @@ describe('RequestDetailRequestSelectors', () => {
                         packageName: 'package2',
                         headers: {
                             'set-header': {
-                                value: 'value',
+                                values: ['value'],
                                 isCurrent: true
                             },
                             'un-set-header': {
-                                value: 'value',
+                                values: ['value'],
                                 isCurrent: false
                             }
                         }
