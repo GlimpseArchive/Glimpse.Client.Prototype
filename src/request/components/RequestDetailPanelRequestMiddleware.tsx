@@ -52,7 +52,7 @@ export class RequestMiddleware extends React.Component<IRequestMiddlewareProps, 
 
     private renderMiddlewareRow(ordinal: number, middleware: IFlattenedMiddleware) {
         return (
-            <tr>
+            <tr key={ordinal}>
                 <td>{ordinal}</td>
                 <td>{this.renderName(middleware.middleware.name, middleware.depth)}</td>
                 <td>{middleware.middleware.packageName}</td>
@@ -76,7 +76,7 @@ export class RequestMiddleware extends React.Component<IRequestMiddlewareProps, 
             const spans = [];
 
             for (let i = 0; i < depth; i++) {
-                spans.push(<span className='tab-request-middleware-indent' />);
+                spans.push(<span key={i} className='tab-request-middleware-indent' />);
             }
 
             return spans;

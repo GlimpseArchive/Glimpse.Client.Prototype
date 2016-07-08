@@ -17,7 +17,7 @@ class LogMessageObject extends React.Component<{ message: string }, {}> {
 class LogMessageText extends React.Component<{ className: string, ref: string, spans: ILogMessageSpan[] }, {}> {
     public render() {
         return (
-            <div className={this.props.className}>{this.props.spans.map(span => <span className={span.wasReplaced ? 'tab-logs-table-message-replaced-region' : ''}>{span.text}</span>)}</div>
+            <div className={this.props.className}>{this.props.spans.map((span, index) => <span key={index} className={span.wasReplaced ? 'tab-logs-table-message-replaced-region' : ''}>{span.text}</span>)}</div>
         );
     }
 }

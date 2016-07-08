@@ -209,7 +209,7 @@ var HttpRequestItemHeaderList = React.createClass({
         if (headers) {
             return (
                     <div>{_.map(headers, function(value, key) {
-                            return <DetailListItem title={key} value={value} />;
+                            return <DetailListItem key={key} title={key} value={value} />;
                         })}</div>
                 );
         }
@@ -460,7 +460,7 @@ var MiddlewareParameters = React.createClass({
 
         var paramComponents = _.map(params, function (value, key) {
             return (
-                <div className="flex tab-section-details-item">
+                <div key={key} className="flex tab-section-details-item">
                     <div className="tab-section-details-key col-2"><div className="truncate">{key}:</div></div>
                     <div className="tab-section-details-value col-8"><div className="truncate">{value}</div></div>
                 </div>
@@ -484,7 +484,7 @@ var MiddlewareHeaders = React.createClass({
 
         var headerComponents = _.map(headers, function (value) {
             return (
-                <div className="flex tab-section-details-item">
+                <div key={value.name} className="flex tab-section-details-item">
                     <div className="tab-section-details-key col-2"><div className="truncate">{value.name}:</div></div>
                     <div className="tab-section-details-value col-8"><div className="truncate">{value.values.join(', ')}</div></div>
                 </div>
@@ -515,7 +515,7 @@ var MiddlewareItem = React.createClass({
 
         if (pair.pairs.length > 0) {
             nestedComponent = pair.pairs.map(function (nestedPair){
-                return <MiddlewareItem messagePair={nestedPair} beforeExecuteCommandMessages={beforeExecuteCommandMessages} afterExecuteCommandMessages={afterExecuteCommandMessages} mongoDBMessages={mongoDBMessages} dataHttpRequestMessages={dataHttpRequestMessages} dataHttpResponseMessages={dataHttpResponseMessages} />;
+                return <MiddlewareItem key={nestedPair.startMessage.id} messagePair={nestedPair} beforeExecuteCommandMessages={beforeExecuteCommandMessages} afterExecuteCommandMessages={afterExecuteCommandMessages} mongoDBMessages={mongoDBMessages} dataHttpRequestMessages={dataHttpRequestMessages} dataHttpResponseMessages={dataHttpResponseMessages} />;
             });
         }
         else {
@@ -649,7 +649,7 @@ var MiddlewareComponents = React.createClass({
             }
 
             var generateMiddlewareItem = function (pair) {
-                return <MiddlewareItem messagePair={pair} beforeExecuteCommandMessages={beforeExecuteCommandMessages} afterExecuteCommandMessages={afterExecuteCommandMessages} mongoDBMessages={mongoDBMessages} dataHttpRequestMessages={dataHttpRequestMessages} dataHttpResponseMessages={dataHttpResponseMessages} />;
+                return <MiddlewareItem key={pair.startMessage.id} messagePair={pair} beforeExecuteCommandMessages={beforeExecuteCommandMessages} afterExecuteCommandMessages={afterExecuteCommandMessages} mongoDBMessages={mongoDBMessages} dataHttpRequestMessages={dataHttpRequestMessages} dataHttpResponseMessages={dataHttpResponseMessages} />;
             };
 
             var middlewareComponents = rootPair.pairs.map(generateMiddlewareItem);

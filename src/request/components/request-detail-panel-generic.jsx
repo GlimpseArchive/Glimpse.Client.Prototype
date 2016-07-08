@@ -26,8 +26,8 @@ function process(data) {
 
 function processArray(data) {
     if (data.length > 0) {
-        var body = data.map(function (item) {
-            return <tr><td>{process(item)}</td></tr>;
+        var body = data.map(function (item, index) {
+            return <tr key={index}><td>{process(item)}</td></tr>;
         });
 
         return <table><thead><th>Items</th></thead><tbody>{body}</tbody></table>;

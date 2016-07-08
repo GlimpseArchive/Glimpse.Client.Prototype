@@ -72,7 +72,7 @@ export class Request extends React.Component<IRequestProps, {}> {
                     {
                         panels.map(panel => {
                             return (
-                                <TabPanel header={panel.header}>
+                                <TabPanel key={panel.header} header={panel.header}>
                                     { panel.renderContent() }
                                 </TabPanel>
                             );

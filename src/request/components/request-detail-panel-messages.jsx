@@ -17,7 +17,7 @@ module.exports = React.createClass({
                     {payload.map(function(item) { 
                         var payload = item.payload && !_.isEmpty(item.payload) ? <PanelGeneric payload={item.payload} /> : '--';
                         return (
-                            <tr className="row-devider">
+                            <tr key={item.id} className="row-devider">
                                 <td>
                                     <h2>{item.types.join(', ')} ({item.ordinal})</h2>
                                     <div>{payload}</div> 
