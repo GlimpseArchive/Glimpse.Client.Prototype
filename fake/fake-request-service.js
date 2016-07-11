@@ -245,14 +245,23 @@ var details = (function () {
     requestMock.get(window.location.origin + '/glimpse/context/:contextId', function(req) {
         details.remote(req.params.contextId.replace('?contextId=', '')); 
     });
-    
-    requestMock.get(window.location.origin + '/glimpse/telemetry-config', function(req) {
+
+   requestMock.get(window.location.origin + '/glimpse/telemetry-config', function (req) {
         return {
-            "ok" : true,
-            "body" : {
+            "ok": true,
+            "body": {
                 "enabled": true,
                 "uri": "https://vortex.data.microsoft.com/collect/v1",
-                "instrumentationKey": "AIF-a96980ad-8a38-47a2-bbb0-328338b6964a"
+                "instrumentationKey": "AIF-a96980ad-8a38-47a2-bbb0-328338b6964a",
+                "clientIP": '0.0.0.0',
+                "glimpseServerVersion": "0.0.0",
+                "serverMachineId": '0123456789abcdef',
+                "serverAppName": 'fakeapp',
+                "serverOSPlatform": 'fakeos',
+                "serverOSRelease": 'fakeosrelease',
+                "serverOSType": 'fakeostype',
+                "privacyPolicy": "http://go.microsoft.com/fwlink/?LinkId=521839&CLCID=0409"
+
             }
         }
     });

@@ -56,7 +56,11 @@ var messageProcessor = require('./util/request-message-processor');
 
     var clearRequest = function() {
         if (deepLinkRequestId) {
-            glimpse.off(summarySubscription);
+            // TODO:  summarySubscription is null and this causes exceptions, blcoking subsequent listeners on
+            // the "shell.request.detail.closed' event.
+            if (summarySubscription) {
+                glimpse.off(summarySubscription);
+            }
 
             deepLinkRequestStartTime = null;
             deepLinkRequestId = null;
