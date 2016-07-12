@@ -349,7 +349,22 @@ class TelemetryClient {
      * then the specified props will be updated.  Otherwise, a new instance will returned. 
      */
     private getShellReadyProperties(props?: IShellReadyProperties): IShellReadyProperties {
-        props = props || <IShellReadyProperties>{};
+
+        if (!props) {
+            const p: IShellReadyProperties = {
+                sessionId: undefined,
+                clientCookieID: undefined,
+                glimpseClientVersion: undefined,
+                glimpseServerVersion: undefined,
+                serverMachineId: undefined,
+                serverAppName: undefined,
+                serverOSPlatform: undefined,
+                serverOSRelease: undefined,
+                serverOSType: undefined,
+                clientIP: undefined
+            };
+            props = p;
+        }
 
         props.sessionId = this.sessionId;
         props.clientCookieID = this.clientCookieId;
@@ -362,15 +377,9 @@ class TelemetryClient {
             props.serverOSPlatform = this.telemetryConfig.serverOSPlatform;
             props.serverOSRelease = this.telemetryConfig.serverOSRelease;
             props.serverOSType = this.telemetryConfig.serverOSType;
+            props.clientIP = this.telemetryConfig.clientIP;
         }
-        else {
-            props.glimpseServerVersion = undefined;
-            props.serverMachineId = undefined;
-            props.serverAppName = undefined;
-            props.serverOSPlatform = undefined;
-            props.serverOSRelease = undefined;
-            props.serverOSType = undefined;
-        }
+
         return props;
     }
 
