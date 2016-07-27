@@ -1,6 +1,6 @@
 {
   "name": "glimpse.client.hud",
-  "version": "2.0.0-alpha.8a",
+  "version": "2.0.0-alpha.9",
   "description": "The Javascript client that acts as an in browser viewer for the various Glimpse server backends",
   "main": "dist/hud.js",
   "scripts": {
