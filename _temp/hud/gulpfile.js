@@ -102,19 +102,19 @@ gulp.task('build', function (cb) {
 
 gulp.task('build-dev', function (cb) {
     RELEASE = false;
-    
+
     runSequence('build', cb);
 });
 
 gulp.task('build-prod', function (cb) {
     RELEASE = true;
-    
+
     runSequence('build', cb);
 });
 
 gulp.task('build-ci', ['clean'], function (cb) {
     RELEASE = false;
-    
+
     runSequence('build', cb);
 });
 

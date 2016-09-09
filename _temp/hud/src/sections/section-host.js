@@ -11,7 +11,7 @@ var getTimeValue = function(value) {
 
 var structure = {
     title: 'Host',
-    id: 'host', 
+    id: 'host',
     color: '#6161e0',
     popup: {
         render: function(details) {
@@ -26,15 +26,15 @@ var structure = {
                     isTrivial = false;
                     // TODO: need to put this back in at some point
                     //isTrivial = item.duration < 2;
-                
+
                 if (!item.suppress) {
                     var maxLength = (16 + (details.sql ? 10 : 0)) - item.nesting * 2;
-                    
+
                     var rowClass = '';
                     if (item.id || isTrivial) {
                         rowClass = ' class="' + (item.id ? item.id : '' ) + (isTrivial ? ' glimpse-hud-quite' : '') + '"';
                     }
-                    
+
                     html += '<tbody' + (isTrivial ? ' class="glimpse-data-trivial"' : '') + '>';
                     html += '<tr' + rowClass + '><td class="glimpse-hud-listing-overflow" style="padding-left:' + (item.nesting * 15) + 'px;" ' + (item.description.length > maxLength ? 'title="' + item.description + '"' : '') +'>' + item.description + '</td><td class="glimpse-hud-listing-value glimpse-data-childless-duration glimpse-hud-data">' + item.duration + '</td><td class="glimpse-hud-listing-value glimpse-data-childless-start-point"><span class="glimpse-hud-prefix">+</span>' + item.startPoint + '</td></tr>';
                     if (item.queries && item.queries.listing.length > 0) {
@@ -43,7 +43,7 @@ var structure = {
                     html += '</tbody>';
                     if (isTrivial) { hasTrivial = true; }
                 }
-            }    
+            }
             html += '</table>';
             if (hasTrivial) {
                 html += '<div class="glimpse-hud-controls"><span class="glimpse-control-trivial">Show Trivial</span><span class="glimpse-control-trivial" style="display:none">Hide Trivial</span></div>';
@@ -90,7 +90,7 @@ var structure = {
 };
 
 var processEvents = function(details) {
-    var eventStack = [], 
+    var eventStack = [],
         lastEvent = { startPoint : 0, duration : 0, childlessDuration : 0, endPoint : 0 },
         lastControllerEvent = { },
         rootDuration = details.request ? details.request.data.server.duration : 1,
@@ -104,12 +104,12 @@ var processEvents = function(details) {
         startTime: 'NOT SURE',
         id: 'glimpse-hud-data-server'
     });
-    
+
     for (var i = 0; i < details.timings.data.length; i += 1) {
         var event = details.timings.data[i],
             topEvent = eventStack.length > 0 ? eventStack[eventStack.length - 1] : null, 
-            left = (event.startPoint / rootDuration) * 100,  
-            width = (event.duration / rootDuration) * 100, 
+            left = (event.startPoint / rootDuration) * 100,
+            width = (event.duration / rootDuration) * 100,
             stackParsed = false;
 
         event.endPoint = parseFloat((event.startPoint + event.duration).toFixed(2));
@@ -125,28 +125,28 @@ var processEvents = function(details) {
             event.suppress = true;
         }
 
-        //Derive event nesting  
+        //Derive event nesting
         while (!stackParsed) {
             if (event.startPoint > lastEvent.startPoint && event.endPoint <= lastEvent.endPoint) { 
-                eventStack.push(lastEvent); 
+                eventStack.push(lastEvent);
                 stackParsed = true;
             }
             else if (topEvent != null && topEvent.endPoint < event.endPoint) {
-                eventStack.pop(); 
+                eventStack.pop();
                 topEvent = eventStack.length > 0 ? eventStack[eventStack.length - 1] : null; 
                 stackParsed = false;
             }
-            else 
-                stackParsed = true; 
+            else
+                stackParsed = true;
         }
 
-        //Work out childless timings 
+        //Work out childless timings
         var temp = eventStack.length > 0 ? eventStack[eventStack.length - 1] : undefined; 
         if (temp) {
             temp.childlessDuration = parseFloat((temp.childlessDuration - event.duration).toFixed(2));
-        } 
+        }
 
-        //Work out root childless timings 
+        //Work out root childless timings
         if (eventStack.length == 0)
             rootChildlessDuration -= event.duration;
 
@@ -156,8 +156,8 @@ var processEvents = function(details) {
         event.startPercent = left;
         event.endPercent = left + width;
         event.widthPercent = width;
-        event.nesting = eventStack.length + 1; 
-        event.description = event.title; 
+        event.nesting = eventStack.length + 1;
+        event.description = event.title;
 
         lastEvent = event;
     }
@@ -167,9 +167,9 @@ var render = function(details, opened) {
     var html = '';
     //Only checking MVC/Webforms as we can't show just SQL very well
     if ((details.mvc && details.mvc.data) || (details.webforms && details.webforms.data)) {
-        process.init(structure); 
+        process.init(structure);
         processEvents(details);
-        html = rendering.section(structure, details, opened); 
+        html = rendering.section(structure, details, opened);
     }
 
     return html;
@@ -177,7 +177,7 @@ var render = function(details, opened) {
 var postRender = function() {
     $('.glimpse-hud .glimpse-control-trivial').click(function() { $('.glimpse-hud .glimpse-control-trivial, .glimpse-hud .glimpse-data-trivial').toggle(); });
 };
-                    
+
 module.exports = {
     render: render,
     postRender: postRender

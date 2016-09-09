@@ -11,4 +11,4 @@ require('jquery/src/core/parseHTML.js');
 require('jquery/src/attributes/classes.js');
 require('jquery/src/attributes/attr.js');
 
-module.exports = jQuery; 
+module.exports = jQuery;
