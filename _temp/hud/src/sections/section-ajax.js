@@ -122,9 +122,10 @@ function registerListeners() {
                             listenerNotification(method, uri, startTime, this);
                         }
                         else {
+                            var xhrObj = this;
                             preRenderCache.push(function() {
-                                listenerNotification(method, uri, startTime, this);
-                            })
+                                listenerNotification(method, uri, startTime, xhrObj);
+                            });
                         }
                     }
                 }, false);
